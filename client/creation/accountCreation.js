@@ -3,7 +3,7 @@ const handleCreation = (e) => {
 
     $("#domoMessage").animate({width:'hide'}, 350);
 
-    if($("#accountAthletics").val() == '' || "#accountDexterity").val() == '' || "#accountCharisma").val() == '') {
+    if($("#accountAthletics").val() == '' || $("#accountDexterity").val() == '' || $("#accountCharisma").val() == '') {
         handleError("RAWR! Fill in Athletics you fuck.");
         return false;
     }
