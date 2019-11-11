@@ -6,7 +6,7 @@ var handleCreation = function handleCreation(e) {
     $("#domoMessage").animate({ width: 'hide' }, 350);
 
     if ($("#accountAthletics").val() == '' || $("#accountDexterity").val() == '' || $("#accountCharisma").val() == '') {
-        handleError("RAWR! Fill in Athletics you fuck.");
+        handleError("RAWR! Fill in the stats you fuck.");
         return false;
     }
     if ($("#accountAthletics").val() == '') {
@@ -40,30 +40,45 @@ var AccountForm = function AccountForm(props) {
             { htmlFor: "athletics" },
             "Athletics: "
         ),
-        React.createElement("input", { id: "accountAthletics", type: "text", name: "athletics", placeholder: "Account Athletics" }),
+        React.createElement("input", { id: "accountAthletics", onchange: "checkValues()", type: "number", name: "athletics", placeholder: "1" }),
         React.createElement(
             "label",
             { htmlFor: "wisdom" },
             "Wisdom: "
         ),
-        React.createElement("input", { id: "accountWisdom", type: "text", name: "wisdom", placeholder: "Account Wisdom" }),
+        React.createElement("input", { id: "accountWisdom", onchange: "checkValues()", type: "number", name: "wisdom", placeholder: "1" }),
         React.createElement(
             "label",
             { htmlFor: "charisma" },
             "Charisma: "
         ),
-        React.createElement("input", { id: "accountCharisma", type: "text", name: "charisma", placeholder: "Account Charisma" }),
+        React.createElement("input", { id: "accountCharisma", onchange: "checkValues()", type: "number", name: "charisma", placeholder: "1" }),
         React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
         React.createElement("input", { className: "makeAccountSubmit", type: "submit", value: "Make Account" })
     );
 };
 
 var createAcountWindow = function createAcountWindow(csrf) {
-    ReactDOM.render(React.createElement(AccountForm, { csrf: csrf }), document.querySelector("#content"));
+    ReactDOM.render(React.createElement(AccountForm, { csrf: csrf }), document.querySelector("#accountCreator"));
+};
+
+var checkValues = function checkValues() {
+    var maxTotal = 10;
+    console.log("HE");
+
+    var athletics = document.querySelector("#accontAthletics");
+    var wisdom = document.querySelector("#accontWisdom");
+    var charisma = document.querySelector("#accontCharisma");
+
+    var currentTotal = athletics.val() + wisdom.val() + charisma.val();
+    if (currentTotal > maxTotal) {
+        console.log("Too big");
+    }
 };
 
 var setup = function setup(csrf) {
     createAcountWindow(csrf); // default view
+    var accountForm = document.querySelector("#accountAthletics");
 };
 
 var getToken = function getToken() {
