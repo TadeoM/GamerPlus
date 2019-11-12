@@ -85,7 +85,6 @@ const checkValues = (e) => {
     
 
     let currentTotal = Number(athletics.val()) + Number(wisdom.val()) + Number(charisma.val());
-    console.log(currentTotal);
     if(currentTotal > maxTotal){
         let inputLocation = document.querySelector(`#${e.target.id}`);
         let decreaseAmount = currentTotal - maxTotal;

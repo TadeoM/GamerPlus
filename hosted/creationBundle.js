@@ -101,7 +101,6 @@ var checkValues = function checkValues(e) {
     var charisma = $("#accountCharisma");
 
     var currentTotal = Number(athletics.val()) + Number(wisdom.val()) + Number(charisma.val());
-    console.log(currentTotal);
     if (currentTotal > maxTotal) {
         var inputLocation = document.querySelector("#" + e.target.id);
         var decreaseAmount = currentTotal - maxTotal;
