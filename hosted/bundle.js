@@ -21,28 +21,32 @@ var handleDomo = function handleDomo(e) {
 
 var DomoForm = function DomoForm(props) {
     return React.createElement(
-        "form",
-        { id: "domoForm",
-            onSubmit: handleDomo,
-            name: "domoForm",
-            action: "/maker",
-            method: "POST",
-            className: "domoForm"
-        },
+        "div",
+        { className: "row mb-3" },
         React.createElement(
-            "label",
-            { htmlFor: "name" },
-            "Name: "
-        ),
-        React.createElement("input", { id: "domoName", type: "text", name: "name", placeholder: "Domo Name" }),
-        React.createElement(
-            "label",
-            { htmlFor: "age" },
-            "Age: "
-        ),
-        React.createElement("input", { id: "domoAge", type: "text", name: "age", placeholder: "Domo Age" }),
-        React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
-        React.createElement("input", { className: "makeDomoSubmit", type: "submit", value: "Make Domo" })
+            "form",
+            { id: "domoForm",
+                onSubmit: handleDomo,
+                name: "domoForm",
+                action: "/maker",
+                method: "POST",
+                className: "domoForm"
+            },
+            React.createElement(
+                "label",
+                { htmlFor: "name" },
+                "Name: "
+            ),
+            React.createElement("input", { id: "domoName", type: "text", name: "name", placeholder: "Domo Name" }),
+            React.createElement(
+                "label",
+                { htmlFor: "age" },
+                "Age: "
+            ),
+            React.createElement("input", { id: "domoAge", type: "text", name: "age", placeholder: "Domo Age" }),
+            React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
+            React.createElement("input", { className: "makeDomoSubmit", type: "submit", value: "Make Domo" })
+        )
     );
 };
 
@@ -91,10 +95,10 @@ var DomoList = function DomoList(props) {
 var AccountData = function AccountData(props) {
     return React.createElement(
         "div",
-        { "class": "row mb-3" },
+        { className: "row mb-3" },
         React.createElement(
             "div",
-            { "class": "col-md-4" },
+            { className: "col-md-4" },
             React.createElement(
                 "h3",
                 { className: "accountName" },
@@ -121,7 +125,7 @@ var AccountData = function AccountData(props) {
         ),
         React.createElement(
             "div",
-            { "class": "col-md-4" },
+            { className: "col-md-4" },
             React.createElement(
                 "h3",
                 { className: "accountWisdom" },

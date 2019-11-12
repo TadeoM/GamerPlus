@@ -3,8 +3,21 @@ const handleCreation = (e) => {
 
     $("#domoMessage").animate({width:'hide'}, 350);
 
-    if($("#accountAthletics").val() == '' || $("#accountDexterity").val() == '' || $("#accountCharisma").val() == '') {
+    let maxTotal = 10;
+
+    const athletics = $("#accountAthletics");
+    const wisdom = $("#accountWisdom");
+    const charisma = $("#accountCharisma");
+
+    if(athletics.val() == '' || wisdom.val() == '' || charisma.val() == '') {
         handleError("RAWR! Fill in the stats you fuck.");
+        return false;
+    }
+
+    let currentTotal = Number(athletics.val()) + Number(wisdom.val()) + Number(charisma.val());
+
+    if(currentTotal < maxTotal){
+        handleError("You still have stats to allocate dumbass!");
         return false;
     }
 
@@ -23,28 +36,30 @@ const AccountForm = (props) => {
                 name="accountForm"
                 action="/creator"
                 method="POST"
-                className="accountForm"
+                className="accountForm form-creator"
             >
-                <div class="row mb-3">
-                    <div class="col-md-4">
-                        <label htmlFor="athletics">Athletics: </label>
-                        <input id="accountAthletics" onChange={checkValues} type="number" name="athletics" placeholder="0" min="0" />
-                    </div>
-                    <div class="col-md-4">
-                        <label htmlFor="wisdom">Wisdom: </label>
-                        <input id="accountWisdom" onChange={checkValues} type="number" name="wisdom" placeholder="0" min="0" />
-                    </div>
-                </div>
+                <div className="row mb-3">
+                    <div className="col-md-4"></div>
+                    <div className="col-md-4 grid-box">
+                        <div>
+                            <label htmlFor="athletics">Athletics: </label>
+                            <input id="accountAthletics" onChange={checkValues} type="number" name="athletics" placeholder="0" min="1" />
+                        </div>
+                        <div>
+                            <label htmlFor="wisdom">Wisdom: </label>
+                            <input id="accountWisdom" onChange={checkValues} type="number" name="wisdom" placeholder="0" min="1" />
+                        </div>
 
-                <div class="row mb-3">
-                    <div class="col-md-4">
-                        <label htmlFor="charisma">Charisma: </label>
-                        <input id="accountCharisma" onChange={checkValues} type="number" name="charisma" placeholder="0" min="0" />
+                        <div >
+                            <label htmlFor="charisma">Charisma: </label>
+                            <input id="accountCharisma" onChange={checkValues} type="number" name="charisma" placeholder="0" min="1" />
+                        </div>
+                        <div >
+                            <input type="hidden" name="_csrf" value={props.csrf}/>
+                            <input className="makeAccountSubmit" type="submit" value="Make Account"/>
+                        </div>
                     </div>
-                    <div class="col-md-4">
-                        <input type="hidden" name="_csrf" value={props.csrf}/>
-                        <input className="makeAccountSubmit" type="submit" value="Make Account"/>
-                    </div>
+                    <div className="col-md-4"></div>
                 </div>
                 
                 
@@ -73,9 +88,9 @@ const checkValues = (e) => {
     console.log(currentTotal);
     if(currentTotal > maxTotal){
         let inputLocation = document.querySelector(`#${e.target.id}`);
-        
-        console.log(inputLocation.value);
-        inputLocation.value--;
+        let decreaseAmount = currentTotal - maxTotal;
+
+        inputLocation.value -= decreaseAmount;
         
     }
 };

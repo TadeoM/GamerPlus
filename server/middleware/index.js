@@ -1,12 +1,23 @@
 const requiresLogin = (req, res, next) => {
-    if (!req.session.account) {
+    const account = req.session.account
+
+    if (!account) {
         return res.redirect('/');
     }
+
     return next();
 };
 
 const requiresLogout = (req, res, next) => {
     if (req.session.account) {
+        const account = req.session.account
+        const totalStats = account.athletics + account.wisdom + account.charisma;
+        const maxStats = 10;
+
+        if (totalStats < maxStats){
+            console.log("Got here");
+            return res.redirect('/creator');
+        }
         return res.redirect('/maker');
     }
     

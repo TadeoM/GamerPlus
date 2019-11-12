@@ -19,20 +19,22 @@ const handleDomo = (e) => {
 
 const DomoForm = (props) => {
     return (
-        <form id="domoForm"
-            onSubmit={handleDomo}
-            name="domoForm"
-            action="/maker"
-            method="POST"
-            className="domoForm"
-        >
-            <label htmlFor="name">Name: </label>
-            <input id="domoName" type="text" name="name" placeholder="Domo Name"/>
-            <label htmlFor="age">Age: </label>
-            <input id="domoAge" type="text" name="age" placeholder="Domo Age"/>
-            <input type="hidden" name="_csrf" value={props.csrf}/>
-            <input className="makeDomoSubmit" type="submit" value="Make Domo"/>
-        </form>
+        <div className="row mb-3">
+            <form id="domoForm"
+                onSubmit={handleDomo}
+                name="domoForm"
+                action="/maker"
+                method="POST"
+                className="domoForm"
+            >
+                <label htmlFor="name">Name: </label>
+                <input id="domoName" type="text" name="name" placeholder="Domo Name"/>
+                <label htmlFor="age">Age: </label>
+                <input id="domoAge" type="text" name="age" placeholder="Domo Age"/>
+                <input type="hidden" name="_csrf" value={props.csrf}/>
+                <input className="makeDomoSubmit" type="submit" value="Make Domo"/>
+            </form>
+        </div>
     );
 };
 
@@ -64,12 +66,12 @@ const DomoList = function(props) {
 
 const AccountData = function(props) {
     return (
-        <div class="row mb-3">
-            <div class="col-md-4">
+        <div className="row mb-3">
+            <div className="col-md-4">
                 <h3 className="accountName"><b>User:</b> {props.account.username} </h3>
                 <h3 className="accountAthletics"><b>Athletics:</b> {props.account.athletics}</h3>
             </div>
-            <div class="col-md-4">
+            <div className="col-md-4">
                 <h3 className="accountWisdom"><b>Wisdom:</b> {props.account.wisdom}</h3>
                 <h3 className="accountCharisma"><b>Charisma:</b> {props.account.charisma}</h3>
             </div>

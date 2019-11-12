@@ -4,6 +4,8 @@ html, body {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    background-color: #8989bb;
+    background-image: linear-gradient(315deg, #3B3E40 0%, #691824 74%);
 }
 
 #logo {
@@ -24,7 +26,21 @@ nav:nth-child(1) {
     padding-left: 25px;
 }
 
+#accountForm {
+    margin-top: 25%;
+    text-align: center;
+    align-content: center;
+}
 
+.grid-box {
+    background-color: #B2B9BF;
+    border: 2px solid #777B80;
+    border-radius: 5px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 15px 15px 15px 15px;
+    box-shadow: 6px 6px 5px grey;
+}
 
 .navlink {
     padding: 5px;
@@ -52,7 +68,6 @@ nav:nth-child(1) {
 .domoForm, #accountData {
     border: 2px solid #691824;
     display: block;
-    height: 35px;
     width: 700px;
     margin-top:0px;
     padding-top:10px;
@@ -143,6 +158,74 @@ nav:nth-child(1) {
 .formSubmit:hover {
     transition: background-color 0.4s ease;
     background-color: #691824;
+}
+
+.form-creator input[type=submit],
+.form-creator input[type=button],
+.form-creator input[type=text],
+.form-creator input[type=email],
+.form-creator input[type=number],
+.form-creator textarea,
+.form-creator label
+{
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 1.5em;
+    margin-top: 10px;
+}
+
+.form-creator label {
+	display:block;
+	margin-bottom: 10px;
+}
+.form-creator label > span{
+	display: inline-block;
+	float: left;
+	width: 150px;
+}
+.form-creator input[type=text],
+.form-creator input[type=email],
+.form-creator input[type=number]
+{
+	background: transparent;
+	border: none;
+	border-bottom: 1px dashed #83A4C5;
+	width: 275px;
+	outline: none;
+	padding: 0px 0px 0px 0px;
+	font-style: italic;
+}
+.form-creator textarea{
+	font-style: italic;
+	padding: 0px 0px 0px 0px;
+	background: transparent;
+	outline: none;
+	border: none;
+	border-bottom: 1px dashed #83A4C5;
+	width: 275px;
+	overflow: hidden;
+	resize:none;
+	height:20px;
+}
+
+.form-creator textarea:focus, 
+.form-creator input[type=text]:focus,
+.form-creator input[type=email]:focus,
+.form-creator input[type=number]:focus
+{
+	border-bottom: 1px dashed #D9FFA9;
+}
+
+.form-creator input[type=submit],
+.form-creator input[type=button]{
+	background: #576E86;
+	border: none;
+	padding: 8px 10px 8px 10px;
+	border-radius: 5px;
+	color: #A8BACE;
+}
+.form-creator input[type=submit]:hover,
+.form-creator input[type=button]:hover{
+background: #394D61;
 }
 
 #user, #pass, #pass2 {

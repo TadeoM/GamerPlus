@@ -5,8 +5,21 @@ var handleCreation = function handleCreation(e) {
 
     $("#domoMessage").animate({ width: 'hide' }, 350);
 
-    if ($("#accountAthletics").val() == '' || $("#accountDexterity").val() == '' || $("#accountCharisma").val() == '') {
+    var maxTotal = 10;
+
+    var athletics = $("#accountAthletics");
+    var wisdom = $("#accountWisdom");
+    var charisma = $("#accountCharisma");
+
+    if (athletics.val() == '' || wisdom.val() == '' || charisma.val() == '') {
         handleError("RAWR! Fill in the stats you fuck.");
+        return false;
+    }
+
+    var currentTotal = Number(athletics.val()) + Number(wisdom.val()) + Number(charisma.val());
+
+    if (currentTotal < maxTotal) {
+        handleError("You still have stats to allocate dumbass!");
         return false;
     }
 
@@ -25,51 +38,53 @@ var AccountForm = function AccountForm(props) {
             name: "accountForm",
             action: "/creator",
             method: "POST",
-            className: "accountForm"
+            className: "accountForm form-creator"
         },
         React.createElement(
             "div",
-            { "class": "row mb-3" },
+            { className: "row mb-3" },
+            React.createElement("div", { className: "col-md-4" }),
             React.createElement(
                 "div",
-                { "class": "col-md-4" },
+                { className: "col-md-4 grid-box" },
                 React.createElement(
-                    "label",
-                    { htmlFor: "athletics" },
-                    "Athletics: "
+                    "div",
+                    null,
+                    React.createElement(
+                        "label",
+                        { htmlFor: "athletics" },
+                        "Athletics: "
+                    ),
+                    React.createElement("input", { id: "accountAthletics", onChange: checkValues, type: "number", name: "athletics", placeholder: "0", min: "1" })
                 ),
-                React.createElement("input", { id: "accountAthletics", onChange: checkValues, type: "number", name: "athletics", placeholder: "0", min: "0" })
+                React.createElement(
+                    "div",
+                    null,
+                    React.createElement(
+                        "label",
+                        { htmlFor: "wisdom" },
+                        "Wisdom: "
+                    ),
+                    React.createElement("input", { id: "accountWisdom", onChange: checkValues, type: "number", name: "wisdom", placeholder: "0", min: "1" })
+                ),
+                React.createElement(
+                    "div",
+                    null,
+                    React.createElement(
+                        "label",
+                        { htmlFor: "charisma" },
+                        "Charisma: "
+                    ),
+                    React.createElement("input", { id: "accountCharisma", onChange: checkValues, type: "number", name: "charisma", placeholder: "0", min: "1" })
+                ),
+                React.createElement(
+                    "div",
+                    null,
+                    React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
+                    React.createElement("input", { className: "makeAccountSubmit", type: "submit", value: "Make Account" })
+                )
             ),
-            React.createElement(
-                "div",
-                { "class": "col-md-4" },
-                React.createElement(
-                    "label",
-                    { htmlFor: "wisdom" },
-                    "Wisdom: "
-                ),
-                React.createElement("input", { id: "accountWisdom", onChange: checkValues, type: "number", name: "wisdom", placeholder: "0", min: "0" })
-            )
-        ),
-        React.createElement(
-            "div",
-            { "class": "row mb-3" },
-            React.createElement(
-                "div",
-                { "class": "col-md-4" },
-                React.createElement(
-                    "label",
-                    { htmlFor: "charisma" },
-                    "Charisma: "
-                ),
-                React.createElement("input", { id: "accountCharisma", onChange: checkValues, type: "number", name: "charisma", placeholder: "0", min: "0" })
-            ),
-            React.createElement(
-                "div",
-                { "class": "col-md-4" },
-                React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
-                React.createElement("input", { className: "makeAccountSubmit", type: "submit", value: "Make Account" })
-            )
+            React.createElement("div", { className: "col-md-4" })
         )
     );
 };
@@ -89,9 +104,9 @@ var checkValues = function checkValues(e) {
     console.log(currentTotal);
     if (currentTotal > maxTotal) {
         var inputLocation = document.querySelector("#" + e.target.id);
+        var decreaseAmount = currentTotal - maxTotal;
 
-        console.log(inputLocation.value);
-        inputLocation.value--;
+        inputLocation.value -= decreaseAmount;
     }
 };
 
