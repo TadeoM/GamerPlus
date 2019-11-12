@@ -7,14 +7,6 @@ const handleCreation = (e) => {
         handleError("RAWR! Fill in the stats you fuck.");
         return false;
     }
-    if($("#accountAthletics").val() == '') {
-        handleError("RAWR! Fill in Athletics you fuck.");
-        return false;
-    }
-    if($("#accountAthletics").val() == '') {
-        handleError("RAWR! Fill in Athletics you fuck.");
-        return false;
-    }
 
     console.log($("input[name=_csrf]").val());
 
@@ -25,22 +17,40 @@ const handleCreation = (e) => {
 
 const AccountForm = (props) => {
     return (
-        <form id="accountForm"
-            onSubmit={handleCreation}
-            name="accountForm"
-            action="/creator"
-            method="POST"
-            className="accountForm"
-        >
-            <label htmlFor="athletics">Athletics: </label>
-            <input id="accountAthletics" onchange="checkValues()" type="number" name="athletics" placeholder="1"/>
-            <label htmlFor="wisdom">Wisdom: </label>
-            <input id="accountWisdom" onchange="checkValues()" type="number" name="wisdom" placeholder="1"/>
-            <label htmlFor="charisma">Charisma: </label>
-            <input id="accountCharisma" onchange="checkValues()" type="number" name="charisma" placeholder="1"/>
-            <input type="hidden" name="_csrf" value={props.csrf}/>
-            <input className="makeAccountSubmit" type="submit" value="Make Account"/>
-        </form>
+        
+            <form id="accountForm"
+                onSubmit={handleCreation}
+                name="accountForm"
+                action="/creator"
+                method="POST"
+                className="accountForm"
+            >
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label htmlFor="athletics">Athletics: </label>
+                        <input id="accountAthletics" onChange={checkValues} type="number" name="athletics" placeholder="0" min="0" />
+                    </div>
+                    <div class="col-md-4">
+                        <label htmlFor="wisdom">Wisdom: </label>
+                        <input id="accountWisdom" onChange={checkValues} type="number" name="wisdom" placeholder="0" min="0" />
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label htmlFor="charisma">Charisma: </label>
+                        <input id="accountCharisma" onChange={checkValues} type="number" name="charisma" placeholder="0" min="0" />
+                    </div>
+                    <div class="col-md-4">
+                        <input type="hidden" name="_csrf" value={props.csrf}/>
+                        <input className="makeAccountSubmit" type="submit" value="Make Account"/>
+                    </div>
+                </div>
+                
+                
+            </form>
+        
+
     );
 };
 
@@ -51,24 +61,27 @@ const createAcountWindow = (csrf) => {
     );
 };
 
-const checkValues = () => {
+const checkValues = (e) => {
     let maxTotal = 10;
-    console.log("HE");
 
-    const athletics = document.querySelector("#accontAthletics");
-    const wisdom = document.querySelector("#accontWisdom");
-    const charisma = document.querySelector("#accontCharisma");
+    const athletics = $("#accountAthletics");
+    const wisdom = $("#accountWisdom");
+    const charisma = $("#accountCharisma");
+    
 
-    let currentTotal = athletics.val() + wisdom.val() + charisma.val();
+    let currentTotal = Number(athletics.val()) + Number(wisdom.val()) + Number(charisma.val());
+    console.log(currentTotal);
     if(currentTotal > maxTotal){
-        console.log("Too big");
+        let inputLocation = document.querySelector(`#${e.target.id}`);
+        
+        console.log(inputLocation.value);
+        inputLocation.value--;
+        
     }
 };
 
 const setup = (csrf) => {
     createAcountWindow(csrf); // default view
-    const accountForm = document.querySelector("#accountAthletics");
-    
 };
 
 const getToken = () => {

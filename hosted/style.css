@@ -254,7 +254,7 @@ h3.domoName {
     font-size: 1.5em;
 }
 
-h3.accountName, h3.accountAthletics, h3.accountDexterity, h3.accountCharisma {
+h3.accountName, h3.accountAthletics, h3.accountWisdom, h3.accountCharisma {
     float:left;
     width: 150px;
     font-weight: normal;

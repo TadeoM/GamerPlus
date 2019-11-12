@@ -91,51 +91,59 @@ var DomoList = function DomoList(props) {
 var AccountData = function AccountData(props) {
     return React.createElement(
         "div",
-        null,
+        { "class": "row mb-3" },
         React.createElement(
-            "h3",
-            { className: "accountName" },
+            "div",
+            { "class": "col-md-4" },
             React.createElement(
-                "b",
-                null,
-                "User:"
+                "h3",
+                { className: "accountName" },
+                React.createElement(
+                    "b",
+                    null,
+                    "User:"
+                ),
+                " ",
+                props.account.username,
+                " "
             ),
-            " ",
-            props.account.username,
-            " "
+            React.createElement(
+                "h3",
+                { className: "accountAthletics" },
+                React.createElement(
+                    "b",
+                    null,
+                    "Athletics:"
+                ),
+                " ",
+                props.account.athletics
+            )
         ),
         React.createElement(
-            "h3",
-            { className: "accountAthletics" },
+            "div",
+            { "class": "col-md-4" },
             React.createElement(
-                "b",
-                null,
-                "Athletics:"
+                "h3",
+                { className: "accountWisdom" },
+                React.createElement(
+                    "b",
+                    null,
+                    "Wisdom:"
+                ),
+                " ",
+                props.account.wisdom
             ),
-            " ",
-            props.account.athletics
-        ),
-        React.createElement(
-            "h3",
-            { className: "accountDexterity" },
             React.createElement(
-                "b",
-                null,
-                "Dexterity:"
-            ),
-            " ",
-            props.account.dexterity
-        ),
-        React.createElement(
-            "h3",
-            { className: "accountCharisma" },
-            React.createElement(
-                "b",
-                null,
-                "Charisma:"
-            ),
-            " ",
-            props.account.charisma
+                "h3",
+                { className: "accountCharisma" },
+                React.createElement(
+                    "b",
+                    null,
+                    "Charisma:"
+                ),
+                " ",
+                props.account.charisma
+            )
         )
     );
 };
