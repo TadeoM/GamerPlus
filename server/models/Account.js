@@ -22,15 +22,15 @@ const AccountSchema = new mongoose.Schema({
   },
   wisdom: {
     type: Number,
-    default: 1
+    default: 1,
   },
   charisma: {
     type: Number,
-    default: 1
+    default: 1,
   },
   dexterity: {
     type: Number,
-    default: 1
+    default: 1,
   },
   salt: {
     type: Buffer,

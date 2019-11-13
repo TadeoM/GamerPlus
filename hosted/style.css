@@ -47,7 +47,7 @@ nav:nth-child(1) {
     background-color: #66bdff;
 }
 
-.domoForm, #accountData {
+.questForm, #accountData {
     border: 2px solid #691824;
     display: block;
     height: 35px;
@@ -60,7 +60,7 @@ nav:nth-child(1) {
     
 }
 
-.domoForm label {
+.questForm label {
     display: inline-block;
     width: 75px;
     margin-left: 10px;
@@ -75,11 +75,11 @@ nav:nth-child(1) {
     color: white;
 }
 
-.domoForm input[type=text] {
+.questForm input[type=text] {
     float:left;
 }
 
-.makeDomoSubmit {
+.makeQuestSubmit {
     transition: background-color 0.4s ease;
     display: inline;
     width: 90px;
@@ -89,11 +89,11 @@ nav:nth-child(1) {
     text-decoration: none;
 }
 
-.makeDomoSubmit:link, .makeDomoSubmit:visited, .makeDomoSubmit:hover, .makeDomoSubmit:active {
+.makeQuestSubmit:link, .makeQuestSubmit:visited, .makeQuestSubmit:hover, .makeQuestSubmit:active {
     color: white;
 }
 
-.makeDomoSubmit:hover {
+.makeQuestSubmit:hover {
     transition: background-color 0.4s ease;
     background-color: #E83551;
 }
@@ -155,7 +155,7 @@ nav:nth-child(1) {
     box-shadow: 0px 0px 1px 1px #E83551;
 }
 
-#domoMessage {
+#questMessage {
     display:none;
     top: 250px;
     width: 250px;
@@ -166,7 +166,7 @@ nav:nth-child(1) {
     overflow: hidden;
 }
 
-#domoMessage h3 {
+#questMessage h3 {
     width: 200px;
     position: absolute;
     top: 0px;
@@ -186,7 +186,7 @@ nav:nth-child(1) {
     font-style: italic;
 }
 
-#domo {
+#quest {
     z-index: 225;
     margin-top: -20px;
     margin-left: 135px;
@@ -197,7 +197,7 @@ nav:nth-child(1) {
     transform: rotate(330deg);
 }
 
-#domos {
+#quests {
     width: 40%;
     min-width: 400px;
     border: 2px solid #E83551;
@@ -206,7 +206,7 @@ nav:nth-child(1) {
     margin-top: 100px;
 }
 
-.domo {
+.quest {
     width: 95%;
     margin: 0 auto;
     margin-top: 2px;
@@ -219,7 +219,7 @@ nav:nth-child(1) {
     overflow: hidden;
 }
 
-.domo:hover {
+.quest:hover {
     transition: border-color 0.2s ease-out;
     border-color: rgba(255,255,255, 0.8);
     transition: background-color 2.6s ease-out;
@@ -236,7 +236,7 @@ img.domoFace {
     float:left;
 }
 
-h3.emptyDomo {
+h3.emptyQuest {
     width: 400px;
     font-size: 1.5em;
     margin: 0 auto;
@@ -244,7 +244,7 @@ h3.emptyDomo {
     margin-top: 18px;
 }
 
-h3.domoName {
+h3.questName {
     float:left;
     width: 200px;
     font-weight: bold;
@@ -259,7 +259,7 @@ h3.accountName, h3.accountAthletics, h3.accountDexterity, h3.accountCharisma {
     font-size: 1.5em;
 }
 
-h3.domoAge{
+h3.questType{
     float:right;
     text-align: left;
     width: 100px;
@@ -268,10 +268,18 @@ h3.domoAge{
     font-size: 1.5em;
 }
 
-.domo:first-child {
+h3.questExperience{
+    float:center;
+    text-align: center;
+    width: 100px;
+    font-weight: bold;
+    padding-right: 40px;
+    font-size: 1.5em;
+}
+.quest:first-child {
     margin-top: 10px;
 }
 
-.domo:last-child {
+.quest:last-child {
     margin-bottom:10px;
 }
