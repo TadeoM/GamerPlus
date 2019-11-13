@@ -67,14 +67,10 @@ const DomoList = function(props) {
 const AccountData = function(props) {
     return (
         <div className="row mb-3">
-            <div className="col-md-4">
                 <h3 className="accountName"><b>User:</b> {props.account.username} </h3>
                 <h3 className="accountAthletics"><b>Athletics:</b> {props.account.athletics}</h3>
-            </div>
-            <div className="col-md-4">
                 <h3 className="accountWisdom"><b>Wisdom:</b> {props.account.wisdom}</h3>
                 <h3 className="accountCharisma"><b>Charisma:</b> {props.account.charisma}</h3>
-            </div>
         </div>
     );
 };

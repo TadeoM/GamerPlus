@@ -97,57 +97,49 @@ var AccountData = function AccountData(props) {
         "div",
         { className: "row mb-3" },
         React.createElement(
-            "div",
-            { className: "col-md-4" },
+            "h3",
+            { className: "accountName" },
             React.createElement(
-                "h3",
-                { className: "accountName" },
-                React.createElement(
-                    "b",
-                    null,
-                    "User:"
-                ),
-                " ",
-                props.account.username,
-                " "
+                "b",
+                null,
+                "User:"
             ),
-            React.createElement(
-                "h3",
-                { className: "accountAthletics" },
-                React.createElement(
-                    "b",
-                    null,
-                    "Athletics:"
-                ),
-                " ",
-                props.account.athletics
-            )
+            " ",
+            props.account.username,
+            " "
         ),
         React.createElement(
-            "div",
-            { className: "col-md-4" },
+            "h3",
+            { className: "accountAthletics" },
             React.createElement(
-                "h3",
-                { className: "accountWisdom" },
-                React.createElement(
-                    "b",
-                    null,
-                    "Wisdom:"
-                ),
-                " ",
-                props.account.wisdom
+                "b",
+                null,
+                "Athletics:"
             ),
+            " ",
+            props.account.athletics
+        ),
+        React.createElement(
+            "h3",
+            { className: "accountWisdom" },
             React.createElement(
-                "h3",
-                { className: "accountCharisma" },
-                React.createElement(
-                    "b",
-                    null,
-                    "Charisma:"
-                ),
-                " ",
-                props.account.charisma
-            )
+                "b",
+                null,
+                "Wisdom:"
+            ),
+            " ",
+            props.account.wisdom
+        ),
+        React.createElement(
+            "h3",
+            { className: "accountCharisma" },
+            React.createElement(
+                "b",
+                null,
+                "Charisma:"
+            ),
+            " ",
+            props.account.charisma
         )
     );
 };

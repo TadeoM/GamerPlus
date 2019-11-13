@@ -68,7 +68,6 @@ nav:nth-child(1) {
 .domoForm, #accountData {
     border: 2px solid #691824;
     display: block;
-    width: 700px;
     margin-top:0px;
     padding-top:10px;
     background-color: #E83551;
