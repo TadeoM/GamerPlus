@@ -3,7 +3,6 @@
     <meta charset="utf-8"/>
     <title>DomoMaker</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     
     <script crossorigin src="https://unpkg.com/react@15/dist/react.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@15/dist/react-dom.min.js"></script>
@@ -18,11 +17,71 @@
   <body> 
       <div class="container creator">
         <section id="accountCreator"></section>
+        <!--
+        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+                <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+            </ol>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img class="d-block w-100" src="assets/img/BarbarianChar.png" alt="First slide" />
+                </div>
+                <div class="carousel-item">
+                    <img class="d-block w-100" src="assets/img/BarbarianChar.png" alt="Second slide" />
+                </div>
+                <div class="carousel-item">
+                    <img class="d-block w-100" src="assets/img/BarbarianChar.png" alt="Third slide" />
+                </div>
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+        -->
+
+        <div class="carousel slide row mb-3" data-ride="carousel">
+          <div class="col-mb-2"></div>
+          <div class="carousel-inner col-mb-8">
+            <div class="carousel-item active">
+              <img class="d-block w-100" src="assets/img/DruidChar.png" alt="First slide">
+            </div>
+            <div class="carousel-item">
+              <img class="d-block w-100" src="assets/img/ShamanChar.png" alt="Second slide">
+            </div>
+            <div class="carousel-item">
+              <img class="d-block w-100" src="assets/img/BarbChar.png" alt="Third slide">
+            </div>
+          </div>
+          <div class="col-mb-2"></div>
+
+        </div>
+
       </div>
     
     <div id="domoMessage"><img id="speech" src="/assets/img/speech.png" alt="speech box"/>
       <h3><span id="errorMessage">Need to input all the stats!</span></h3><img id="domo" src="assets/img/domo.png" alt="domo"/>
     </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" ></script>
+    
     <script src="/assets/creationBundle.js"></script>
+    <script> 
+      const init = () => {
+        $('.carousel').carousel({
+          interval: 2000
+        });
+      }
+      window.onload = init;
+      </script>
+      
   </body>
+  
 </html>

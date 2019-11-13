@@ -22,3 +22,4 @@ const sendAjax = (type, action, data, success) => {
         }
     });
 };
+$('.carousel').carousel()

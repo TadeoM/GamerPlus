@@ -43,10 +43,10 @@ var AccountForm = function AccountForm(props) {
         React.createElement(
             "div",
             { className: "row mb-3" },
-            React.createElement("div", { className: "col-md-4" }),
+            React.createElement("div", { className: "col-md-3" }),
             React.createElement(
                 "div",
-                { className: "col-md-4 grid-box" },
+                { className: "col-md-6 grid-box" },
                 React.createElement(
                     "div",
                     null,
@@ -55,7 +55,7 @@ var AccountForm = function AccountForm(props) {
                         { htmlFor: "athletics" },
                         "Athletics: "
                     ),
-                    React.createElement("input", { id: "accountAthletics", onChange: checkValues, type: "number", name: "athletics", placeholder: "0", min: "1" })
+                    React.createElement("input", { id: "accountAthletics", onChange: checkValues, type: "number", name: "athletics", placeholder: "1", min: "1" })
                 ),
                 React.createElement(
                     "div",
@@ -65,7 +65,7 @@ var AccountForm = function AccountForm(props) {
                         { htmlFor: "wisdom" },
                         "Wisdom: "
                     ),
-                    React.createElement("input", { id: "accountWisdom", onChange: checkValues, type: "number", name: "wisdom", placeholder: "0", min: "1" })
+                    React.createElement("input", { id: "accountWisdom", onChange: checkValues, type: "number", name: "wisdom", placeholder: "1", min: "1" })
                 ),
                 React.createElement(
                     "div",
@@ -75,7 +75,7 @@ var AccountForm = function AccountForm(props) {
                         { htmlFor: "charisma" },
                         "Charisma: "
                     ),
-                    React.createElement("input", { id: "accountCharisma", onChange: checkValues, type: "number", name: "charisma", placeholder: "0", min: "1" })
+                    React.createElement("input", { id: "accountCharisma", onChange: checkValues, type: "number", name: "charisma", placeholder: "1", min: "1" })
                 ),
                 React.createElement(
                     "div",
@@ -84,13 +84,19 @@ var AccountForm = function AccountForm(props) {
                     React.createElement("input", { className: "makeAccountSubmit", type: "submit", value: "Make Account" })
                 )
             ),
-            React.createElement("div", { className: "col-md-4" })
+            React.createElement("div", { className: "col-md-3" })
         )
     );
 };
 
+var CharacterSelector = function CharacterSelector(props) {};
+
 var createAcountWindow = function createAcountWindow(csrf) {
     ReactDOM.render(React.createElement(AccountForm, { csrf: csrf }), document.querySelector("#accountCreator"));
+};
+
+var createCarousel = function createCarousel(csrf) {
+    ReactDOM.render(React.createElement(CharacterSelector, { csrf: csrf }), document.querySelector("#carousel"));
 };
 
 var checkValues = function checkValues(e) {
@@ -111,6 +117,7 @@ var checkValues = function checkValues(e) {
 
 var setup = function setup(csrf) {
     createAcountWindow(csrf); // default view
+    //createCarousel(csrf);
 };
 
 var getToken = function getToken() {
@@ -148,3 +155,4 @@ var sendAjax = function sendAjax(type, action, data, success) {
         }
     });
 };
+$('.carousel').carousel();

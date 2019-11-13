@@ -95,7 +95,7 @@ var DomoList = function DomoList(props) {
 var AccountData = function AccountData(props) {
     return React.createElement(
         "div",
-        { className: "row mb-3" },
+        { className: "row mb-3 tempHelp" },
         React.createElement(
             "h3",
             { className: "accountName" },
@@ -201,3 +201,4 @@ var sendAjax = function sendAjax(type, action, data, success) {
         }
     });
 };
+$('.carousel').carousel();
