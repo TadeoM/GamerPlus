@@ -136,6 +136,10 @@ var handleError = function handleError(message) {
     $("#domoMessage").animate({ width: 'toggle' }, 350);
 };
 
+var showProfile = function showProfile(message) {
+    $("#profileContent").animate({ width: 'toggle' }, 350);
+};
+
 var redirect = function redirect(response) {
     $("#domoMessage").animate({ width: 'hide' }, 350);
     window.location = response.redirect;
@@ -155,4 +159,3 @@ var sendAjax = function sendAjax(type, action, data, success) {
         }
     });
 };
-$('.carousel').carousel();

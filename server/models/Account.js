@@ -40,6 +40,10 @@ const AccountSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  friendList: {
+    type: Array,
+    default: [],
+  },
 });
 
 AccountSchema.statics.toAPI = doc => ({

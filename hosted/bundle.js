@@ -19,6 +19,10 @@ var handleDomo = function handleDomo(e) {
     return false;
 };
 
+var showProfile = function showProfile(e) {
+    showProfile("PROFILE");
+};
+
 var DomoForm = function DomoForm(props) {
     return React.createElement(
         "div",
@@ -92,6 +96,28 @@ var DomoList = function DomoList(props) {
     );
 };
 
+var Profile = function Profile() {
+    return React.createElement(
+        "div",
+        { className: "profile" },
+        React.createElement(
+            "button",
+            { onClick: showProfile },
+            "Profile"
+        ),
+        React.createElement(
+            "div",
+            { id: "profileContent", className: "grid-box" },
+            React.createElement(
+                "h3",
+                null,
+                React.createElement("span", { id: "profileStats" })
+            ),
+            React.createElement("img", { id: "char", src: "assets/img/BardChar.png", alt: "character" })
+        )
+    );
+};
+
 var AccountData = function AccountData(props) {
     return React.createElement(
         "div",
@@ -161,9 +187,11 @@ var setup = function setup(csrf) {
     ReactDOM.render(React.createElement(DomoForm, { csrf: csrf }), document.querySelector("#makeDomo"));
 
     ReactDOM.render(React.createElement(DomoList, { domos: [] }), document.querySelector("#domos"));
+    ReactDOM.render(React.createElement(Profile, null), document.querySelector("#profileButton"));
 
     loadDomosFromServer();
     loadAccountFromServer();
+    $("#profileContent").animate({ width: 'hide' }, 0);
 };
 
 var getToken = function getToken() {
@@ -180,6 +208,10 @@ $(document).ready(function () {
 var handleError = function handleError(message) {
     $("#errorMessage").text(message);
     $("#domoMessage").animate({ width: 'toggle' }, 350);
+};
+
+var showProfile = function showProfile(message) {
+    $("#profileContent").animate({ width: 'toggle' }, 350);
 };
 
 var redirect = function redirect(response) {
@@ -201,4 +233,3 @@ var sendAjax = function sendAjax(type, action, data, success) {
         }
     });
 };
-$('.carousel').carousel();

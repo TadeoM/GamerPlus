@@ -5,6 +5,7 @@ const handleDomo = (e) => {
     
     $("#domoMessage").animate({ width:'hide'}, 350);
     
+    
     if($("#domoName").val() == '' || $("#domoAge").val() == '') {
         handleError("RAWR! All fields are required");
         return false;
@@ -16,6 +17,10 @@ const handleDomo = (e) => {
     
     return false;
 };
+
+const showProfile = (e) => {
+    showProfile("PROFILE");
+}
 
 const DomoForm = (props) => {
     return (
@@ -64,7 +69,20 @@ const DomoList = function(props) {
     );
 };
 
-const AccountData = function(props) {
+const Profile = () => {
+    return (
+        <div className="profile">
+            <button onClick={showProfile}>Profile</button>
+            <div id="profileContent" className="grid-box">
+                <h3>
+                    <span id="profileStats"></span>
+                </h3>
+                <img id="char" src="assets/img/BardChar.png" alt="character"/></div>
+        </div>
+    );
+};
+
+const AccountData = function(props) {    
     return (
         <div className="row mb-3 tempHelp">
                 <h3 className="accountName"><b>User:</b> {props.account.username} </h3>
@@ -100,9 +118,13 @@ const setup = function(csrf) {
     ReactDOM.render(
         <DomoList domos={[]} />, document.querySelector("#domos")
     );
+    ReactDOM.render(
+        <Profile />, document.querySelector("#profileButton")
+    );
     
     loadDomosFromServer();
     loadAccountFromServer();
+    $("#profileContent").animate({ width:'hide'}, 0);
 };
 
 const getToken = () => {

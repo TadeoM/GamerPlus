@@ -17,13 +17,13 @@
   
 </head>
 <body>
-  <nav><a href="/login"><img id="logo" src="/assets/img/gamifyLife.png" alt="face logo"/></a>
-    
-    <div class="navlink">
-      <a href="/logout">Log out</a>
+  <nav> <a href="/login"><img id="logo" src="/assets/img/gamifyLife.png" alt="face logo"/></a>
+    <div id="profileButton"></div>
+      <div class="navlink">
+       <a id="logout" href="/logout">Log out</a>
       </div>
   </nav>
-  <div class="container">
+  <div class="grid">
     <section id="accountData">
     </section>
     <section id="makeDomo">
@@ -31,8 +31,12 @@
     <section id="domos">
     </section>
   </div>
-  <div id="domoMessage"><img id="speech" src="/assets/img/speech.png" alt="speech box"/>
-    <h3><span id="errorMessage"></span></h3><img id="domo" src="assets/img/domo.png" alt="domo"/>
+  <div id="domoMessage">
+    <img id="speech" src="/assets/img/speech.png" alt="speech box"/>
+    <h3>
+      <span id="errorMessage"></span>
+    </h3>
+    <img id="domo" src="assets/img/domo.png" alt="domo"/>
   </div>
   <script src="/assets/bundle.js"></script>
 </body>
