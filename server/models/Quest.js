@@ -55,10 +55,12 @@ QuestSchema.statics.findbyOwner = (ownerId, callback) => {
 // Find by username and then edit.
 // Find Quest By ID and delete
 QuestSchema.statics.deleteQuest = (id, callback) => {
+  
   const search = {
     _id: id,
   };
-  return QuestModel.deleteOne(search, callback);
+  //console.log(_id);
+  return QuestModel.find(search).deleteOne(search, callback);
 };
 QuestModel = mongoose.model('Quest', QuestSchema);
 

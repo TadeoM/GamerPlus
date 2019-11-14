@@ -21,9 +21,8 @@ var handleQuest = function handleQuest(e) {
 var deleteQuest = function deleteQuest(e) {
     e.preventDefault();
 
-    var data = {};
-    data.quests = $("#questList").props;
-    console.log($("#questList"));
+    //data.quests = $("#questList").props;
+    console.log($("#curQuestForm").serialize());
 
     //Delete in our database and reload quests. 
     sendAjax('GET', $("#curQuestForm").attr("action"), $("#curQuestForm").serialize(), function () {
@@ -172,8 +171,8 @@ var QuestList = function QuestList(props) {
                     "EXP: ",
                     quest.questExperience
                 ),
-                React.createElement("input", { type: "submit", name: "deleteQuest", value: "deleteQuest", placeholder: "Delete Quest" }),
-                React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf })
+                React.createElement("input", { type: "submit", name: "deleteQuest", value: "Delete Quest" }),
+                React.createElement("input", { type: "hidden", name: "_csrf", value: quest._id })
             )
         );
     });
@@ -248,11 +247,6 @@ var loadAccountFromServer = function loadAccountFromServer() {
 
 var setup = function setup(csrf) {
     ReactDOM.render(React.createElement(QuestForm, { csrf: csrf }), document.querySelector("#makeQuest"));
-    /*
-    ReactDOM.render(
-        <questDropDown/>,document.querySelector("#questType")
-    );
-    */
     ReactDOM.render(React.createElement(QuestList, { csrf: csrf, quests: [] }), document.querySelector("#quests"));
     loadQuestsFromServer();
     loadAccountFromServer();

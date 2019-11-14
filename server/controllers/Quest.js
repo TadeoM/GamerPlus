@@ -44,7 +44,7 @@ const makeQuest = (req, res) => {
 const getQuests = (request, response) => {
   const req = request;
   const res = response;
-
+  
   return Quest.QuestModel.findbyOwner(req.session.account._id, (err, docs) => {
     if (err) {
       console.log(err);
@@ -57,7 +57,7 @@ const getQuests = (request, response) => {
 const deleteQuest = (request, response) => {
   const req = request;
   const res = response;
-  console.log(req);
+  console.log(req.body);
   return Quest.QuestModel.deleteQuest(req.body, (err, docs) => {
     if (err) {
       console.log(err);

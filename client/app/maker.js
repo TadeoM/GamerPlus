@@ -21,9 +21,9 @@ const handleQuest = (e) =>{
 const deleteQuest = (e) =>{
     e.preventDefault();
 
-    const data = {}
-    data.quests = $("#questList").props;
-    console.log($("#questList"));
+    
+    //data.quests = $("#questList").props;
+    console.log( $("#curQuestForm").serialize());
 
     //Delete in our database and reload quests. 
     sendAjax('GET',$("#curQuestForm").attr("action"), $("#curQuestForm").serialize(), function(){
@@ -128,9 +128,9 @@ const questNodes = props.quests.map(function(quest)
             <h3 className="questType">Quest Type: {quest.questType}</h3>
             <h3 className="questExperience">EXP: {quest.questExperience}</h3>
            
-              <input type="submit" name="deleteQuest" value="deleteQuest" placeholder="Delete Quest"/>
-              <input type="hidden" name="_csrf" value={props.csrf}/>
-           
+              <input type="submit" name="deleteQuest" value="Delete Quest" />
+       
+            <input type ="hidden" name ="_csrf" value ={quest._id}/>
         </div>
          </form>
     );
@@ -171,11 +171,6 @@ const setup = function(csrf) {
     ReactDOM.render(
         <QuestForm csrf ={csrf}/>, document.querySelector("#makeQuest")
     );
-    /*
-    ReactDOM.render(
-        <questDropDown/>,document.querySelector("#questType")
-    );
-    */
     ReactDOM.render(
         <QuestList csrf = {csrf} quests ={[]}/>, document.querySelector("#quests")
     );
