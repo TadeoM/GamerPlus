@@ -1,12 +1,12 @@
-// add after fix to part 30
+let csrfToken = null;
 const handleQuest = (e) =>{
     e.preventDefault();
 
     $("#questMessage").animate({width:'hide'},350);
 
-    if($("#questName").val()==''|| $("#questExp").val()==''||$("#questType").val()=='')
+    if($("#questName").val()==''|| $("#questExp").val()==''||$("#questType").val()==''||$("#questContent").val()=='')
     {
-        handleError("Rawr! All fields are required");
+        handleError("Gamer! All fields are required");
         return false;
     }
 
@@ -26,11 +26,17 @@ const deleteQuest = (e) =>{
     console.log( $("#curQuestForm").serialize());
 
     //Delete in our database and reload quests. 
-    sendAjax('GET',$("#curQuestForm").attr("action"), $("#curQuestForm").serialize(), function(){
+    sendAjax('POST',$("#curQuestForm").attr("action"), $("#curQuestForm").serialize(), function(){
         loadQuestsFromServer();
         
     });
     
+}
+const changePassword = (e) =>{
+    e.preventDefault();
+
+    console.log($("#curQuestForm").serialize());
+    sendAjax('POST',$("#changePswdForm").attr("action"), $("#changePswdForm").serialize());
 }
 ///Editing Quests///
 /*
@@ -75,6 +81,35 @@ const editQuestForm = function(props)
    );
 }
 */
+const ChangePasswordForm = (props)=>{
+    return (
+        <form id="changePswdForm" 
+            name="changePswdForm"
+            onSubmit={changePassword}
+            action="/changePswd"
+            method="POST"
+            className="mainForm"
+        >
+             <label htmlFor="username">Username: </label>
+            <input id="user" type="text" name="username" placeholder="username"/>
+            <label htmlFor="currPass">Current Password: </label>
+            <input id="currPass" type="password" name="currPass" placeholder="password"/>
+            <label htmlFor="pass">New Password: </label>
+            <input id="pass" type="password" name="pass" placeholder="password"/>
+            <input id="pass2" type="password" name="pass2" placeholder="password"/>
+            <input type="hidden" name="_csrf" value={props.csrf}/>
+            <input className="formSubmit" type="submit" value="Confirm Password Change"/>
+
+        </form>
+    );
+}
+
+const createChangePasswordForm =(csrf) => {
+    ReactDOM.render(
+        <ChangePasswordForm csrf={csrf} />,
+        document.querySelector("#pswdChange")
+    );
+};
 
 const QuestForm = (props) =>{
     return(
@@ -95,6 +130,7 @@ const QuestForm = (props) =>{
                 </select>
             <label htmlFor ="questExperience">Quest Experiece: </label>
             <input id="questExperience" type="number" name="questExperience" placeholder ="EXP Reward" min="0"/>
+            <input id="questContent" type="text" name="questContent" placeholder ="Details of the Quest"/>
             <input type="hidden" name="_csrf" value={props.csrf}/>
             <input className ="makeQuestSubmit" type="submit" value ="Make Quest"/>
         </form>
@@ -125,8 +161,10 @@ const questNodes = props.quests.map(function(quest)
             <h3 className="questName">Name: {quest.name}</h3>
             <h3 className="questType">Quest Type: {quest.questType}</h3>
             <h3 className="questExperience">EXP: {quest.questExperience}</h3>
+            <h4 className="questContent">Quest Content: {quest.questContent}</h4>
             <input type="submit" name="deleteQuest" value="Delete Quest" />
             <input type ="hidden" name ="_id" value ={quest._id}/>
+            <input type="hidden" name="_csrf" value={props.csrf}/>
         </div>
          </form>
     );
@@ -151,7 +189,7 @@ const AccountData = function(props) {
 const loadQuestsFromServer = () =>{
     sendAjax('GET', '/getQuests', null, (data) =>{
         ReactDOM.render(
-            <QuestList quests ={data.quests}/>, document.querySelector("#quests")
+            <QuestList quests ={data.quests} csrf = {csrfToken} />, document.querySelector("#quests")
         );
     });
 };
@@ -164,6 +202,12 @@ const loadAccountFromServer = () => {
 };
 
 const setup = function(csrf) {
+    const changePswdBtn = document.querySelector("#changePswdBtn");
+    changePswdBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        createChangePasswordForm(csrf);
+        return false;
+    });
     ReactDOM.render(
         <QuestForm csrf ={csrf}/>, document.querySelector("#makeQuest")
     );
@@ -177,6 +221,7 @@ const setup = function(csrf) {
 const getToken = () => {
     sendAjax('GET', '/getToken', null, (result) => {
         setup(result.csrfToken);
+        csrfToken = result.csrfToken;
     });
 };
 

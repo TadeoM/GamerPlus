@@ -35,6 +35,10 @@ const QuestSchema = new mongoose.Schema({
     required: true,
     min: 0,
   },
+  questContent:{
+    type:String,
+    required: true,
+  }
 });
 // Static function to get the name and age from client
 QuestSchema.statics.toAPI = (doc) => ({
@@ -42,6 +46,7 @@ QuestSchema.statics.toAPI = (doc) => ({
   age: doc.age,
   questType: doc.questType,
   questExperience: doc.questExperience,
+  questContent: doc.questContent,
   _id: doc._id,
 });
 
@@ -60,7 +65,7 @@ QuestSchema.statics.deleteQuest = (id, callback) => {
     _id: id,
   };
   //console.log(_id);
-  return QuestModel.find(search).deleteOne(search, callback);
+  return QuestModel.deleteOne(search, callback);
 };
 QuestModel = mongoose.model('Quest', QuestSchema);
 

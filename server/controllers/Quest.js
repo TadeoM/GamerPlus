@@ -14,13 +14,14 @@ const makerPage = (req, res) => {
   });
 };
 const makeQuest = (req, res) => {
-  if (!req.body.name || !req.body.questExperience || !req.body.questType) {
+  if (!req.body.name || !req.body.questExperience || !req.body.questType||!req.body.questContent) {
     return res.status(400).json({ error: 'All Parameters Are Required For Quest Submission' });
   }
   const questData = {
     name: req.body.name,
     questType: req.body.questType,
     questExperience: req.body.questExperience,
+    questContent: req.body.questContent,
     owner: req.session.account._id,
   };
 

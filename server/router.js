@@ -12,9 +12,10 @@ const router = (app) => {
   app.get('/logout', mid.requiresLogin, controllers.Account.logout);
   app.get('/maker', mid.requiresLogin, controllers.Quest.makerPage);
   app.post('/maker', mid.requiresLogin, controllers.Quest.make);
-  app.get('/deleteQuest',mid.requiresLogin, controllers.Quest.deleteQuest);
+  app.post('/deleteQuest',mid.requiresLogin, controllers.Quest.deleteQuest);
   app.get('/creator', mid.requiresLogin, controllers.Account.creatorPage);
   app.post('/creator', mid.requiresLogin, controllers.Account.createStats);
+  app.post('/changePswd',mid.requiresLogin, controllers.Account.changePassword);
   app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
 };
 

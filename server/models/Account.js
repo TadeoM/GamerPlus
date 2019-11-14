@@ -101,6 +101,11 @@ AccountModel.findByUsername(username, (err, doc) => {
   });
 });
 
+AccountSchema.statics.changePassword = (password, callback) =>{
+  AccountModel.AccountSchema.password = password;
+
+  return AccountModel.authenticate(username,password,callback);
+};
 AccountModel = mongoose.model('Account', AccountSchema);
 
 module.exports.AccountModel = AccountModel;

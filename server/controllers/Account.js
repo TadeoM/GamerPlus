@@ -79,7 +79,52 @@ const signup = (request, response) => {
     });
   });
 };
+const changePassword = (request, response) =>{
+  const req = request;
+  const res = response;
 
+  req.body.username = `${req.body.username}`;
+  req.body.currPass = `${req.body.currPass}`;
+  req.body.pass = `${req.body.pass}`;
+  req.body.pass2 = `${req.body.pass2}`;
+  if (!req.body.username || !req.body.currPass || !req.body.pass || !req.body.pass2) {
+    return res.status(400).json({ error: 'Gamer! All fields are requires' });
+  }
+
+  if(req.body.currPass === req.body.pass)
+  {
+    return res.status(400).json({ error: 'Cannot use the same password gamer' });
+  }
+  if (req.body.pass !== req.body.pass2) {
+    return res.status(400).json({ error: 'Passwords do not match' });
+  }
+
+  return Account.AccountModel.authenticate(req.body.username, password, (err, account) => {
+    if (err || !account) {
+      return res.status(401).json({ error: 'Wrong username or password' });
+    }
+    /*
+    const savePromise = updateAccount.save();
+
+    savePromise.then(() => {
+      req.session.account = Account.AccountModel.toAPI(updateAccount);
+
+      return res.json({ redirect: '/maker' });
+    });
+
+    savePromise.catch((error) => {
+      console.log(error);
+
+      if (error.code === 11000) {
+        return res.status(400).json({ error: 'Username already in use.' });
+      }
+
+      return res.status(400).json({ error: 'An error occured' });
+    });
+    */
+    return Account.AccountModel.changePassword()
+  });
+}
 const getAccount = (request, response) => {
   const req = request;
   const res = response;
@@ -154,3 +199,4 @@ module.exports.getToken = getToken;
 module.exports.getAccount = getAccount;
 module.exports.creatorPage = creatorPage;
 module.exports.createStats = createStats;
+module.exports.changePassword = changePassword;

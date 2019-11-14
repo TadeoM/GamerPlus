@@ -1,13 +1,13 @@
 "use strict";
 
-// add after fix to part 30
+var csrfToken = null;
 var handleQuest = function handleQuest(e) {
     e.preventDefault();
 
     $("#questMessage").animate({ width: 'hide' }, 350);
 
-    if ($("#questName").val() == '' || $("#questExp").val() == '' || $("#questType").val() == '') {
-        handleError("Rawr! All fields are required");
+    if ($("#questName").val() == '' || $("#questExp").val() == '' || $("#questType").val() == '' || $("#questContent").val() == '') {
+        handleError("Gamer! All fields are required");
         return false;
     }
 
@@ -25,9 +25,15 @@ var deleteQuest = function deleteQuest(e) {
     console.log($("#curQuestForm").serialize());
 
     //Delete in our database and reload quests. 
-    sendAjax('GET', $("#curQuestForm").attr("action"), $("#curQuestForm").serialize(), function () {
+    sendAjax('POST', $("#curQuestForm").attr("action"), $("#curQuestForm").serialize(), function () {
         loadQuestsFromServer();
     });
+};
+var changePassword = function changePassword(e) {
+    e.preventDefault();
+
+    console.log($("#curQuestForm").serialize());
+    sendAjax('POST', $("#changePswdForm").attr("action"), $("#changePswdForm").serialize());
 };
 ///Editing Quests///
 /*
@@ -72,6 +78,43 @@ const editQuestForm = function(props)
    );
 }
 */
+var ChangePasswordForm = function ChangePasswordForm(props) {
+    return React.createElement(
+        "form",
+        { id: "changePswdForm",
+            name: "changePswdForm",
+            onSubmit: changePassword,
+            action: "/changePswd",
+            method: "POST",
+            className: "mainForm"
+        },
+        React.createElement(
+            "label",
+            { htmlFor: "username" },
+            "Username: "
+        ),
+        React.createElement("input", { id: "user", type: "text", name: "username", placeholder: "username" }),
+        React.createElement(
+            "label",
+            { htmlFor: "currPass" },
+            "Current Password: "
+        ),
+        React.createElement("input", { id: "currPass", type: "password", name: "currPass", placeholder: "password" }),
+        React.createElement(
+            "label",
+            { htmlFor: "pass" },
+            "New Password: "
+        ),
+        React.createElement("input", { id: "pass", type: "password", name: "pass", placeholder: "password" }),
+        React.createElement("input", { id: "pass2", type: "password", name: "pass2", placeholder: "password" }),
+        React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
+        React.createElement("input", { className: "formSubmit", type: "submit", value: "Confirm Password Change" })
+    );
+};
+
+var createChangePasswordForm = function createChangePasswordForm(csrf) {
+    ReactDOM.render(React.createElement(ChangePasswordForm, { csrf: csrf }), document.querySelector("#pswdChange"));
+};
 
 var QuestForm = function QuestForm(props) {
     return React.createElement(
@@ -123,6 +166,7 @@ var QuestForm = function QuestForm(props) {
             "Quest Experiece: "
         ),
         React.createElement("input", { id: "questExperience", type: "number", name: "questExperience", placeholder: "EXP Reward", min: "0" }),
+        React.createElement("input", { id: "questContent", type: "text", name: "questContent", placeholder: "Details of the Quest" }),
         React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
         React.createElement("input", { className: "makeQuestSubmit", type: "submit", value: "Make Quest" })
     );
@@ -171,8 +215,15 @@ var QuestList = function QuestList(props) {
                     "EXP: ",
                     quest.questExperience
                 ),
+                React.createElement(
+                    "h4",
+                    { className: "questContent" },
+                    "Quest Content: ",
+                    quest.questContent
+                ),
                 React.createElement("input", { type: "submit", name: "deleteQuest", value: "Delete Quest" }),
-                React.createElement("input", { type: "hidden", name: "_id", value: quest._id })
+                React.createElement("input", { type: "hidden", name: "_id", value: quest._id }),
+                React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf })
             )
         );
     });
@@ -236,7 +287,7 @@ var AccountData = function AccountData(props) {
 
 var loadQuestsFromServer = function loadQuestsFromServer() {
     sendAjax('GET', '/getQuests', null, function (data) {
-        ReactDOM.render(React.createElement(QuestList, { quests: data.quests }), document.querySelector("#quests"));
+        ReactDOM.render(React.createElement(QuestList, { quests: data.quests, csrf: csrfToken }), document.querySelector("#quests"));
     });
 };
 var loadAccountFromServer = function loadAccountFromServer() {
@@ -246,6 +297,12 @@ var loadAccountFromServer = function loadAccountFromServer() {
 };
 
 var setup = function setup(csrf) {
+    var changePswdBtn = document.querySelector("#changePswdBtn");
+    changePswdBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        createChangePasswordForm(csrf);
+        return false;
+    });
     ReactDOM.render(React.createElement(QuestForm, { csrf: csrf }), document.querySelector("#makeQuest"));
     ReactDOM.render(React.createElement(QuestList, { csrf: csrf, quests: [] }), document.querySelector("#quests"));
     loadQuestsFromServer();
@@ -255,6 +312,7 @@ var setup = function setup(csrf) {
 var getToken = function getToken() {
     sendAjax('GET', '/getToken', null, function (result) {
         setup(result.csrfToken);
+        csrfToken = result.csrfToken;
     });
 };
 
