@@ -122,15 +122,11 @@ const questNodes = props.quests.map(function(quest)
             >
         <div key={quest._id} className="quest">
             <img src="/assets/img/scrollQuest.png" alt="domo face" className="scrollQuest"/>
-           
-            
-                 <h3 className="questName">Name: {quest.name}</h3>
+            <h3 className="questName">Name: {quest.name}</h3>
             <h3 className="questType">Quest Type: {quest.questType}</h3>
             <h3 className="questExperience">EXP: {quest.questExperience}</h3>
-           
-              <input type="submit" name="deleteQuest" value="Delete Quest" />
-       
-            <input type ="hidden" name ="_csrf" value ={quest._id}/>
+            <input type="submit" name="deleteQuest" value="Delete Quest" />
+            <input type ="hidden" name ="_id" value ={quest._id}/>
         </div>
          </form>
     );

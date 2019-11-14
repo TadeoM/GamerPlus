@@ -172,7 +172,7 @@ var QuestList = function QuestList(props) {
                     quest.questExperience
                 ),
                 React.createElement("input", { type: "submit", name: "deleteQuest", value: "Delete Quest" }),
-                React.createElement("input", { type: "hidden", name: "_csrf", value: quest._id })
+                React.createElement("input", { type: "hidden", name: "_id", value: quest._id })
             )
         );
     });
