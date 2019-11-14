@@ -55,15 +55,7 @@ nav:nth-child(1) {
     align-content: center;
 }
 
-.grid-box {
-    background-color: #B2B9BF;
-    border: 2px solid #777B80;
-    border-radius: 5px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    padding: 15px 15px 15px 15px;
-    box-shadow: 6px 6px 5px grey;
-}
+
 
 .navlink {
     padding: 5px;
@@ -389,11 +381,6 @@ h3.domoAge{
     margin-bottom:10px;
 } */
 
-
-#domoMessage {
-    display:none;
-}
-
 body{
     background-color: #88bbff;
     margin:0;
@@ -404,12 +391,43 @@ body{
 
 nav{
     width:100vw;
-    height: 50px;
+    height: 75px;
     background-color: #E83551;
     box-shadow: 0px 0px 10px navy;
     position: fixed;
     top:0;
     left:0;
+    padding-top: 6px;
+}
+
+#wrapper{
+    width: 80%;
+    margin: 150px auto 0px auto;
+}
+
+.box{
+    background-color:GREY;
+    margin-top: 5%;
+    width: 80%;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    text-align: center;
+}
+
+.logo {
+    width: 80px;
+    border-radius: 10px;
+}
+
+#domoMessage {
+    display:none;
+}
+
+#content {
+    align-content: center;
+    text-align: center;
+    grid-column-start: 2;
 }
 
 #nav{
@@ -418,33 +436,184 @@ nav{
     display: flex;
     margin-left: 10px;
     align-items: center;
+    background-color: inherit;
 }
 
-.button {
-    margin-left: 20px;
+/*LOGIN FORM START*/
+#signupForm{
+	width: 450px;
+	font-size: 16px;
+	background: #495C70;
+	padding: 30px 30px 15px 30px;
+    border: 5px solid #53687E;
+    
+}
+#signupForm input[type=submit],
+#signupForm input[type=button],
+#signupForm input[type=text],
+#signupForm input[type=hidden],
+#signupForm textarea,
+#signupForm label
+{
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 16px;
+	color: #fff;
+
+}
+#signupForm label {
+	display:block;
+	margin-bottom: 10px;
+}
+#signupForm label > span{
+	display: inline-block;
+	float: left;
+	width: 150px;
+}
+#signupForm input[type=text],
+#signupForm input[type=password] 
+{
+	background: transparent;
+	border: none;
+	border-bottom: 1px dashed #83A4C5;
+	width: 275px;
+	outline: none;
+	padding: 0px 0px 0px 0px;
+	font-style: italic;
+}
+#signupForm textarea{
+	font-style: italic;
+	padding: 0px 0px 0px 0px;
+	background: transparent;
+	outline: none;
+	border: none;
+	border-bottom: 1px dashed #83A4C5;
+	width: 275px;
+	overflow: hidden;
+	resize:none;
+	height:20px;
 }
 
-#wrapper{
-    background-color:white;
-    width: 80%;
-    margin:150px auto 0px auto;
+#signupForm textarea:focus, 
+#signupForm input[type=text]:focus,
+#signupForm input[type=password]:focus,
+#signupForm input[type=email] :focus
+{
+	border-bottom: 1px dashed #D9FFA9;
 }
 
-.box{
-    margin-top: 5%;
-    width: 80%;
-    margin: auto;
-    display: grid;
-    grid-template-columns: 1fr 3fr;
+#signupForm input[type=submit],
+#signupForm input[type=button]{
+	background: #576E86;
+	border: none;
+	padding: 8px 10px 8px 10px;
+	border-radius: 5px;
+    color: #A8BACE;
+    display: block;
+    align-content: center;
     text-align: center;
 }
+#signupForm input[type=submit]:hover,
+#signupForm input[type=button]:hover{
+background: #394D61;
+}
+/*LOGIN FORM END*/
 
-.box >*{
-    border: 1px solid black;
+button#signupButton  , input[type="submit"]#signupButton , input[type="reset"]#signupButton ,
+button#loginButton, input[type="submit"]#loginButton, input[type="reset"]#loginButton
+{
+    width: 100%;
+    height: 100%;
+	background: none;
+	color: inherit;
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
 }
 
-#content{
-    grid-column: 1/3;
+/* BUTTON START */
+@import 'https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300';
+
+
+div[class*=button] {
+    height: 33.33%;
+    width: 10%; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 10px;
+}
+
+/* .box { background-color: #FF6766; } */
+
+.btn {
+    line-height: 25px;
+    height: 40px;
+    text-align: center;
+    width: 1000%;
+    cursor: pointer;
+}
+
+.btn-one {
+    color: #FFF;
+    transition: all 0.3s;
+    position: relative;
+}
+.btn-one span {
+    transition: all 0.3s;
+}
+.btn-one::before {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    opacity: 0;
+    transition: all 0.3s;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-top-style: solid;
+    border-bottom-style: solid;
+    border-top-color: rgba(255,255,255,0.5);
+    border-bottom-color: rgba(255,255,255,0.5);
+    transform: scale(0.1, 1);
+}
+.btn-one:hover span {
+    letter-spacing: 2px;
+}
+.btn-one:hover::before {
+    opacity: 1; 
+    transform: scale(1, 1); 
+}
+.btn-one::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* z-index: 1; */
+    transition: all 0.3s;
+    background-color: rgba(255,255,255,0.1);
+}
+
+.btn-one:hover::after {
+    opacity: 0; 
+    transform: scale(0.1, 1);
+}
+
+/* BUTTON STUFF END */
+
+.grid-box {
+    background-color: #B2B9BF;
+    border: 2px solid #777B80;
+    border-radius: 5px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 15px 15px 15px 15px;
+    box-shadow: 6px 6px 5px grey;
 }
 
 .stats{

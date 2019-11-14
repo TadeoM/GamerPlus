@@ -24,7 +24,6 @@ const showProfile = (e) => {
 
 const DomoForm = (props) => {
     return (
-        <div className="row mb-3">
             <form id="domoForm"
                 onSubmit={handleDomo}
                 name="domoForm"
@@ -39,7 +38,6 @@ const DomoForm = (props) => {
                 <input type="hidden" name="_csrf" value={props.csrf}/>
                 <input className="makeDomoSubmit" type="submit" value="Make Domo"/>
             </form>
-        </div>
     );
 };
 
