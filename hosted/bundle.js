@@ -25,32 +25,28 @@ var showProfile = function showProfile(e) {
 
 var DomoForm = function DomoForm(props) {
     return React.createElement(
-        "div",
-        { className: "row mb-3" },
+        "form",
+        { id: "domoForm",
+            onSubmit: handleDomo,
+            name: "domoForm",
+            action: "/maker",
+            method: "POST",
+            className: "domoForm"
+        },
         React.createElement(
-            "form",
-            { id: "domoForm",
-                onSubmit: handleDomo,
-                name: "domoForm",
-                action: "/maker",
-                method: "POST",
-                className: "domoForm"
-            },
-            React.createElement(
-                "label",
-                { htmlFor: "name" },
-                "Name: "
-            ),
-            React.createElement("input", { id: "domoName", type: "text", name: "name", placeholder: "Domo Name" }),
-            React.createElement(
-                "label",
-                { htmlFor: "age" },
-                "Age: "
-            ),
-            React.createElement("input", { id: "domoAge", type: "text", name: "age", placeholder: "Domo Age" }),
-            React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
-            React.createElement("input", { className: "makeDomoSubmit", type: "submit", value: "Make Domo" })
-        )
+            "label",
+            { htmlFor: "name" },
+            "Name: "
+        ),
+        React.createElement("input", { id: "domoName", type: "text", name: "name", placeholder: "Domo Name" }),
+        React.createElement(
+            "label",
+            { htmlFor: "age" },
+            "Age: "
+        ),
+        React.createElement("input", { id: "domoAge", type: "text", name: "age", placeholder: "Domo Age" }),
+        React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
+        React.createElement("input", { className: "makeDomoSubmit", type: "submit", value: "Make Domo" })
     );
 };
 
@@ -96,32 +92,10 @@ var DomoList = function DomoList(props) {
     );
 };
 
-var Profile = function Profile() {
-    return React.createElement(
-        "div",
-        { className: "profile" },
-        React.createElement(
-            "button",
-            { onClick: showProfile },
-            "Profile"
-        ),
-        React.createElement(
-            "div",
-            { id: "profileContent", className: "grid-box" },
-            React.createElement(
-                "h3",
-                null,
-                React.createElement("span", { id: "profileStats" })
-            ),
-            React.createElement("img", { id: "char", src: "assets/img/BardChar.png", alt: "character" })
-        )
-    );
-};
-
 var AccountData = function AccountData(props) {
     return React.createElement(
         "div",
-        { className: "row mb-3 tempHelp" },
+        null,
         React.createElement(
             "h3",
             { className: "accountName" },
@@ -187,7 +161,22 @@ var setup = function setup(csrf) {
     ReactDOM.render(React.createElement(DomoForm, { csrf: csrf }), document.querySelector("#makeDomo"));
 
     ReactDOM.render(React.createElement(DomoList, { domos: [] }), document.querySelector("#domos"));
-    ReactDOM.render(React.createElement(Profile, null), document.querySelector("#profileButton"));
+
+    var signupButton = document.querySelector("#profileButton");
+    var logoutButton = document.querySelector("#logoutButton");
+
+    logoutButton.addEventListener("click", function (e) {
+        console.log("Crash?");
+        // sendAjax('GET', '/logout', null, (result) => {
+        //     console.log(result);
+        // });
+    });
+
+    signupButton.addEventListener("click", function (e) {
+        e.preventDefault();
+        showProfile();
+        return false;
+    });
 
     loadDomosFromServer();
     loadAccountFromServer();
@@ -206,8 +195,35 @@ $(document).ready(function () {
 "use strict";
 
 var handleError = function handleError(message) {
+    if ($.ui) {
+        (function () {
+            var oldEffect = $.fn.effect;
+            $.fn.effect = function (effectName) {
+                if (effectName === "shake") {
+                    var old = $.effects.createWrapper;
+                    $.effects.createWrapper = function (element) {
+                        var result;
+                        var oldCSS = $.fn.css;
+
+                        $.fn.css = function (size) {
+                            var _element = this;
+                            var hasOwn = Object.prototype.hasOwnProperty;
+                            return _element === element && hasOwn.call(size, "width") && hasOwn.call(size, "height") && _element || oldCSS.apply(this, arguments);
+                        };
+
+                        result = old.apply(this, arguments);
+
+                        $.fn.css = oldCSS;
+                        return result;
+                    };
+                }
+                return oldEffect.apply(this, arguments);
+            };
+        })();
+    }
     $("#errorMessage").text(message);
-    $("#domoMessage").animate({ width: 'toggle' }, 350);
+    $("#messageArea").animate({ width: 'toggle' }, 0);
+    $(".mainForm").effect("shake");
 };
 
 var showProfile = function showProfile(message) {

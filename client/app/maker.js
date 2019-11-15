@@ -5,7 +5,6 @@ const handleDomo = (e) => {
     
     $("#domoMessage").animate({ width:'hide'}, 350);
     
-    
     if($("#domoName").val() == '' || $("#domoAge").val() == '') {
         handleError("RAWR! All fields are required");
         return false;
@@ -67,26 +66,13 @@ const DomoList = function(props) {
     );
 };
 
-const Profile = () => {
-    return (
-        <div className="profile">
-            <button onClick={showProfile}>Profile</button>
-            <div id="profileContent" className="grid-box">
-                <h3>
-                    <span id="profileStats"></span>
-                </h3>
-                <img id="char" src="assets/img/BardChar.png" alt="character"/></div>
-        </div>
-    );
-};
-
 const AccountData = function(props) {    
     return (
-        <div className="row mb-3 tempHelp">
-                <h3 className="accountName"><b>User:</b> {props.account.username} </h3>
-                <h3 className="accountAthletics"><b>Athletics:</b> {props.account.athletics}</h3>
-                <h3 className="accountWisdom"><b>Wisdom:</b> {props.account.wisdom}</h3>
-                <h3 className="accountCharisma"><b>Charisma:</b> {props.account.charisma}</h3>
+        <div>
+            <h3 className="accountName"><b>User:</b> {props.account.username} </h3>
+            <h3 className="accountAthletics"><b>Athletics:</b> {props.account.athletics}</h3>
+            <h3 className="accountWisdom"><b>Wisdom:</b> {props.account.wisdom}</h3>
+            <h3 className="accountCharisma"><b>Charisma:</b> {props.account.charisma}</h3>
         </div>
     );
 };
@@ -116,9 +102,22 @@ const setup = function(csrf) {
     ReactDOM.render(
         <DomoList domos={[]} />, document.querySelector("#domos")
     );
-    ReactDOM.render(
-        <Profile />, document.querySelector("#profileButton")
-    );
+
+    const signupButton = document.querySelector("#profileButton");
+    const logoutButton = document.querySelector("#logoutButton");
+
+    logoutButton.addEventListener("click", (e) => {
+        console.log("Crash?");
+        // sendAjax('GET', '/logout', null, (result) => {
+        //     console.log(result);
+        // });
+    });
+
+    signupButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        showProfile();
+        return false;
+    });
     
     loadDomosFromServer();
     loadAccountFromServer();

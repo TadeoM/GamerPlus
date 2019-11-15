@@ -38,61 +38,48 @@ var AccountForm = function AccountForm(props) {
             name: "accountForm",
             action: "/creator",
             method: "POST",
-            className: "accountForm form-creator"
+            className: "mainForm"
         },
         React.createElement(
             "div",
-            { className: "row mb-3" },
-            React.createElement("div", { className: "col-md-3" }),
+            { id: "messageArea" },
             React.createElement(
-                "div",
-                { className: "col-md-6 grid-box" },
+                "h3",
+                null,
                 React.createElement(
-                    "div",
-                    null,
-                    React.createElement(
-                        "label",
-                        { htmlFor: "athletics" },
-                        "Athletics: "
-                    ),
-                    React.createElement("input", { id: "accountAthletics", onChange: checkValues, type: "number", name: "athletics", placeholder: "1", min: "1" })
-                ),
-                React.createElement(
-                    "div",
-                    null,
-                    React.createElement(
-                        "label",
-                        { htmlFor: "wisdom" },
-                        "Wisdom: "
-                    ),
-                    React.createElement("input", { id: "accountWisdom", onChange: checkValues, type: "number", name: "wisdom", placeholder: "1", min: "1" })
-                ),
-                React.createElement(
-                    "div",
-                    null,
-                    React.createElement(
-                        "label",
-                        { htmlFor: "charisma" },
-                        "Charisma: "
-                    ),
-                    React.createElement("input", { id: "accountCharisma", onChange: checkValues, type: "number", name: "charisma", placeholder: "1", min: "1" })
-                ),
-                React.createElement(
-                    "div",
-                    null,
-                    React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
-                    React.createElement("input", { className: "makeAccountSubmit", type: "submit", value: "Make Account" })
+                    "span",
+                    { id: "errorMessage" },
+                    "Wrong username or password"
                 )
-            ),
-            React.createElement("div", { className: "col-md-3" })
-        )
+            )
+        ),
+        React.createElement(
+            "label",
+            { htmlFor: "athletics" },
+            "Athletics: "
+        ),
+        React.createElement("input", { id: "accountAthletics", onChange: checkValues, type: "number", name: "athletics", placeholder: "1", min: "1" }),
+        React.createElement(
+            "label",
+            { htmlFor: "wisdom" },
+            "Wisdom: "
+        ),
+        React.createElement("input", { id: "accountWisdom", onChange: checkValues, type: "number", name: "wisdom", placeholder: "1", min: "1" }),
+        React.createElement(
+            "label",
+            { htmlFor: "charisma" },
+            "Charisma: "
+        ),
+        React.createElement("input", { id: "accountCharisma", onChange: checkValues, type: "number", name: "charisma", placeholder: "1", min: "1" }),
+        React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
+        React.createElement("input", { className: "makeAccountSubmit", type: "submit", value: "Make Account" })
     );
 };
 
 var CharacterSelector = function CharacterSelector(props) {};
 
 var createAcountWindow = function createAcountWindow(csrf) {
-    ReactDOM.render(React.createElement(AccountForm, { csrf: csrf }), document.querySelector("#accountCreator"));
+    ReactDOM.render(React.createElement(AccountForm, { csrf: csrf }), document.querySelector("#content"));
 };
 
 var createCarousel = function createCarousel(csrf) {
@@ -132,8 +119,35 @@ $(document).ready(function () {
 "use strict";
 
 var handleError = function handleError(message) {
+    if ($.ui) {
+        (function () {
+            var oldEffect = $.fn.effect;
+            $.fn.effect = function (effectName) {
+                if (effectName === "shake") {
+                    var old = $.effects.createWrapper;
+                    $.effects.createWrapper = function (element) {
+                        var result;
+                        var oldCSS = $.fn.css;
+
+                        $.fn.css = function (size) {
+                            var _element = this;
+                            var hasOwn = Object.prototype.hasOwnProperty;
+                            return _element === element && hasOwn.call(size, "width") && hasOwn.call(size, "height") && _element || oldCSS.apply(this, arguments);
+                        };
+
+                        result = old.apply(this, arguments);
+
+                        $.fn.css = oldCSS;
+                        return result;
+                    };
+                }
+                return oldEffect.apply(this, arguments);
+            };
+        })();
+    }
     $("#errorMessage").text(message);
-    $("#domoMessage").animate({ width: 'toggle' }, 350);
+    $("#messageArea").animate({ width: 'toggle' }, 0);
+    $(".mainForm").effect("shake");
 };
 
 var showProfile = function showProfile(message) {
