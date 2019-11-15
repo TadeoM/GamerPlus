@@ -92,10 +92,81 @@ var DomoList = function DomoList(props) {
     );
 };
 
+var ProfileBar = function ProfileBar(props) {
+    return React.createElement(
+        "div",
+        { className: "profileBox" },
+        React.createElement(
+            "div",
+            null,
+            React.createElement("img", { id: "char", src: "/assets/img/BardChar.png", alt: "character" }),
+            React.createElement(
+                "button",
+                null,
+                "To Profile"
+            )
+        ),
+        React.createElement(
+            "h3",
+            null,
+            React.createElement(
+                "span",
+                { id: "profileStats" },
+                React.createElement(
+                    "h3",
+                    { className: "accountName" },
+                    React.createElement(
+                        "b",
+                        null,
+                        "User:"
+                    ),
+                    " ",
+                    props.account.username,
+                    " "
+                ),
+                React.createElement(
+                    "h3",
+                    { className: "accountAthletics" },
+                    React.createElement(
+                        "b",
+                        null,
+                        "Athletics:"
+                    ),
+                    " ",
+                    props.account.athletics
+                ),
+                React.createElement(
+                    "h3",
+                    { className: "accountWisdom" },
+                    React.createElement(
+                        "b",
+                        null,
+                        "Wisdom:"
+                    ),
+                    " ",
+                    props.account.wisdom
+                ),
+                React.createElement(
+                    "h3",
+                    { className: "accountCharisma" },
+                    React.createElement(
+                        "b",
+                        null,
+                        "Charisma:"
+                    ),
+                    " ",
+                    props.account.charisma
+                )
+            )
+        )
+    );
+};
+
 var AccountData = function AccountData(props) {
     return React.createElement(
         "div",
         null,
+        React.createElement("img", { id: "char", src: "/assets/img/BardChar.png", alt: "character" }),
         React.createElement(
             "h3",
             { className: "accountName" },
@@ -107,39 +178,6 @@ var AccountData = function AccountData(props) {
             " ",
             props.account.username,
             " "
-        ),
-        React.createElement(
-            "h3",
-            { className: "accountAthletics" },
-            React.createElement(
-                "b",
-                null,
-                "Athletics:"
-            ),
-            " ",
-            props.account.athletics
-        ),
-        React.createElement(
-            "h3",
-            { className: "accountWisdom" },
-            React.createElement(
-                "b",
-                null,
-                "Wisdom:"
-            ),
-            " ",
-            props.account.wisdom
-        ),
-        React.createElement(
-            "h3",
-            { className: "accountCharisma" },
-            React.createElement(
-                "b",
-                null,
-                "Charisma:"
-            ),
-            " ",
-            props.account.charisma
         )
     );
 };
@@ -154,6 +192,7 @@ var loadAccountFromServer = function loadAccountFromServer() {
     sendAjax('GET', '/getAccount', null, function (data) {
         console.log(data.account.athletics);
         ReactDOM.render(React.createElement(AccountData, { account: data.account }), document.querySelector("#accountData"));
+        ReactDOM.render(React.createElement(ProfileBar, { account: data.account }), document.querySelector("#profileContent"));
     });
 };
 
@@ -221,6 +260,7 @@ var handleError = function handleError(message) {
             };
         })();
     }
+
     $("#errorMessage").text(message);
     $("#messageArea").animate({ width: 'toggle' }, 0);
     $(".mainForm").effect("shake");

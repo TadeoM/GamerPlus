@@ -66,13 +66,32 @@ const DomoList = function(props) {
     );
 };
 
+const ProfileBar = function(props) {
+    return (
+        <div className="profileBox">
+            <div> 
+                <img id="char" src="/assets/img/BardChar.png" alt="character"/>
+                <button >To Profile</button>
+            </div>
+            
+            <h3>
+                <span id="profileStats">
+                <h3 className="accountName"><b>User:</b> {props.account.username} </h3>
+                <h3 className="accountAthletics"><b>Athletics:</b> {props.account.athletics}</h3>
+                <h3 className="accountWisdom"><b>Wisdom:</b> {props.account.wisdom}</h3>
+                <h3 className="accountCharisma"><b>Charisma:</b> {props.account.charisma}</h3>
+                </span>
+            </h3>
+            
+        </div>
+    );
+};
+
 const AccountData = function(props) {    
     return (
         <div>
+            <img id="char" src="/assets/img/BardChar.png" alt="character"/>
             <h3 className="accountName"><b>User:</b> {props.account.username} </h3>
-            <h3 className="accountAthletics"><b>Athletics:</b> {props.account.athletics}</h3>
-            <h3 className="accountWisdom"><b>Wisdom:</b> {props.account.wisdom}</h3>
-            <h3 className="accountCharisma"><b>Charisma:</b> {props.account.charisma}</h3>
         </div>
     );
 };
@@ -90,6 +109,9 @@ const loadAccountFromServer = () => {
         console.log(data.account.athletics);
         ReactDOM.render(
             <AccountData account={data.account} />, document.querySelector("#accountData")
+        );
+        ReactDOM.render(
+            <ProfileBar account={data.account} />, document.querySelector("#profileContent")
         );
     });
 };
