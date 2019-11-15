@@ -25,6 +25,7 @@ const handleError = (message) => {
             };
         })();
     }
+    
     $("#errorMessage").text(message);
     $("#messageArea").animate({width:'toggle'}, 0);
     $(".mainForm").effect("shake");
