@@ -52,6 +52,7 @@ AccountSchema.statics.toAPI = doc => ({
   athletics: doc.athletics,
   wisdom: doc.wisdom,
   charisma: doc.charisma,
+  friendList: doc.friendList,
   _id: doc._id,
 });
 
