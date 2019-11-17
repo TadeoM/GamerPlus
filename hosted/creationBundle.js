@@ -156,7 +156,7 @@ var showProfile = function showProfile(message) {
 };
 
 var redirect = function redirect(response) {
-    $("#domoMessage").animate({ width: 'hide' }, 350);
+    $("#questMessage").animate({ width: 'hide' }, 350);
     window.location = response.redirect;
 };
 

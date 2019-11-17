@@ -1,69 +1,183 @@
-// add after fix to part 30
-
-const handleDomo = (e) => {
+let csrfToken = null;
+const handleQuest = (e) =>{
     e.preventDefault();
-    
-    $("#domoMessage").animate({ width:'hide'}, 350);
-    
-    if($("#domoName").val() == '' || $("#domoAge").val() == '') {
-        handleError("RAWR! All fields are required");
+
+    $("#questMessage").animate({width:'hide'},350);
+
+    if($("#questName").val()==''|| $("#questExp").val()==''||$("#questType").val()==''||$("#questContent").val()=='')
+    {
+        handleError("Gamer! All fields are required");
         return false;
     }
-    
-    sendAjax('POST', $("#domoForm").attr("action"), $("#domoForm").serialize(), function() {
-        loadDomosFromServer();
+
+    sendAjax('POST',$("#questForm").attr("action"), $("#questForm").serialize(), function(){
+        loadQuestsFromServer();
+        
     });
     
     return false;
 };
 
+const deleteQuest = (e) =>{
+    e.preventDefault();
+
+    
+    //data.quests = $("#questList").props;
+    console.log( $("#curQuestForm").serialize());
+
+    //Delete in our database and reload quests. 
+    sendAjax('POST',$("#curQuestForm").attr("action"), $("#curQuestForm").serialize(), function(){
+        loadQuestsFromServer();
+        
+    });
+    
+}
+const changePassword = (e) =>{
+    e.preventDefault();
+
+    console.log($("#curQuestForm").serialize());
+    sendAjax('POST',$("#changePswdForm").attr("action"), $("#changePswdForm").serialize());
+}
+///Editing Quests///
+/*
+const editQuest = (props) =>{
+    e.preventDefault();
+    sendAjax('POST',$("#editQuestForm").attr("action"), $("#editQuestForm").serialize(),function(){
+        loadQuestsFromServer();
+        
+    });
+};
+const editQuestForm = function(props)
+{
+    const editAbleQuest=props.quests.map(function(quest)
+{
+    return(
+        <form id="editQuestForm" name="editQuestForm"
+        onSubmit ={handleQuest}
+        action ="/editQuest"
+        method="POST"
+        className ="questForm"
+        >
+            <label htmlFor ="name">Name: </label>
+            <input id="questName" type="text" name="name" placeholder ="Quest Name"/>
+            <label htmlFor ="Quest Type">Quest Type: </label>
+            <select id="questType" type="text" name="questType" placeholder ="Quest Type" onChange={handleChange}>
+                <option value="Daily">Daily</option>
+                <option value="Weekly">Weekly</option>
+                <option value="Monthly">Monthly</option>
+                <option value="Special">Special</option>
+                </select>
+            <label htmlFor ="questExperience">Quest Experiece: </label>
+            <input id="questExperience" type="number" name="questExperience" placeholder ="EXP Reward"/>
+            <input type="hidden" name="_csrf" value={props.csrf}/>
+            <input className ="makeQuestSubmit" type="submit" value ="Make Quest"/>
+            </form>
+    );
+});
+   return(
+    <div className="editQuestForm">
+        {questForm}
+    </div>
+   );
+}
+*/
+const ChangePasswordForm = (props)=>{
 const showProfile = (e) => {
     showProfile("PROFILE");
 }
 
-const DomoForm = (props) => {
     return (
-            <form id="domoForm"
-                onSubmit={handleDomo}
-                name="domoForm"
-                action="/maker"
-                method="POST"
-                className="domoForm"
-            >
-                <label htmlFor="name">Name: </label>
-                <input id="domoName" type="text" name="name" placeholder="Domo Name"/>
-                <label htmlFor="age">Age: </label>
-                <input id="domoAge" type="text" name="age" placeholder="Domo Age"/>
-                <input type="hidden" name="_csrf" value={props.csrf}/>
-                <input className="makeDomoSubmit" type="submit" value="Make Domo"/>
-            </form>
+        <form id="changePswdForm" 
+            name="changePswdForm"
+            onSubmit={changePassword}
+            action="/changePswd"
+            method="POST"
+            className="mainForm"
+        >
+             <label htmlFor="username">Username: </label>
+            <input id="user" type="text" name="username" placeholder="username"/>
+            <label htmlFor="currPass">Current Password: </label>
+            <input id="currPass" type="password" name="currPass" placeholder="password"/>
+            <label htmlFor="pass">New Password: </label>
+            <input id="pass" type="password" name="pass" placeholder="password"/>
+            <input id="pass2" type="password" name="pass2" placeholder="password"/>
+            <input type="hidden" name="_csrf" value={props.csrf}/>
+            <input className="formSubmit" type="submit" value="Confirm Password Change"/>
+
+        </form>
+    );
+}
+
+const createChangePasswordForm =(csrf) => {
+    ReactDOM.render(
+        <ChangePasswordForm csrf={csrf} />,
+        document.querySelector("#pswdChange")
     );
 };
 
-const DomoList = function(props) {
-    if(props.domos.length === 0) {
-        return (
-            <div className="domoList">
-                <h3 className="emptyDomo">No Domos yet</h3>
+const QuestForm = (props) =>{
+    return(
+        <form id="questForm" name="questForm"
+        onSubmit ={handleQuest}
+        action ="/maker"
+        method="GET"
+        className ="questForm"
+        >
+            <label htmlFor ="name">Name: </label>
+            <input id="questName" type="text" name="name" placeholder ="Quest Name"/>
+            <label htmlFor ="Quest Type">Quest Type: </label>
+            <select id="questType" type="text" name="questType" placeholder ="Quest Type">
+                <option value="Daily">Daily</option>
+                <option value="Weekly">Weekly</option>
+                <option value="Monthly">Monthly</option>
+                <option value="Special">Special</option>
+                </select>
+            <label htmlFor ="questExperience">Quest Experiece: </label>
+            <input id="questExperience" type="number" name="questExperience" placeholder ="EXP Reward" min="0"/>
+            <input id="questContent" type="text" name="questContent" placeholder ="Details of the Quest"/>
+            <input type="hidden" name="_csrf" value={props.csrf}/>
+            <input className ="makeQuestSubmit" type="submit" value ="Make Quest"/>
+        </form>
+    );
+};
+const QuestList = function(props)
+{
+    if(props.quests.length === 0)
+    {
+        return(
+            <div className="questList">
+                <h3 className="emptyQuest">No Quests Yet</h3>
             </div>
         );
     }
-    
-    const domoNodes = props.domos.map(function(domo) {
-        return (
-            <div key={domo._id} className="domo">
-                <img src="/assets/img/domoface.jpeg" alt="domo face" className="domoFace" />
-                <h3 className="domoName">Name: {domo.name} </h3>
-                <h3 className="domoAge">Age: {domo.age} </h3>
-            </div>
-        );
-    });
-    
-    return (
-        <div className="domoList">
-            {domoNodes}
+const questNodes = props.quests.map(function(quest)
+{
+    console.log(quest._id);
+    return(
+        <form id="curQuestForm" name ="curQuestForm"
+            onSubmit ={deleteQuest}
+            action ="/deleteQuest"
+            method="POST"
+            className="curQuestForm"
+            >
+        <div key={quest._id} className="quest">
+            <img src="/assets/img/scrollQuest.png" alt="domo face" className="scrollQuest"/>
+            <h3 className="questName">Name: {quest.name}</h3>
+            <h3 className="questType">Quest Type: {quest.questType}</h3>
+            <h3 className="questExperience">EXP: {quest.questExperience}</h3>
+            <h4 className="questContent">Quest Content: {quest.questContent}</h4>
+            <input type="submit" name="deleteQuest" value="Delete Quest" />
+            <input type ="hidden" name ="_id" value ={quest._id}/>
+            <input type="hidden" name="_csrf" value={props.csrf}/>
         </div>
+         </form>
     );
+});
+return (
+    <div className="questList">
+        {questNodes}
+    </div>
+);
 };
 
 const ProfileBar = function(props) {
@@ -96,17 +210,15 @@ const AccountData = function(props) {
     );
 };
 
-const loadDomosFromServer = () => {
-    sendAjax('GET', '/getDomos', null, (data) =>{
+const loadQuestsFromServer = () =>{
+    sendAjax('GET', '/getQuests', null, (data) =>{
         ReactDOM.render(
-            <DomoList domos={data.domos} />, document.querySelector("#domos")
+            <QuestList quests ={data.quests} csrf = {csrfToken} />, document.querySelector("#quests")
         );
     });
 };
-
 const loadAccountFromServer = () => {
     sendAjax('GET', '/getAccount', null, (data) =>{
-        console.log(data.account.athletics);
         ReactDOM.render(
             <AccountData account={data.account} />, document.querySelector("#accountData")
         );
@@ -117,24 +229,26 @@ const loadAccountFromServer = () => {
 };
 
 const setup = function(csrf) {
+    const changePswdBtn = document.querySelector("#changePswdBtn");
+    changePswdBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        createChangePasswordForm(csrf);
+        return false;
+    });
     ReactDOM.render(
-        <DomoForm csrf={csrf} />, document.querySelector("#makeDomo")
+        <QuestForm csrf ={csrf}/>, document.querySelector("#makeQuest")
     );
-    
     ReactDOM.render(
-        <DomoList domos={[]} />, document.querySelector("#domos")
+        <QuestList csrf = {csrf} quests ={[]}/>, document.querySelector("#quests")
     );
-
+    loadQuestsFromServer();
     const signupButton = document.querySelector("#profileButton");
-
 
     signupButton.addEventListener("click", (e) => {
         e.preventDefault();
         showProfile();
         return false;
     });
-    
-    loadDomosFromServer();
     loadAccountFromServer();
     $("#profileContent").animate({ width:'hide'}, 0);
 };
@@ -142,6 +256,7 @@ const setup = function(csrf) {
 const getToken = () => {
     sendAjax('GET', '/getToken', null, (result) => {
         setup(result.csrfToken);
+        csrfToken = result.csrfToken;
     });
 };
 

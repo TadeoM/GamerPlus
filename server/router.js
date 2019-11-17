@@ -2,7 +2,7 @@ const controllers = require('./controllers');
 const mid = require('./middleware');
 
 const router = (app) => {
-    app.get('/getToken', mid.requiresSecure, controllers.Account.getToken);
+  app.get('/getToken', mid.requiresSecure, controllers.Account.getToken);
     // add after fix up to 30
     app.get('/getDomos', mid.requiresLogin, controllers.Domo.getDomos);
     app.get('/getAccount', mid.requiresSecure, controllers.Account.getAccount);
@@ -21,6 +21,11 @@ const router = (app) => {
     app.post('/addFriend', mid.requiresLogin, controllers.Friend.addFriend);
 
     app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
+  app.get('/getQuests', mid.requiresLogin, controllers.Quest.getQuests);
+  app.post('/deleteQuest',mid.requiresLogin, controllers.Quest.deleteQuest);
+  app.post('/changePswd',mid.requiresLogin, controllers.Account.changePassword);
+  app.get('/maker', mid.requiresLogin, controllers.Quest.makerPage);
+  app.post('/maker', mid.requiresLogin, controllers.Quest.make);
 };
 
 module.exports = router;
