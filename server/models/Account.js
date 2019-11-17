@@ -22,11 +22,11 @@ const AccountSchema = new mongoose.Schema({
   },
   wisdom: {
     type: Number,
-    default: 1
+    default: 1,
   },
   charisma: {
     type: Number,
-    default: 1
+    default: 1,
   },
   salt: {
     type: Buffer,
@@ -102,6 +102,10 @@ AccountModel.findByUsername(username, (err, doc) => {
   });
 });
 
+AccountSchema.statics.changePassword = (newPassword, callback) =>{
+    AccountModel.update(password, newPassword)
+    return callback();
+};
 AccountModel = mongoose.model('Account', AccountSchema);
 
 module.exports.AccountModel = AccountModel;
