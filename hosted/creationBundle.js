@@ -5,16 +5,21 @@ var handleCreation = function handleCreation(e) {
 
     $("#domoMessage").animate({ width: 'hide' }, 350);
 
-    if ($("#accountAthletics").val() == '' || $("#accountDexterity").val() == '' || $("#accountCharisma").val() == '') {
-        handleError("RAWR! Fill in Athletics you fuck.");
+    var maxTotal = 10;
+
+    var athletics = $("#accountAthletics");
+    var wisdom = $("#accountWisdom");
+    var charisma = $("#accountCharisma");
+
+    if (athletics.val() == '' || wisdom.val() == '' || charisma.val() == '') {
+        handleError("RAWR! Fill in the stats you fuck.");
         return false;
     }
-    if ($("#accountAthletics").val() == '') {
-        handleError("RAWR! Fill in Athletics you fuck.");
-        return false;
-    }
-    if ($("#accountAthletics").val() == '') {
-        handleError("RAWR! Fill in Athletics you fuck.");
+
+    var currentTotal = Number(athletics.val()) + Number(wisdom.val()) + Number(charisma.val());
+
+    if (currentTotal < maxTotal) {
+        handleError("You still have stats to allocate dumbass!");
         return false;
     }
 
@@ -33,37 +38,73 @@ var AccountForm = function AccountForm(props) {
             name: "accountForm",
             action: "/creator",
             method: "POST",
-            className: "accountForm"
+            className: "mainForm"
         },
+        React.createElement(
+            "div",
+            { id: "messageArea" },
+            React.createElement(
+                "h3",
+                null,
+                React.createElement(
+                    "span",
+                    { id: "errorMessage" },
+                    "Wrong username or password"
+                )
+            )
+        ),
         React.createElement(
             "label",
             { htmlFor: "athletics" },
             "Athletics: "
         ),
-        React.createElement("input", { id: "accountAthletics", type: "text", name: "athletics", placeholder: "Account Athletics" }),
+        React.createElement("input", { id: "accountAthletics", onChange: checkValues, type: "number", name: "athletics", placeholder: "1", min: "1" }),
         React.createElement(
             "label",
             { htmlFor: "wisdom" },
             "Wisdom: "
         ),
-        React.createElement("input", { id: "accountWisdom", type: "text", name: "wisdom", placeholder: "Account Wisdom" }),
+        React.createElement("input", { id: "accountWisdom", onChange: checkValues, type: "number", name: "wisdom", placeholder: "1", min: "1" }),
         React.createElement(
             "label",
             { htmlFor: "charisma" },
             "Charisma: "
         ),
-        React.createElement("input", { id: "accountCharisma", type: "text", name: "charisma", placeholder: "Account Charisma" }),
+        React.createElement("input", { id: "accountCharisma", onChange: checkValues, type: "number", name: "charisma", placeholder: "1", min: "1" }),
         React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
         React.createElement("input", { className: "makeAccountSubmit", type: "submit", value: "Make Account" })
     );
 };
 
+var CharacterSelector = function CharacterSelector(props) {};
+
 var createAcountWindow = function createAcountWindow(csrf) {
     ReactDOM.render(React.createElement(AccountForm, { csrf: csrf }), document.querySelector("#content"));
 };
 
+var createCarousel = function createCarousel(csrf) {
+    ReactDOM.render(React.createElement(CharacterSelector, { csrf: csrf }), document.querySelector("#carousel"));
+};
+
+var checkValues = function checkValues(e) {
+    var maxTotal = 10;
+
+    var athletics = $("#accountAthletics");
+    var wisdom = $("#accountWisdom");
+    var charisma = $("#accountCharisma");
+
+    var currentTotal = Number(athletics.val()) + Number(wisdom.val()) + Number(charisma.val());
+    if (currentTotal > maxTotal) {
+        var inputLocation = document.querySelector("#" + e.target.id);
+        var decreaseAmount = currentTotal - maxTotal;
+
+        inputLocation.value -= decreaseAmount;
+    }
+};
+
 var setup = function setup(csrf) {
     createAcountWindow(csrf); // default view
+    //createCarousel(csrf);
 };
 
 var getToken = function getToken() {
@@ -78,8 +119,41 @@ $(document).ready(function () {
 "use strict";
 
 var handleError = function handleError(message) {
+    if ($.ui) {
+        (function () {
+            var oldEffect = $.fn.effect;
+            $.fn.effect = function (effectName) {
+                if (effectName === "shake") {
+                    var old = $.effects.createWrapper;
+                    $.effects.createWrapper = function (element) {
+                        var result;
+                        var oldCSS = $.fn.css;
+
+                        $.fn.css = function (size) {
+                            var _element = this;
+                            var hasOwn = Object.prototype.hasOwnProperty;
+                            return _element === element && hasOwn.call(size, "width") && hasOwn.call(size, "height") && _element || oldCSS.apply(this, arguments);
+                        };
+
+                        result = old.apply(this, arguments);
+
+                        $.fn.css = oldCSS;
+                        return result;
+                    };
+                }
+                return oldEffect.apply(this, arguments);
+            };
+        })();
+    }
+
     $("#errorMessage").text(message);
+    $(".mainForm").effect("shake");
     $("#questMessage").animate({ width: 'toggle' }, 350);
+    $("#messageArea").animate({ width: 'toggle' }, 0);
+};
+
+var showProfile = function showProfile(message) {
+    $("#profileContent").animate({ width: 'toggle' }, 350);
 };
 
 var redirect = function redirect(response) {

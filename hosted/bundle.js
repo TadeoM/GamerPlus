@@ -1,6 +1,7 @@
 "use strict";
 
 var csrfToken = null;
+
 var handleQuest = function handleQuest(e) {
     e.preventDefault();
 
@@ -33,55 +34,18 @@ var deleteQuest = function deleteQuest(e) {
         loadQuestsFromServer();
     });
 };
+
 var changePassword = function changePassword(e) {
     e.preventDefault();
 
     console.log($("#curQuestForm").serialize());
     sendAjax('POST', $("#changePswdForm").attr("action"), $("#changePswdForm").serialize());
 };
-///Editing Quests///
-/*
-const editQuest = (props) =>{
-    e.preventDefault();
-    sendAjax('POST',$("#editQuestForm").attr("action"), $("#editQuestForm").serialize(),function(){
-        loadQuestsFromServer();
-        
-    });
+
+var showProfile = function showProfile(e) {
+    showProfile("PROFILE");
 };
-const editQuestForm = function(props)
-{
-    const editAbleQuest=props.quests.map(function(quest)
-{
-    return(
-        <form id="editQuestForm" name="editQuestForm"
-        onSubmit ={handleQuest}
-        action ="/editQuest"
-        method="POST"
-        className ="questForm"
-        >
-            <label htmlFor ="name">Name: </label>
-            <input id="questName" type="text" name="name" placeholder ="Quest Name"/>
-            <label htmlFor ="Quest Type">Quest Type: </label>
-            <select id="questType" type="text" name="questType" placeholder ="Quest Type" onChange={handleChange}>
-                <option value="Daily">Daily</option>
-                <option value="Weekly">Weekly</option>
-                <option value="Monthly">Monthly</option>
-                <option value="Special">Special</option>
-                </select>
-            <label htmlFor ="questExperience">Quest Experiece: </label>
-            <input id="questExperience" type="number" name="questExperience" placeholder ="EXP Reward"/>
-            <input type="hidden" name="_csrf" value={props.csrf}/>
-            <input className ="makeQuestSubmit" type="submit" value ="Make Quest"/>
-            </form>
-    );
-});
-   return(
-    <div className="editQuestForm">
-        {questForm}
-    </div>
-   );
-}
-*/
+
 var ChangePasswordForm = function ChangePasswordForm(props) {
     return React.createElement(
         "form",
@@ -175,6 +139,7 @@ var QuestForm = function QuestForm(props) {
         React.createElement("input", { className: "makeQuestSubmit", type: "submit", value: "Make Quest" })
     );
 };
+
 var QuestList = function QuestList(props) {
     if (props.quests.length === 0) {
         return React.createElement(
@@ -188,6 +153,7 @@ var QuestList = function QuestList(props) {
         );
     }
     var questNodes = props.quests.map(function (quest) {
+        console.log(quest._id);
         return React.createElement(
             "form",
             { id: "curQuestForm", name: "curQuestForm",
@@ -298,10 +264,90 @@ var PendingQuestList = function PendingQuestList(props) {
         pendingQuestNodes
     );
 };
+
+var ProfileBar = function ProfileBar(props) {
+    return React.createElement(
+        "div",
+        { className: "profileBox" },
+        React.createElement(
+            "div",
+            null,
+            React.createElement("img", { id: "char", src: "/assets/img/BardChar.png", alt: "character" }),
+            React.createElement(
+                "div",
+                { "class": "button" },
+                React.createElement(
+                    "div",
+                    { "class": "btn btn-one" },
+                    React.createElement(
+                        "a",
+                        { href: "/profile" },
+                        "To Profile"
+                    )
+                )
+            )
+        ),
+        React.createElement(
+            "h3",
+            null,
+            React.createElement(
+                "span",
+                { id: "profileStats" },
+                React.createElement(
+                    "h3",
+                    { className: "accountName" },
+                    React.createElement(
+                        "b",
+                        null,
+                        "User:"
+                    ),
+                    " ",
+                    props.account.username,
+                    " "
+                ),
+                React.createElement(
+                    "h3",
+                    { className: "accountAthletics" },
+                    React.createElement(
+                        "b",
+                        null,
+                        "Athletics:"
+                    ),
+                    " ",
+                    props.account.athletics
+                ),
+                React.createElement(
+                    "h3",
+                    { className: "accountWisdom" },
+                    React.createElement(
+                        "b",
+                        null,
+                        "Wisdom:"
+                    ),
+                    " ",
+                    props.account.wisdom
+                ),
+                React.createElement(
+                    "h3",
+                    { className: "accountCharisma" },
+                    React.createElement(
+                        "b",
+                        null,
+                        "Charisma:"
+                    ),
+                    " ",
+                    props.account.charisma
+                )
+            )
+        )
+    );
+};
+
 var AccountData = function AccountData(props) {
     return React.createElement(
         "div",
         null,
+        React.createElement("img", { id: "char", src: "/assets/img/BardChar.png", alt: "character" }),
         React.createElement(
             "h3",
             { className: "accountName" },
@@ -313,39 +359,6 @@ var AccountData = function AccountData(props) {
             " ",
             props.account.username,
             " "
-        ),
-        React.createElement(
-            "h3",
-            { className: "accountAthletics" },
-            React.createElement(
-                "b",
-                null,
-                "Athletics:"
-            ),
-            " ",
-            props.account.athletics
-        ),
-        React.createElement(
-            "h3",
-            { className: "accountDexterity" },
-            React.createElement(
-                "b",
-                null,
-                "Dexterity:"
-            ),
-            " ",
-            props.account.dexterity
-        ),
-        React.createElement(
-            "h3",
-            { className: "accountCharisma" },
-            React.createElement(
-                "b",
-                null,
-                "Charisma:"
-            ),
-            " ",
-            props.account.charisma
         )
     );
 };
@@ -363,6 +376,7 @@ var loadPendingQuestsFromServer = function loadPendingQuestsFromServer() {
 var loadAccountFromServer = function loadAccountFromServer() {
     sendAjax('GET', '/getAccount', null, function (data) {
         ReactDOM.render(React.createElement(AccountData, { account: data.account }), document.querySelector("#accountData"));
+        ReactDOM.render(React.createElement(ProfileBar, { account: data.account }), document.querySelector("#profileContent"));
     });
 };
 
@@ -376,7 +390,15 @@ var setup = function setup(csrf) {
     ReactDOM.render(React.createElement(QuestForm, { csrf: csrf }), document.querySelector("#makeQuest"));
     ReactDOM.render(React.createElement(QuestList, { csrf: csrf, quests: [] }), document.querySelector("#quests"));
     loadQuestsFromServer();
+    var signupButton = document.querySelector("#profileButton");
+
+    signupButton.addEventListener("click", function (e) {
+        e.preventDefault();
+        showProfile();
+        return false;
+    });
     loadAccountFromServer();
+    $("#profileContent").animate({ width: 'hide' }, 0);
 };
 
 var getToken = function getToken() {
@@ -392,8 +414,41 @@ $(document).ready(function () {
 "use strict";
 
 var handleError = function handleError(message) {
+    if ($.ui) {
+        (function () {
+            var oldEffect = $.fn.effect;
+            $.fn.effect = function (effectName) {
+                if (effectName === "shake") {
+                    var old = $.effects.createWrapper;
+                    $.effects.createWrapper = function (element) {
+                        var result;
+                        var oldCSS = $.fn.css;
+
+                        $.fn.css = function (size) {
+                            var _element = this;
+                            var hasOwn = Object.prototype.hasOwnProperty;
+                            return _element === element && hasOwn.call(size, "width") && hasOwn.call(size, "height") && _element || oldCSS.apply(this, arguments);
+                        };
+
+                        result = old.apply(this, arguments);
+
+                        $.fn.css = oldCSS;
+                        return result;
+                    };
+                }
+                return oldEffect.apply(this, arguments);
+            };
+        })();
+    }
+
     $("#errorMessage").text(message);
+    $(".mainForm").effect("shake");
     $("#questMessage").animate({ width: 'toggle' }, 350);
+    $("#messageArea").animate({ width: 'toggle' }, 0);
+};
+
+var showProfile = function showProfile(message) {
+    $("#profileContent").animate({ width: 'toggle' }, 350);
 };
 
 var redirect = function redirect(response) {

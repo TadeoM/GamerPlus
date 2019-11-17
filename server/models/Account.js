@@ -28,10 +28,6 @@ const AccountSchema = new mongoose.Schema({
     type: Number,
     default: 1,
   },
-  dexterity: {
-    type: Number,
-    default: 1,
-  },
   salt: {
     type: Buffer,
     required: true,
@@ -44,14 +40,19 @@ const AccountSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  friendList: {
+    type: Array,
+    default: [],
+  },
 });
 
 AccountSchema.statics.toAPI = doc => ({
   // _id is built into your mongo document and is guaranteed to be unique
   username: doc.username,
   athletics: doc.athletics,
-  dexterity: doc.dexterity,
+  wisdom: doc.wisdom,
   charisma: doc.charisma,
+  friendList: doc.friendList,
   _id: doc._id,
 });
 

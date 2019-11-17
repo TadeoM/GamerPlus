@@ -1,4 +1,5 @@
 let csrfToken = null;
+
 const handleQuest = (e) =>{
     e.preventDefault();
 
@@ -36,55 +37,18 @@ const deleteQuest = (e) =>{
     });
     
 }
+
 const changePassword = (e) =>{
     e.preventDefault();
 
     console.log($("#curQuestForm").serialize());
     sendAjax('POST',$("#changePswdForm").attr("action"), $("#changePswdForm").serialize());
 }
-///Editing Quests///
-/*
-const editQuest = (props) =>{
-    e.preventDefault();
-    sendAjax('POST',$("#editQuestForm").attr("action"), $("#editQuestForm").serialize(),function(){
-        loadQuestsFromServer();
-        
-    });
-};
-const editQuestForm = function(props)
-{
-    const editAbleQuest=props.quests.map(function(quest)
-{
-    return(
-        <form id="editQuestForm" name="editQuestForm"
-        onSubmit ={handleQuest}
-        action ="/editQuest"
-        method="POST"
-        className ="questForm"
-        >
-            <label htmlFor ="name">Name: </label>
-            <input id="questName" type="text" name="name" placeholder ="Quest Name"/>
-            <label htmlFor ="Quest Type">Quest Type: </label>
-            <select id="questType" type="text" name="questType" placeholder ="Quest Type" onChange={handleChange}>
-                <option value="Daily">Daily</option>
-                <option value="Weekly">Weekly</option>
-                <option value="Monthly">Monthly</option>
-                <option value="Special">Special</option>
-                </select>
-            <label htmlFor ="questExperience">Quest Experiece: </label>
-            <input id="questExperience" type="number" name="questExperience" placeholder ="EXP Reward"/>
-            <input type="hidden" name="_csrf" value={props.csrf}/>
-            <input className ="makeQuestSubmit" type="submit" value ="Make Quest"/>
-            </form>
-    );
-});
-   return(
-    <div className="editQuestForm">
-        {questForm}
-    </div>
-   );
+
+const showProfile = (e) => {
+    showProfile("PROFILE");
 }
-*/
+
 const ChangePasswordForm = (props)=>{
     return (
         <form id="changePswdForm" 
@@ -105,8 +69,8 @@ const ChangePasswordForm = (props)=>{
             <input className="formSubmit" type="submit" value="Confirm Password Change"/>
 
         </form>
-    );
-}
+    ); 
+};
 
 const createChangePasswordForm =(csrf) => {
     ReactDOM.render(
@@ -140,6 +104,7 @@ const QuestForm = (props) =>{
         </form>
     );
 };
+
 const QuestList = function(props)
 {
     if(props.quests.length === 0)
@@ -150,33 +115,34 @@ const QuestList = function(props)
             </div>
         );
     }
-const questNodes = props.quests.map(function(quest)
-{
-    return(
-        <form id="curQuestForm" name ="curQuestForm"
-            onSubmit ={deleteQuest}
-            action ="/deleteQuest"
-            method="POST"
-            className="curQuestForm"
-            >
-        <div key={quest._id} className="quest">
-            <img src="/assets/img/scrollQuest.png" alt="domo face" className="scrollQuest"/>
-            <h3 className="questName">Name: {quest.name}</h3>
-            <h3 className="questType">Quest Type: {quest.questType}</h3>
-            <h3 className="questExperience">EXP: {quest.questExperience}</h3>
-            <h4 className="questContent">Quest Content: {quest.questContent}</h4>
-            <input type="submit" name="deleteQuest" value="Delete Quest" />
-            <input type ="hidden" name ="_id" value ={quest._id}/>
-            <input type="hidden" name="_csrf" value={props.csrf}/>
+    const questNodes = props.quests.map(function(quest)
+    {
+        console.log(quest._id);
+        return(
+            <form id="curQuestForm" name ="curQuestForm"
+                onSubmit ={deleteQuest}
+                action ="/deleteQuest"
+                method="POST"
+                className="curQuestForm"
+                >
+            <div key={quest._id} className="quest">
+                <img src="/assets/img/scrollQuest.png" alt="domo face" className="scrollQuest"/>
+                <h3 className="questName">Name: {quest.name}</h3>
+                <h3 className="questType">Quest Type: {quest.questType}</h3>
+                <h3 className="questExperience">EXP: {quest.questExperience}</h3>
+                <h4 className="questContent">Quest Content: {quest.questContent}</h4>
+                <input type="submit" name="deleteQuest" value="Delete Quest" />
+                <input type ="hidden" name ="_id" value ={quest._id}/>
+                <input type="hidden" name="_csrf" value={props.csrf}/>
+            </div>
+            </form>
+        );
+    });
+    return (
+        <div className="questList">
+            {questNodes}
         </div>
-         </form>
     );
-});
-return (
-    <div className="questList">
-        {questNodes}
-    </div>
-);
 };
 const PendingQuestList = function(props)
 {
@@ -217,13 +183,37 @@ return (
     </div>
 );
 };
-const AccountData = function(props) {
+
+const ProfileBar = function(props) {
     return (
-        <div >
+        <div className="profileBox">
+            <div> 
+                <img id="char" src="/assets/img/BardChar.png" alt="character"/>
+                <div class="button">
+                    <div class="btn btn-one">
+                        <a href="/profile">To Profile</a>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <h3>
+                <span id="profileStats">
+                    <h3 className="accountName"><b>User:</b> {props.account.username} </h3>
+                    <h3 className="accountAthletics"><b>Athletics:</b> {props.account.athletics}</h3>
+                    <h3 className="accountWisdom"><b>Wisdom:</b> {props.account.wisdom}</h3>
+                    <h3 className="accountCharisma"><b>Charisma:</b> {props.account.charisma}</h3>
+                </span>
+            </h3>
+        </div>
+    );
+};
+
+const AccountData = function(props) {    
+    return (
+        <div>
+            <img id="char" src="/assets/img/BardChar.png" alt="character"/>
             <h3 className="accountName"><b>User:</b> {props.account.username} </h3>
-            <h3 className="accountAthletics"><b>Athletics:</b> {props.account.athletics}</h3>
-            <h3 className="accountDexterity"><b>Dexterity:</b> {props.account.dexterity}</h3>
-            <h3 className="accountCharisma"><b>Charisma:</b> {props.account.charisma}</h3>
         </div>
     );
 };
@@ -247,6 +237,9 @@ const loadAccountFromServer = () => {
         ReactDOM.render(
             <AccountData account={data.account} />, document.querySelector("#accountData")
         );
+        ReactDOM.render(
+            <ProfileBar account={data.account} />, document.querySelector("#profileContent")
+        );
     });
 };
 
@@ -264,7 +257,15 @@ const setup = function(csrf) {
         <QuestList csrf = {csrf} quests ={[]}/>, document.querySelector("#quests")
     );
     loadQuestsFromServer();
+    const signupButton = document.querySelector("#profileButton");
+
+    signupButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        showProfile();
+        return false;
+    });
     loadAccountFromServer();
+    $("#profileContent").animate({ width:'hide'}, 0);
 };
 
 const getToken = () => {

@@ -1,7 +1,8 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <title>Gamer+</title>
+  <title>DomoMaker</title>
+
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 
@@ -14,33 +15,34 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/remarkable/1.6.2/remarkable.min.js"></script>
   <link rel="shortcut icon" href="/assets/img/favicon.png"/>
   <link rel="stylesheet" type="text/css" href="/assets/style.css"/>
+  
 </head>
-<body id="loginPage"> 
-    <nav>
-        <div id="nav">
-          <img class="logo" src="/assets/img/gamifyLife.png" alt="face logo"/>
-            <div class="button">
-              <div class="btn btn-one">
-                <button class="navButton" id="loginButton" href="/login">Login</button>
-              </div>
-            </div>
-
-            <div class="button">
-              <div class="btn btn-one">
-                <button class="navButton" id="signupButton" href="/signup">Sign up</button>
-              </div>
-            </div>
+<body>
+  <nav>
+    <div id="nav">
+      <a href="/login"><img class="logo" src="/assets/img/gamifyLife.png" alt="face logo"/></a>
+        <div class="button">
+          <div class="btn btn-one">
+            <button class="navButton" id="profileButton">Profile</button>
+          </div>
         </div>
-    </nav>
-
-    <div id="wrapper">
-        <div class="box">
-            <section id="content"></section>
+        <div class="button">
+          <div class="btn btn-one">
+            <a class="navButton" id="logoutButton" href="/logout">Log out</a>
+          </div>
         </div>
     </div>
-  
-  
-  
-  <script src="/assets/loginBundle.js"></script>
+  </nav>
+
+  <div id="wrapper">
+    <div class="box">
+        <section id="friendList">
+      </section>
+      <section id="addFriend">
+      </section>  
+
+    </div>
+  </div>
+  <script src="/assets/profileBundle.js"></script>
 </body>
 </html>
