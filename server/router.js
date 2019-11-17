@@ -16,9 +16,9 @@ const router = (app) => {
     app.get('/creator', mid.requiresLogin, controllers.Account.creatorPage);
     app.post('/creator', mid.requiresLogin, controllers.Account.createStats);
 
-    app.get('/profile', mid.requiresLogin, controllers.Account.profilePage);
-    //app.get('/getFriends', mid.requiresLogin, controllers.Account.getFriends);
-    app.post('/addFriend', mid.requiresLogin, controllers.Account.addFriend);
+    app.get('/profile', mid.requiresLogin, controllers.Friend.profilePage);
+    app.get('/getFriends', mid.requiresLogin, controllers.Friend.getFriends);
+    app.post('/addFriend', mid.requiresLogin, controllers.Friend.addFriend);
 
     app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
 };

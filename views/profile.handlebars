@@ -11,25 +11,38 @@
   <script crossorigin src="https://unpkg.com/prop-types/prop-types.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+  <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/remarkable/1.6.2/remarkable.min.js"></script>
   <link rel="shortcut icon" href="/assets/img/favicon.png"/>
   <link rel="stylesheet" type="text/css" href="/assets/style.css"/>
   
 </head>
 <body>
-  <nav><a href="/login"><img id="logo" src="/assets/img/gamifyLife.png" alt="face logo"/></a>
-    
-    <div class="navlink">
-      <a href="/logout">Log out</a>
-      </div>
+  <nav>
+    <div id="nav">
+      <a href="/login"><img class="logo" src="/assets/img/gamifyLife.png" alt="face logo"/></a>
+        <div class="button">
+          <div class="btn btn-one">
+            <button class="navButton" id="profileButton">Profile</button>
+          </div>
+        </div>
+        <div class="button">
+          <div class="btn btn-one">
+            <a class="navButton" id="logoutButton" href="/logout">Log out</a>
+          </div>
+        </div>
+    </div>
   </nav>
-  <div class="container">
-    <section id="friendList">
-    </section>
-    <section id="addFriend">
-    </section>
+
+  <div id="wrapper">
+    <div class="box">
+        <section id="friendList">
+      </section>
+      <section id="addFriend">
+      </section>  
+
+    </div>
   </div>
-  
   <script src="/assets/profileBundle.js"></script>
 </body>
 </html>

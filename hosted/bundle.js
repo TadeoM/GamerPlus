@@ -202,14 +202,6 @@ var setup = function setup(csrf) {
     ReactDOM.render(React.createElement(DomoList, { domos: [] }), document.querySelector("#domos"));
 
     var signupButton = document.querySelector("#profileButton");
-    var logoutButton = document.querySelector("#logoutButton");
-
-    logoutButton.addEventListener("click", function (e) {
-        console.log("Crash?");
-        // sendAjax('GET', '/logout', null, (result) => {
-        //     console.log(result);
-        // });
-    });
 
     signupButton.addEventListener("click", function (e) {
         e.preventDefault();

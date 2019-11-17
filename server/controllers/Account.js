@@ -6,6 +6,18 @@ const loginPage = (req, res) => {
     res.render('login', { csrfToken: req.csrfToken() });
 };
 
+const creatorPage = (req, res) => {
+
+    Account.AccountModel.findByUsername(req.session.account.username, (err, docs) => {
+        if(err) {
+            console.log(err);
+            return res.status(400).json({ error: 'An error occurred' });
+        }
+        
+        return res.render('creation', { csrfToken: req.csrfToken(), account: docs });
+    });
+};
+
 const logout = (req, res) => {
     req.session.destroy();
     res.redirect('/');
@@ -126,61 +138,6 @@ const createStats = (request, response) => {
     });
 };
 
-const creatorPage = (req, res) => {
-
-    Account.AccountModel.findByUsername(req.session.account.username, (err, docs) => {
-        if(err) {
-            console.log(err);
-            return res.status(400).json({ error: 'An error occurred' });
-        }
-        
-        return res.render('creation', { csrfToken: req.csrfToken(), account: docs });
-    });
-};
-
-const addFriend = (request,response) => {
-    const req = request;
-    const res = response;
-    
-    console.log(req.body);
-
-    return Account.AccountModel.findByUsername(req.session.account.username, (err, doc) => {            
-        const updateAccount = doc;
-        //updateAccount.athletics = req.body.athletics;
-        
-        const savePromise = updateAccount.save();
-        
-        savePromise.then(() => {
-            req.session.account = Account.AccountModel.toAPI(updateAccount);
-            
-            return res.json({ redirect: '/maker' }); 
-        });
-        
-        savePromise.catch((error) => {
-            console.log(error);
-            
-            if (error.code === 11000) {
-                return res.status(400).json({ error: 'Username already in use.'});
-            }
-            
-            return res.status(400).json({ error: 'An error occured'});
-        })
-    
-    });
-};
-
-const profilePage = (req, res) => {
-
-    Account.AccountModel.findByUsername(req.session.account.username, (err, docs) => {
-        if(err) {
-            console.log(err);
-            return res.status(400).json({ error: 'An error occurred' });
-        }
-        
-        return res.render('profile', { csrfToken: req.csrfToken(), account: docs });
-    });
-};
-
 const getToken = (request, response) => {
     const req = request;
     const res = response;
@@ -199,6 +156,4 @@ module.exports.signup = signup;
 module.exports.getToken = getToken;
 module.exports.getAccount = getAccount;
 module.exports.creatorPage = creatorPage;
-module.exports.addFriend = addFriend;
-module.exports.profilePage = profilePage;
 module.exports.createStats = createStats;

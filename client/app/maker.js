@@ -126,14 +126,7 @@ const setup = function(csrf) {
     );
 
     const signupButton = document.querySelector("#profileButton");
-    const logoutButton = document.querySelector("#logoutButton");
 
-    logoutButton.addEventListener("click", (e) => {
-        console.log("Crash?");
-        // sendAjax('GET', '/logout', null, (result) => {
-        //     console.log(result);
-        // });
-    });
 
     signupButton.addEventListener("click", (e) => {
         e.preventDefault();

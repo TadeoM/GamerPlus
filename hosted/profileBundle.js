@@ -11,7 +11,7 @@ var handleFriend = function handleFriend(e) {
     }
 
     sendAjax('POST', $("#friendForm").attr("action"), $("#friendForm").serialize(), function () {
-        addFriend();
+        showFriends();
     });
 
     return false;
@@ -92,34 +92,35 @@ var AccountData = function AccountData(props) {
 };
 
 var showFriends = function showFriends(props) {
-    sendAjax('GET', '/getAccount', null, function (data) {
-        ReactDOM.render(React.createElement(FriendList, { friends: data.account.friendList }), document.querySelector("#friendList"));
+    sendAjax('GET', '/getFriends', null, function (data) {
+        console.log(data.friends);
+        ReactDOM.render(React.createElement(FriendList, { friends: data.friends }), document.querySelector("#friendList"));
     });
 };
 
 var FriendList = function FriendList(props) {
-    if (props.friendList.length === 0) {
+    if (props.friends.length === 0) {
         return React.createElement(
             "div",
             { className: "friendList" },
             React.createElement(
                 "h3",
-                { className: "emptyDomo" },
-                "No Domos yet"
+                { className: "emptyFriend" },
+                "No Friends yet, loser"
             )
         );
     }
 
-    var friendNodes = props.friendList.map(function (friend) {
+    var friendNodes = props.friends.map(function (friend) {
         return React.createElement(
             "div",
-            { key: friend._id, className: "friend" },
+            { key: friend.user, className: "friend" },
             React.createElement("img", { src: "/assets/img/domoface.jpeg", alt: "friend face", className: "friendFace" }),
             React.createElement(
                 "h3",
                 { className: "friendName" },
                 "Name: ",
-                friend.username,
+                friend.friend,
                 " "
             )
         );
@@ -133,7 +134,8 @@ var FriendList = function FriendList(props) {
 };
 
 var setup = function setup(csrf) {
-    ReactDOM.render(React.createElement(FriendForm, { friends: data.account.friendList }), document.querySelector("#addFriend"));
+    ReactDOM.render(React.createElement(FriendForm, { csrf: csrf }), document.querySelector("#addFriend"));
+    showFriends();
 };
 
 var getToken = function getToken() {

@@ -9,7 +9,7 @@ const handleFriend = (e) => {
     }
     
     sendAjax('POST', $("#friendForm").attr("action"), $("#friendForm").serialize(), function() {
-        addFriend();
+        showFriends();
     });
     
     return false;
@@ -45,28 +45,29 @@ const AccountData = function(props) {
 };
 
 const showFriends = function(props) {
-    sendAjax('GET', '/getAccount', null, (data) =>{
+    sendAjax('GET', '/getFriends', null, (data) =>{
+        console.log(data.friends);
         ReactDOM.render(
-            <FriendList friends={data.account.friendList} />, document.querySelector("#friendList")
+            <FriendList friends={data.friends} />, document.querySelector("#friendList")
         );
     });
 };
 
 
 const FriendList = function(props) {
-    if(props.friendList.length === 0) {
+    if(props.friends.length === 0) {
         return (
             <div className="friendList">
-                <h3 className="emptyDomo">No Domos yet</h3>
+                <h3 className="emptyFriend">No Friends yet, loser</h3>
             </div>
         );
     }
     
-    const friendNodes = props.friendList.map(function(friend) {
+    const friendNodes = props.friends.map(function(friend) {
         return (
-            <div key={friend._id} className="friend">
+            <div key={friend.user} className="friend">
                 <img src="/assets/img/domoface.jpeg" alt="friend face" className="friendFace" />
-                <h3 className="friendName">Name: {friend.username} </h3>
+                <h3 className="friendName">Name: {friend.friend} </h3>
             </div>
         );
     });
@@ -80,8 +81,9 @@ const FriendList = function(props) {
 
 const setup = function(csrf) {
     ReactDOM.render(
-        <FriendForm friends={data.account.friendList} />, document.querySelector("#addFriend")
+        <FriendForm csrf={csrf} />, document.querySelector("#addFriend")
     );
+    showFriends();
 };
 
 const getToken = () => {
