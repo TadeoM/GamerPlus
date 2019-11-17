@@ -212,7 +212,7 @@ const setup = function(csrf) {
         return false;
     });
     loadAccountFromServer();
-    //$("#profileContent").animate({ width:'hide'}, 0);
+    $("#profileContent").animate({ width:'hide'}, 0);
 };
 
 const getToken = () => {

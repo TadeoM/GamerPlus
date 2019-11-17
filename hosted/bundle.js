@@ -320,7 +320,7 @@ var setup = function setup(csrf) {
         return false;
     });
     loadAccountFromServer();
-    //$("#profileContent").animate({ width:'hide'}, 0);
+    $("#profileContent").animate({ width: 'hide' }, 0);
 };
 
 var getToken = function getToken() {
