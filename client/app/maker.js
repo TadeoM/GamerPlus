@@ -18,6 +18,10 @@ const handleQuest = (e) =>{
     return false;
 };
 
+const completeQuest = (e) =>{
+    e.preventDefault();
+}
+
 const deleteQuest = (e) =>{
     e.preventDefault();
 
@@ -130,7 +134,7 @@ const QuestForm = (props) =>{
                 </select>
             <label htmlFor ="questExperience">Quest Experiece: </label>
             <input id="questExperience" type="number" name="questExperience" placeholder ="EXP Reward" min="0"/>
-            <input id="questContent" type="text" name="questContent" placeholder ="Details of the Quest"/>
+            <textarea id="questContent" class="text" name="questContent" placeholder ="Details of the Quest"></textarea>
             <input type="hidden" name="_csrf" value={props.csrf}/>
             <input className ="makeQuestSubmit" type="submit" value ="Make Quest"/>
         </form>
@@ -148,7 +152,6 @@ const QuestList = function(props)
     }
 const questNodes = props.quests.map(function(quest)
 {
-    console.log(quest._id);
     return(
         <form id="curQuestForm" name ="curQuestForm"
             onSubmit ={deleteQuest}
@@ -175,6 +178,45 @@ return (
     </div>
 );
 };
+const PendingQuestList = function(props)
+{
+    if(props.quests.length === 0)
+    {
+        return(
+            <div className="pendingQuestList">
+                <h3 className="emptyQuest">No Quests Yet</h3>
+            </div>
+        );
+    }
+const pendingQuestNodes = props.quests.map(function(quest)
+{
+   
+    return(
+        <form id="pendingQuestForm" name ="pendingQuestForm"
+            onSubmit ={completeQuest}
+            action ="/completeQuest"
+            method="POST"
+            className="curQuestForm"
+            >
+        <div key={quest._id} className="quest">
+            <img src="/assets/img/scrollQuest.png" alt="domo face" className="scrollQuest"/>
+            <h3 className="questName">Name: {quest.name}</h3>
+            <h3 className="questType">Quest Type: {quest.questType}</h3>
+            <h3 className="questExperience">EXP: {quest.questExperience}</h3>
+            <h4 className="questContent">Quest Content: {quest.questContent}</h4>
+            <input type="submit" name="deleteQuest" value="Delete Quest" />
+            <input type ="hidden" name ="_id" value ={quest._id}/>
+            <input type="hidden" name="_csrf" value={props.csrf}/>
+        </div>
+         </form>
+    );
+});
+return (
+    <div className="pendingQuestList">
+        {pendingQuestNodes}
+    </div>
+);
+};
 const AccountData = function(props) {
     return (
         <div >
@@ -188,6 +230,13 @@ const AccountData = function(props) {
 
 const loadQuestsFromServer = () =>{
     sendAjax('GET', '/getQuests', null, (data) =>{
+        ReactDOM.render(
+            <QuestList quests ={data.quests} csrf = {csrfToken} />, document.querySelector("#quests")
+        );
+    });
+};
+const loadPendingQuestsFromServer = () =>{
+    sendAjax('GET', '/getPendingQuests', null, (data) =>{
         ReactDOM.render(
             <QuestList quests ={data.quests} csrf = {csrfToken} />, document.querySelector("#quests")
         );

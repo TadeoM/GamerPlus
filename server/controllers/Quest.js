@@ -68,9 +68,16 @@ const deleteQuest = (request, response) => {
     return res.json({ quests: docs });
   });
 };
+/*
+const getPendingQuests = (request, response)=>{
+  const req = request;
+  const res = response;
 
+}
+*/
 module.exports.makerPage = makerPage;
 module.exports.make = makeQuest;
 module.exports.getQuests = getQuests;
 module.exports.deleteQuest = deleteQuest;
+//module.exports.getPendingQuests = getPendingQuests;
 

@@ -17,6 +17,8 @@ const router = (app) => {
   app.post('/creator', mid.requiresLogin, controllers.Account.createStats);
   app.post('/changePswd',mid.requiresLogin, controllers.Account.changePassword);
   app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
+  //app.post('/completeQuest,mid.requiresLogin,controllers.Quest.completeQuest,controllers.Account.giveAccountExp)
+  //app.get('/getPendingQuests',mid.requiresLogin, controllers.Quest.getPendingQuest)
 };
 
 module.exports = router;

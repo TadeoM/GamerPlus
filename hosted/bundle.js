@@ -18,6 +18,10 @@ var handleQuest = function handleQuest(e) {
     return false;
 };
 
+var completeQuest = function completeQuest(e) {
+    e.preventDefault();
+};
+
 var deleteQuest = function deleteQuest(e) {
     e.preventDefault();
 
@@ -166,7 +170,7 @@ var QuestForm = function QuestForm(props) {
             "Quest Experiece: "
         ),
         React.createElement("input", { id: "questExperience", type: "number", name: "questExperience", placeholder: "EXP Reward", min: "0" }),
-        React.createElement("input", { id: "questContent", type: "text", name: "questContent", placeholder: "Details of the Quest" }),
+        React.createElement("textarea", { id: "questContent", "class": "text", name: "questContent", placeholder: "Details of the Quest" }),
         React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
         React.createElement("input", { className: "makeQuestSubmit", type: "submit", value: "Make Quest" })
     );
@@ -184,7 +188,6 @@ var QuestList = function QuestList(props) {
         );
     }
     var questNodes = props.quests.map(function (quest) {
-        console.log(quest._id);
         return React.createElement(
             "form",
             { id: "curQuestForm", name: "curQuestForm",
@@ -231,6 +234,68 @@ var QuestList = function QuestList(props) {
         "div",
         { className: "questList" },
         questNodes
+    );
+};
+var PendingQuestList = function PendingQuestList(props) {
+    if (props.quests.length === 0) {
+        return React.createElement(
+            "div",
+            { className: "pendingQuestList" },
+            React.createElement(
+                "h3",
+                { className: "emptyQuest" },
+                "No Quests Yet"
+            )
+        );
+    }
+    var pendingQuestNodes = props.quests.map(function (quest) {
+
+        return React.createElement(
+            "form",
+            { id: "pendingQuestForm", name: "pendingQuestForm",
+                onSubmit: completeQuest,
+                action: "/completeQuest",
+                method: "POST",
+                className: "curQuestForm"
+            },
+            React.createElement(
+                "div",
+                { key: quest._id, className: "quest" },
+                React.createElement("img", { src: "/assets/img/scrollQuest.png", alt: "domo face", className: "scrollQuest" }),
+                React.createElement(
+                    "h3",
+                    { className: "questName" },
+                    "Name: ",
+                    quest.name
+                ),
+                React.createElement(
+                    "h3",
+                    { className: "questType" },
+                    "Quest Type: ",
+                    quest.questType
+                ),
+                React.createElement(
+                    "h3",
+                    { className: "questExperience" },
+                    "EXP: ",
+                    quest.questExperience
+                ),
+                React.createElement(
+                    "h4",
+                    { className: "questContent" },
+                    "Quest Content: ",
+                    quest.questContent
+                ),
+                React.createElement("input", { type: "submit", name: "deleteQuest", value: "Delete Quest" }),
+                React.createElement("input", { type: "hidden", name: "_id", value: quest._id }),
+                React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf })
+            )
+        );
+    });
+    return React.createElement(
+        "div",
+        { className: "pendingQuestList" },
+        pendingQuestNodes
     );
 };
 var AccountData = function AccountData(props) {
@@ -287,6 +352,11 @@ var AccountData = function AccountData(props) {
 
 var loadQuestsFromServer = function loadQuestsFromServer() {
     sendAjax('GET', '/getQuests', null, function (data) {
+        ReactDOM.render(React.createElement(QuestList, { quests: data.quests, csrf: csrfToken }), document.querySelector("#quests"));
+    });
+};
+var loadPendingQuestsFromServer = function loadPendingQuestsFromServer() {
+    sendAjax('GET', '/getPendingQuests', null, function (data) {
         ReactDOM.render(React.createElement(QuestList, { quests: data.quests, csrf: csrfToken }), document.querySelector("#quests"));
     });
 };

@@ -20,7 +20,7 @@ const login = (request, response) => {
   const password = `${req.body.pass}`;
 
   if (!username || !password) {
-    return res.status(400).json({ error: 'RAWR! All fields are required' });
+    return res.status(400).json({ error: 'Gamer! All fields are required' });
   }
 
   return Account.AccountModel.authenticate(username, password, (err, account) => {
@@ -44,11 +44,11 @@ const signup = (request, response) => {
   req.body.pass2 = `${req.body.pass2}`;
 
   if (!req.body.username || !req.body.pass || !req.body.pass2) {
-    return res.status(400).json({ error: 'RAWR! All fields are requires' });
+    return res.status(400).json({ error: 'Gamer! All fields are requires' });
   }
 
   if (req.body.pass !== req.body.pass2) {
-    return res.status(400).json({ error: 'RAWR! Passwords do not match' });
+    return res.status(400).json({ error: 'Gamer! Passwords do not match' });
   }
 
   return Account.AccountModel.generateHash(req.body.pass, (salt, hash) => {
@@ -99,30 +99,19 @@ const changePassword = (request, response) =>{
     return res.status(400).json({ error: 'Passwords do not match' });
   }
 
-  return Account.AccountModel.authenticate(req.body.username, password, (err, account) => {
+  return Account.AccountModel.authenticate(req.body.username,  req.body.currPass, (err, account) => {
     if (err || !account) {
       return res.status(401).json({ error: 'Wrong username or password' });
     }
-    /*
-    const savePromise = updateAccount.save();
-
-    savePromise.then(() => {
-      req.session.account = Account.AccountModel.toAPI(updateAccount);
-
-      return res.json({ redirect: '/maker' });
+    
+    return Account.AccountModel.generateHash(req.body.pass, (salt, hash) => {
+      return Account.AccountModel.updateOne({ username: req.session.account.username },{ salt, password: hash }, (err) => {           
+        if(err) {             
+            return res.status(400).json({err});           
+        }
+        return res.json({message: "password successfully changed"});         
     });
-
-    savePromise.catch((error) => {
-      console.log(error);
-
-      if (error.code === 11000) {
-        return res.status(400).json({ error: 'Username already in use.' });
-      }
-
-      return res.status(400).json({ error: 'An error occured' });
     });
-    */
-    return Account.AccountModel.changePassword()
   });
 }
 const getAccount = (request, response) => {
