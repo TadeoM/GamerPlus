@@ -7,7 +7,6 @@ const loginPage = (req, res) => {
 };
 
 const creatorPage = (req, res) => {
-
     Account.AccountModel.findByUsername(req.session.account.username, (err, docs) => {
         if(err) {
             console.log(err);
@@ -91,6 +90,7 @@ const signup = (request, response) => {
     });
   });
 };
+
 const changePassword = (request, response) =>{
   const req = request;
   const res = response;
@@ -115,25 +115,7 @@ const changePassword = (request, response) =>{
     if (err || !account) {
       return res.status(401).json({ error: 'Wrong username or password' });
     }
-    /*
-    const savePromise = updateAccount.save();
-
-    savePromise.then(() => {
-      req.session.account = Account.AccountModel.toAPI(updateAccount);
-
-      return res.json({ redirect: '/maker' });
-    });
-
-    savePromise.catch((error) => {
-      console.log(error);
-
-      if (error.code === 11000) {
-        return res.status(400).json({ error: 'Username already in use.' });
-      }
-
-      return res.status(400).json({ error: 'An error occured' });
-    });
-    */
+    
     return Account.AccountModel.changePassword()
   });
 }

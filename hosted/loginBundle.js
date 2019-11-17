@@ -197,9 +197,11 @@ var handleError = function handleError(message) {
             };
         })();
     }
+
     $("#errorMessage").text(message);
-    $("#messageArea").animate({ width: 'toggle' }, 0);
     $(".mainForm").effect("shake");
+    $("#questMessage").animate({ width: 'toggle' }, 350);
+    $("#messageArea").animate({ width: 'toggle' }, 0);
 };
 
 var showProfile = function showProfile(message) {

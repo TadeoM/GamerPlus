@@ -1,6 +1,7 @@
 "use strict";
 
 var csrfToken = null;
+
 var handleQuest = function handleQuest(e) {
     e.preventDefault();
 
@@ -18,11 +19,30 @@ var handleQuest = function handleQuest(e) {
     return false;
 };
 
+var deleteQuest = function deleteQuest(e) {
+    e.preventDefault();
+
+    //data.quests = $("#questList").props;
+    console.log($("#curQuestForm").serialize());
+
+    //Delete in our database and reload quests. 
+    sendAjax('POST', $("#curQuestForm").attr("action"), $("#curQuestForm").serialize(), function () {
+        loadQuestsFromServer();
+    });
+};
+
+var changePassword = function changePassword(e) {
+    e.preventDefault();
+
+    console.log($("#curQuestForm").serialize());
+    sendAjax('POST', $("#changePswdForm").attr("action"), $("#changePswdForm").serialize());
+};
+
 var showProfile = function showProfile(e) {
     showProfile("PROFILE");
 };
 
-var DomoForm = function DomoForm(props) {
+var ChangePasswordForm = function ChangePasswordForm(props) {
     return React.createElement(
         "form",
         { id: "changePswdForm",
@@ -115,6 +135,7 @@ var QuestForm = function QuestForm(props) {
         React.createElement("input", { className: "makeQuestSubmit", type: "submit", value: "Make Quest" })
     );
 };
+
 var QuestList = function QuestList(props) {
     if (props.quests.length === 0) {
         return React.createElement(
@@ -273,6 +294,7 @@ var loadQuestsFromServer = function loadQuestsFromServer() {
         ReactDOM.render(React.createElement(QuestList, { quests: data.quests, csrf: csrfToken }), document.querySelector("#quests"));
     });
 };
+
 var loadAccountFromServer = function loadAccountFromServer() {
     sendAjax('GET', '/getAccount', null, function (data) {
         ReactDOM.render(React.createElement(AccountData, { account: data.account }), document.querySelector("#accountData"));
@@ -281,10 +303,15 @@ var loadAccountFromServer = function loadAccountFromServer() {
 };
 
 var setup = function setup(csrf) {
-    ReactDOM.render(React.createElement(DomoForm, { csrf: csrf }), document.querySelector("#makeDomo"));
-
-    ReactDOM.render(React.createElement(DomoList, { domos: [] }), document.querySelector("#domos"));
-
+    var changePswdBtn = document.querySelector("#changePswdBtn");
+    changePswdBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        createChangePasswordForm(csrf);
+        return false;
+    });
+    ReactDOM.render(React.createElement(QuestForm, { csrf: csrf }), document.querySelector("#makeQuest"));
+    ReactDOM.render(React.createElement(QuestList, { csrf: csrf, quests: [] }), document.querySelector("#quests"));
+    loadQuestsFromServer();
     var signupButton = document.querySelector("#profileButton");
 
     signupButton.addEventListener("click", function (e) {
@@ -292,10 +319,8 @@ var setup = function setup(csrf) {
         showProfile();
         return false;
     });
-
-    loadDomosFromServer();
     loadAccountFromServer();
-    $("#profileContent").animate({ width: 'hide' }, 0);
+    //$("#profileContent").animate({ width:'hide'}, 0);
 };
 
 var getToken = function getToken() {
@@ -339,8 +364,9 @@ var handleError = function handleError(message) {
     }
 
     $("#errorMessage").text(message);
-    $("#messageArea").animate({ width: 'toggle' }, 0);
     $(".mainForm").effect("shake");
+    $("#questMessage").animate({ width: 'toggle' }, 350);
+    $("#messageArea").animate({ width: 'toggle' }, 0);
 };
 
 var showProfile = function showProfile(message) {
