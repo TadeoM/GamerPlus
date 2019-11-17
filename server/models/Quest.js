@@ -38,7 +38,14 @@ const QuestSchema = new mongoose.Schema({
   questContent:{
     type:String,
     required: true,
-  }
+  },
+  /*
+  questReciever:{
+    type:mongoose.Schema.ObjectId,
+    required:true,
+    ref:'Account',
+  },
+  */
 });
 // Static function to get the name and age from client
 QuestSchema.statics.toAPI = (doc) => ({
@@ -55,7 +62,7 @@ QuestSchema.statics.findbyOwner = (ownerId, callback) => {
   const search = {
     owner: convertID(ownerId),
   };
-  return QuestModel.find(search).select('name questType questExperience').exec(callback);
+  return QuestModel.find(search).select('name questType questExperience questContent').exec(callback);
 };
 // Find by username and then edit.
 // Find Quest By ID and delete

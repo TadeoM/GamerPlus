@@ -19,6 +19,10 @@ const handleQuest = (e) =>{
     return false;
 };
 
+const completeQuest = (e) =>{
+    e.preventDefault();
+}
+
 const deleteQuest = (e) =>{
     e.preventDefault();
 
@@ -94,7 +98,7 @@ const QuestForm = (props) =>{
                 </select>
             <label htmlFor ="questExperience">Quest Experiece: </label>
             <input id="questExperience" type="number" name="questExperience" placeholder ="EXP Reward" min="0"/>
-            <input id="questContent" type="text" name="questContent" placeholder ="Details of the Quest"/>
+            <textarea id="questContent" class="text" name="questContent" placeholder ="Details of the Quest"></textarea>
             <input type="hidden" name="_csrf" value={props.csrf}/>
             <input className ="makeQuestSubmit" type="submit" value ="Make Quest"/>
         </form>
@@ -140,24 +144,67 @@ const QuestList = function(props)
         </div>
     );
 };
+const PendingQuestList = function(props)
+{
+    if(props.quests.length === 0)
+    {
+        return(
+            <div className="pendingQuestList">
+                <h3 className="emptyQuest">No Quests Yet</h3>
+            </div>
+        );
+    }
+const pendingQuestNodes = props.quests.map(function(quest)
+{
+   
+    return(
+        <form id="pendingQuestForm" name ="pendingQuestForm"
+            onSubmit ={completeQuest}
+            action ="/completeQuest"
+            method="POST"
+            className="curQuestForm"
+            >
+        <div key={quest._id} className="quest">
+            <img src="/assets/img/scrollQuest.png" alt="domo face" className="scrollQuest"/>
+            <h3 className="questName">Name: {quest.name}</h3>
+            <h3 className="questType">Quest Type: {quest.questType}</h3>
+            <h3 className="questExperience">EXP: {quest.questExperience}</h3>
+            <h4 className="questContent">Quest Content: {quest.questContent}</h4>
+            <input type="submit" name="deleteQuest" value="Delete Quest" />
+            <input type ="hidden" name ="_id" value ={quest._id}/>
+            <input type="hidden" name="_csrf" value={props.csrf}/>
+        </div>
+         </form>
+    );
+});
+return (
+    <div className="pendingQuestList">
+        {pendingQuestNodes}
+    </div>
+);
+};
 
 const ProfileBar = function(props) {
     return (
         <div className="profileBox">
             <div> 
                 <img id="char" src="/assets/img/BardChar.png" alt="character"/>
-                <button >To Profile</button>
+                <div class="button">
+                    <div class="btn btn-one">
+                        <a href="/profile">To Profile</a>
+                    </div>
+                </div>
+                
             </div>
             
             <h3>
                 <span id="profileStats">
-                <h3 className="accountName"><b>User:</b> {props.account.username} </h3>
-                <h3 className="accountAthletics"><b>Athletics:</b> {props.account.athletics}</h3>
-                <h3 className="accountWisdom"><b>Wisdom:</b> {props.account.wisdom}</h3>
-                <h3 className="accountCharisma"><b>Charisma:</b> {props.account.charisma}</h3>
+                    <h3 className="accountName"><b>User:</b> {props.account.username} </h3>
+                    <h3 className="accountAthletics"><b>Athletics:</b> {props.account.athletics}</h3>
+                    <h3 className="accountWisdom"><b>Wisdom:</b> {props.account.wisdom}</h3>
+                    <h3 className="accountCharisma"><b>Charisma:</b> {props.account.charisma}</h3>
                 </span>
             </h3>
-            
         </div>
     );
 };
@@ -178,7 +225,13 @@ const loadQuestsFromServer = () =>{
         );
     });
 };
-
+const loadPendingQuestsFromServer = () =>{
+    sendAjax('GET', '/getPendingQuests', null, (data) =>{
+        ReactDOM.render(
+            <QuestList quests ={data.quests} csrf = {csrfToken} />, document.querySelector("#quests")
+        );
+    });
+};
 const loadAccountFromServer = () => {
     sendAjax('GET', '/getAccount', null, (data) =>{
         ReactDOM.render(
