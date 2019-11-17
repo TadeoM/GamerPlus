@@ -19,34 +19,34 @@ var handleDomo = function handleDomo(e) {
     return false;
 };
 
+var showProfile = function showProfile(e) {
+    showProfile("PROFILE");
+};
+
 var DomoForm = function DomoForm(props) {
     return React.createElement(
-        "div",
-        { className: "row mb-3" },
+        "form",
+        { id: "domoForm",
+            onSubmit: handleDomo,
+            name: "domoForm",
+            action: "/maker",
+            method: "POST",
+            className: "domoForm"
+        },
         React.createElement(
-            "form",
-            { id: "domoForm",
-                onSubmit: handleDomo,
-                name: "domoForm",
-                action: "/maker",
-                method: "POST",
-                className: "domoForm"
-            },
-            React.createElement(
-                "label",
-                { htmlFor: "name" },
-                "Name: "
-            ),
-            React.createElement("input", { id: "domoName", type: "text", name: "name", placeholder: "Domo Name" }),
-            React.createElement(
-                "label",
-                { htmlFor: "age" },
-                "Age: "
-            ),
-            React.createElement("input", { id: "domoAge", type: "text", name: "age", placeholder: "Domo Age" }),
-            React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
-            React.createElement("input", { className: "makeDomoSubmit", type: "submit", value: "Make Domo" })
-        )
+            "label",
+            { htmlFor: "name" },
+            "Name: "
+        ),
+        React.createElement("input", { id: "domoName", type: "text", name: "name", placeholder: "Domo Name" }),
+        React.createElement(
+            "label",
+            { htmlFor: "age" },
+            "Age: "
+        ),
+        React.createElement("input", { id: "domoAge", type: "text", name: "age", placeholder: "Domo Age" }),
+        React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
+        React.createElement("input", { className: "makeDomoSubmit", type: "submit", value: "Make Domo" })
     );
 };
 
@@ -92,62 +92,92 @@ var DomoList = function DomoList(props) {
     );
 };
 
-var AccountData = function AccountData(props) {
+var ProfileBar = function ProfileBar(props) {
     return React.createElement(
         "div",
-        { className: "row mb-3" },
+        { className: "profileBox" },
         React.createElement(
             "div",
-            { className: "col-md-4" },
+            null,
+            React.createElement("img", { id: "char", src: "/assets/img/BardChar.png", alt: "character" }),
             React.createElement(
-                "h3",
-                { className: "accountName" },
-                React.createElement(
-                    "b",
-                    null,
-                    "User:"
-                ),
-                " ",
-                props.account.username,
-                " "
-            ),
-            React.createElement(
-                "h3",
-                { className: "accountAthletics" },
-                React.createElement(
-                    "b",
-                    null,
-                    "Athletics:"
-                ),
-                " ",
-                props.account.athletics
+                "button",
+                null,
+                "To Profile"
             )
         ),
         React.createElement(
-            "div",
-            { className: "col-md-4" },
+            "h3",
+            null,
             React.createElement(
-                "h3",
-                { className: "accountWisdom" },
+                "span",
+                { id: "profileStats" },
                 React.createElement(
-                    "b",
-                    null,
-                    "Wisdom:"
+                    "h3",
+                    { className: "accountName" },
+                    React.createElement(
+                        "b",
+                        null,
+                        "User:"
+                    ),
+                    " ",
+                    props.account.username,
+                    " "
                 ),
-                " ",
-                props.account.wisdom
-            ),
-            React.createElement(
-                "h3",
-                { className: "accountCharisma" },
                 React.createElement(
-                    "b",
-                    null,
-                    "Charisma:"
+                    "h3",
+                    { className: "accountAthletics" },
+                    React.createElement(
+                        "b",
+                        null,
+                        "Athletics:"
+                    ),
+                    " ",
+                    props.account.athletics
                 ),
-                " ",
-                props.account.charisma
+                React.createElement(
+                    "h3",
+                    { className: "accountWisdom" },
+                    React.createElement(
+                        "b",
+                        null,
+                        "Wisdom:"
+                    ),
+                    " ",
+                    props.account.wisdom
+                ),
+                React.createElement(
+                    "h3",
+                    { className: "accountCharisma" },
+                    React.createElement(
+                        "b",
+                        null,
+                        "Charisma:"
+                    ),
+                    " ",
+                    props.account.charisma
+                )
             )
+        )
+    );
+};
+
+var AccountData = function AccountData(props) {
+    return React.createElement(
+        "div",
+        null,
+        React.createElement("img", { id: "char", src: "/assets/img/BardChar.png", alt: "character" }),
+        React.createElement(
+            "h3",
+            { className: "accountName" },
+            React.createElement(
+                "b",
+                null,
+                "User:"
+            ),
+            " ",
+            props.account.username,
+            " "
         )
     );
 };
@@ -162,6 +192,7 @@ var loadAccountFromServer = function loadAccountFromServer() {
     sendAjax('GET', '/getAccount', null, function (data) {
         console.log(data.account.athletics);
         ReactDOM.render(React.createElement(AccountData, { account: data.account }), document.querySelector("#accountData"));
+        ReactDOM.render(React.createElement(ProfileBar, { account: data.account }), document.querySelector("#profileContent"));
     });
 };
 
@@ -170,8 +201,17 @@ var setup = function setup(csrf) {
 
     ReactDOM.render(React.createElement(DomoList, { domos: [] }), document.querySelector("#domos"));
 
+    var signupButton = document.querySelector("#profileButton");
+
+    signupButton.addEventListener("click", function (e) {
+        e.preventDefault();
+        showProfile();
+        return false;
+    });
+
     loadDomosFromServer();
     loadAccountFromServer();
+    $("#profileContent").animate({ width: 'hide' }, 0);
 };
 
 var getToken = function getToken() {
@@ -186,8 +226,40 @@ $(document).ready(function () {
 "use strict";
 
 var handleError = function handleError(message) {
+    if ($.ui) {
+        (function () {
+            var oldEffect = $.fn.effect;
+            $.fn.effect = function (effectName) {
+                if (effectName === "shake") {
+                    var old = $.effects.createWrapper;
+                    $.effects.createWrapper = function (element) {
+                        var result;
+                        var oldCSS = $.fn.css;
+
+                        $.fn.css = function (size) {
+                            var _element = this;
+                            var hasOwn = Object.prototype.hasOwnProperty;
+                            return _element === element && hasOwn.call(size, "width") && hasOwn.call(size, "height") && _element || oldCSS.apply(this, arguments);
+                        };
+
+                        result = old.apply(this, arguments);
+
+                        $.fn.css = oldCSS;
+                        return result;
+                    };
+                }
+                return oldEffect.apply(this, arguments);
+            };
+        })();
+    }
+
     $("#errorMessage").text(message);
-    $("#domoMessage").animate({ width: 'toggle' }, 350);
+    $("#messageArea").animate({ width: 'toggle' }, 0);
+    $(".mainForm").effect("shake");
+};
+
+var showProfile = function showProfile(message) {
+    $("#profileContent").animate({ width: 'toggle' }, 350);
 };
 
 var redirect = function redirect(response) {

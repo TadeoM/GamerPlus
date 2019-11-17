@@ -1,7 +1,7 @@
 const handleLogin = (e) => {
     e.preventDefault();
 
-    $("#domoMessage").animate({width:'hide'}, 350);
+    $("#messageArea").animate({width:'hide'}, 0);
 
     if($("#user").val() == '' || $("#pass").val() == '') {
         handleError("RAWR! Username or password is empty");
@@ -18,7 +18,7 @@ const handleLogin = (e) => {
 const handleSignup = (e) => {
     e.preventDefault();
 
-    $("#domoMessage").animate({width:'hide'}, 350);
+    $("#domoMessage").animate({width:'hide'}, 0);
 
     if ($("#user").val() == '' || $("#pass").val() == '' || $("#pass2").val() == '') {
         handleError("RAWR! All fields are required");
@@ -37,43 +37,54 @@ const handleSignup = (e) => {
 
 const LoginWindow = (props) => {
     return (
-        <form id="loginForm" 
-            name="loginForm"
-            onSubmit={handleLogin}
-            action="/login"
-            method="POST"
-            className="mainForm"
-        >
-            <label htmlFor="username">Username: </label>
-            <input id="user" type="text" name="username" placeholder="username"/>
-            <label htmlFor="pass">Password: </label>
-            <input id="pass" type="password" name="pass" placeholder="password"/>
-            <input type="hidden" name="_csrf" value={props.csrf}/>
-            <input className="formSubmit" type="submit" value="Sign In"/>
+        <div className="box">
+            
+            <form id="loginForm" 
+                name="loginForm"
+                onSubmit={handleLogin}
+                action="/login"
+                method="POST"
+                className="mainForm"
+            >
+                <div id="messageArea">
+                    <h3><span id="errorMessage">Wrong username or password</span></h3>
+                </div>
+                <label htmlFor="username">Username: </label>
+                <input id="user" type="text" name="username" placeholder="username"/>
+                <label htmlFor="pass">Password: </label>
+                <input id="pass" type="password" name="pass" placeholder="password"/>
+                <input type="hidden" name="_csrf" value={props.csrf}/>
+                <input className="formSubmit" type="submit" value="Sign In"/>
 
-        </form>
+            </form>
+        </div>
     );
 };
 
 const SignupWindow = (props) => {
     return (
-        <form id="signupForm" 
-            name="signupForm"
-            onSubmit={handleSignup}
-            action="/signup"
-            method="POST"
-            className="mainForm"
-        >
-            <label htmlFor="username">Username: </label>
-            <input id="user" type="text" name="username" placeholder="username"/>
-            <label htmlFor="pass">Password: </label>
-            <input id="pass" type="password" name="pass" placeholder="password"/>
-            <label htmlFor="pass2">Password: </label>
-            <input id="pass2" type="password" name="pass2" placeholder="password"/>
-            <input type="hidden" name="_csrf" value={props.csrf}/>
-            <input className="formSubmit" type="submit" value="Sign Up"/>
+        <div className="box">
+            <form id="signupForm" 
+                name="signupForm"
+                onSubmit={handleSignup}
+                action="/signup"
+                method="POST"
+                className="mainForm"
+            >
+                <div id="messageArea">
+                    <h3><span id="errorMessage">Wrong username or password</span></h3>
+                </div>
+                <label htmlFor="username">Username: </label>
+                <input id="user" type="text" name="username" placeholder="username"/>
+                <label htmlFor="pass">Password: </label>
+                <input id="pass" type="password" name="pass" placeholder="password"/>
+                <label htmlFor="pass2">Repeat Password: </label>
+                <input id="pass2" type="password" name="pass2" placeholder="repeat password"/>
+                <input type="hidden" name="_csrf" value={props.csrf}/>
+                <input className="formSubmit" type="submit" value="Sign Up"/>
 
-        </form>
+            </form>
+        </div>
     );
 };
 
@@ -94,6 +105,7 @@ const createSignupWindow = (csrf) => {
 const setup = (csrf) => {
     const loginButton = document.querySelector("#loginButton");
     const signupButton = document.querySelector("#signupButton");
+    console.log("loginButton");
 
     signupButton.addEventListener("click", (e) => {
         e.preventDefault();

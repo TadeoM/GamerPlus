@@ -6,6 +6,18 @@ const loginPage = (req, res) => {
     res.render('login', { csrfToken: req.csrfToken() });
 };
 
+const creatorPage = (req, res) => {
+
+    Account.AccountModel.findByUsername(req.session.account.username, (err, docs) => {
+        if(err) {
+            console.log(err);
+            return res.status(400).json({ error: 'An error occurred' });
+        }
+        
+        return res.render('creation', { csrfToken: req.csrfToken(), account: docs });
+    });
+};
+
 const logout = (req, res) => {
     req.session.destroy();
     res.redirect('/');
@@ -123,18 +135,6 @@ const createStats = (request, response) => {
             return res.status(400).json({ error: 'An error occured'});
         })
     
-    });
-};
-
-const creatorPage = (req, res) => {
-
-    Account.AccountModel.findByUsername(req.session.account.username, (err, docs) => {
-        if(err) {
-            console.log(err);
-            return res.status(400).json({ error: 'An error occurred' });
-        }
-        
-        return res.render('creation', { csrfToken: req.csrfToken(), account: docs });
     });
 };
 

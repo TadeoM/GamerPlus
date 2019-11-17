@@ -17,9 +17,12 @@ const handleDomo = (e) => {
     return false;
 };
 
+const showProfile = (e) => {
+    showProfile("PROFILE");
+}
+
 const DomoForm = (props) => {
     return (
-        <div className="row mb-3">
             <form id="domoForm"
                 onSubmit={handleDomo}
                 name="domoForm"
@@ -34,7 +37,6 @@ const DomoForm = (props) => {
                 <input type="hidden" name="_csrf" value={props.csrf}/>
                 <input className="makeDomoSubmit" type="submit" value="Make Domo"/>
             </form>
-        </div>
     );
 };
 
@@ -64,17 +66,32 @@ const DomoList = function(props) {
     );
 };
 
-const AccountData = function(props) {
+const ProfileBar = function(props) {
     return (
-        <div className="row mb-3">
-            <div className="col-md-4">
+        <div className="profileBox">
+            <div> 
+                <img id="char" src="/assets/img/BardChar.png" alt="character"/>
+                <button >To Profile</button>
+            </div>
+            
+            <h3>
+                <span id="profileStats">
                 <h3 className="accountName"><b>User:</b> {props.account.username} </h3>
                 <h3 className="accountAthletics"><b>Athletics:</b> {props.account.athletics}</h3>
-            </div>
-            <div className="col-md-4">
                 <h3 className="accountWisdom"><b>Wisdom:</b> {props.account.wisdom}</h3>
                 <h3 className="accountCharisma"><b>Charisma:</b> {props.account.charisma}</h3>
-            </div>
+                </span>
+            </h3>
+            
+        </div>
+    );
+};
+
+const AccountData = function(props) {    
+    return (
+        <div>
+            <img id="char" src="/assets/img/BardChar.png" alt="character"/>
+            <h3 className="accountName"><b>User:</b> {props.account.username} </h3>
         </div>
     );
 };
@@ -93,6 +110,9 @@ const loadAccountFromServer = () => {
         ReactDOM.render(
             <AccountData account={data.account} />, document.querySelector("#accountData")
         );
+        ReactDOM.render(
+            <ProfileBar account={data.account} />, document.querySelector("#profileContent")
+        );
     });
 };
 
@@ -104,9 +124,19 @@ const setup = function(csrf) {
     ReactDOM.render(
         <DomoList domos={[]} />, document.querySelector("#domos")
     );
+
+    const signupButton = document.querySelector("#profileButton");
+
+
+    signupButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        showProfile();
+        return false;
+    });
     
     loadDomosFromServer();
     loadAccountFromServer();
+    $("#profileContent").animate({ width:'hide'}, 0);
 };
 
 const getToken = () => {
