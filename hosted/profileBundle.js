@@ -2,11 +2,9 @@
 
 var handleFriend = function handleFriend(e) {
     e.preventDefault();
-
-    $("#domoMessage").animate({ width: 'hide' }, 350);
-
-    if ($("#domoName").val() == '' || $("#domoAge").val() == '') {
-        handleError("RAWR! All fields are required");
+    console.log($("#friendName").val());
+    if ($("#friendName").val() === '') {
+        handleError("Gamer! All fields are required");
         return false;
     }
 
@@ -15,6 +13,18 @@ var handleFriend = function handleFriend(e) {
     });
 
     return false;
+};
+var changePassword = function changePassword(e) {
+    e.preventDefault();
+
+    sendAjax('POST', $("#changePswdForm").attr("action"), $("#changePswdForm").serialize(), function (err) {
+        console.log(err);
+        if (!err) {
+            handleError("");
+        } else {
+            $("#changePswdForm").animate({ width: 'hide' }, 350);
+        }
+    });
 };
 
 var FriendForm = function FriendForm(props) {
@@ -63,7 +73,7 @@ var FriendList = function FriendList(props) {
         return React.createElement(
             "div",
             { key: friend.user, className: "friend" },
-            React.createElement("img", { src: "/assets/img/domoface.jpeg", alt: "friend face", className: "friendFace" }),
+            React.createElement("img", { src: "/assets/img/gamifyLife.png", alt: "friend face", className: "friendFace" }),
             React.createElement(
                 "h3",
                 { className: "friendName" },
@@ -80,7 +90,39 @@ var FriendList = function FriendList(props) {
         friendNodes
     );
 };
-
+var ChangePasswordForm = function ChangePasswordForm(props) {
+    return React.createElement(
+        "form",
+        { id: "changePswdForm",
+            name: "changePswdForm",
+            onSubmit: changePassword,
+            action: "/changePswd",
+            method: "POST",
+            className: "mainForm"
+        },
+        React.createElement(
+            "label",
+            { htmlFor: "username" },
+            "Username: "
+        ),
+        React.createElement("input", { id: "user", type: "text", name: "username", placeholder: "username" }),
+        React.createElement(
+            "label",
+            { htmlFor: "currPass" },
+            "Current Password: "
+        ),
+        React.createElement("input", { id: "currPass", type: "password", name: "currPass", placeholder: "password" }),
+        React.createElement(
+            "label",
+            { htmlFor: "pass" },
+            "New Password: "
+        ),
+        React.createElement("input", { id: "pass", type: "password", name: "pass", placeholder: "password" }),
+        React.createElement("input", { id: "pass2", type: "password", name: "pass2", placeholder: "password" }),
+        React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
+        React.createElement("input", { className: "formSubmit", type: "submit", value: "Confirm Password Change" })
+    );
+};
 var AccountData = function AccountData(props) {
     return React.createElement(
         "div",
@@ -130,6 +172,17 @@ var AccountData = function AccountData(props) {
             ),
             " ",
             props.account.charisma
+        ),
+        React.createElement(
+            "h3",
+            { className: "accountExperience" },
+            React.createElement(
+                "b",
+                null,
+                "Experience:"
+            ),
+            " ",
+            props.account.experience
         )
     );
 };
@@ -140,8 +193,16 @@ var loadAccountFromServer = function loadAccountFromServer() {
     });
 };
 
+var createChangePasswordForm = function createChangePasswordForm(csrf) {
+    ReactDOM.render(React.createElement(ChangePasswordForm, { csrf: csrf }), document.querySelector("#pswdChange"));
+};
 var setup = function setup(csrf) {
-
+    var changePswdBtn = document.querySelector("#changePswdBtn");
+    changePswdBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        createChangePasswordForm(csrf);
+        return false;
+    });
     ReactDOM.render(React.createElement(FriendForm, { csrf: csrf }), document.querySelector("#addFriend"));
 
     showFriends();

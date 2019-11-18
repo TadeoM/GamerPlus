@@ -39,12 +39,6 @@ const deleteQuest = (e) =>{
     
 }
 
-const changePassword = (e) =>{
-    e.preventDefault();
-
-    console.log($("#curQuestForm").serialize());
-    sendAjax('POST',$("#changePswdForm").attr("action"), $("#changePswdForm").serialize());
-}
 
 const showProfile = (e) => {
     showProfile("PROFILE");
@@ -173,6 +167,7 @@ const ProfileBar = function(props) {
                     <h3 className="accountAthletics"><b>Athletics:</b> {props.account.athletics}</h3>
                     <h3 className="accountWisdom"><b>Wisdom:</b> {props.account.wisdom}</h3>
                     <h3 className="accountCharisma"><b>Charisma:</b> {props.account.charisma}</h3>
+                    <h3 className="accountExperience"><b>Experience:</b> {props.account.experience}</h3>
                 </span>
             </h3>
         </div>

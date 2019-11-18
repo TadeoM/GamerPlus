@@ -1,8 +1,7 @@
 const handleFriend = (e) => {
     e.preventDefault();
-    
-    
-    if($("#friendName").val() == '') {
+    console.log($("#friendName").val());
+    if($("#friendName").val() === '') {
         handleError("Gamer! All fields are required");
         return false;
     }
@@ -13,6 +12,20 @@ const handleFriend = (e) => {
     
     return false;
 };
+const changePassword = (e) =>{
+    e.preventDefault();
+
+    sendAjax('POST',$("#changePswdForm").attr("action"), $("#changePswdForm").serialize(), (err) => {
+        console.log(err);
+        if(!err) {
+            handleError("");
+        }
+        else {
+            $("#changePswdForm").animate({width:'hide'},350);
+        }
+    });
+    
+}
 
 const FriendForm = (props) => {
     return (
@@ -84,7 +97,9 @@ const ChangePasswordForm = (props)=>{
             <input id="pass2" type="password" name="pass2" placeholder="password"/>
             <input type="hidden" name="_csrf" value={props.csrf}/>
             <input className="formSubmit" type="submit" value="Confirm Password Change"/>
-
+            </form>
+    )
+}
 const AccountData = function(props) {    
     return (
         <div>
@@ -93,6 +108,7 @@ const AccountData = function(props) {
             <h3 className="accountAthletics"><b>Athletics:</b> {props.account.athletics}</h3>
             <h3 className="accountWisdom"><b>Wisdom:</b> {props.account.wisdom}</h3>
             <h3 className="accountCharisma"><b>Charisma:</b> {props.account.charisma}</h3>
+            <h3 className="accountExperience"><b>Experience:</b> {props.account.experience}</h3>
         </div>
     );
 };

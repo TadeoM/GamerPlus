@@ -36,13 +36,6 @@ var deleteQuest = function deleteQuest(e) {
     });
 };
 
-var changePassword = function changePassword(e) {
-    e.preventDefault();
-
-    console.log($("#curQuestForm").serialize());
-    sendAjax('POST', $("#changePswdForm").attr("action"), $("#changePswdForm").serialize());
-};
-
 var showProfile = function showProfile(e) {
     showProfile("PROFILE");
 };
@@ -303,6 +296,17 @@ var ProfileBar = function ProfileBar(props) {
                     ),
                     " ",
                     props.account.charisma
+                ),
+                React.createElement(
+                    "h3",
+                    { className: "accountExperience" },
+                    React.createElement(
+                        "b",
+                        null,
+                        "Experience:"
+                    ),
+                    " ",
+                    props.account.experience
                 )
             )
         )
