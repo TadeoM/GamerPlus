@@ -1,10 +1,9 @@
 const handleFriend = (e) => {
     e.preventDefault();
     
-    $("#domoMessage").animate({ width:'hide'}, 350);
     
-    if($("#domoName").val() == '' || $("#domoAge").val() == '') {
-        handleError("RAWR! All fields are required");
+    if($("#friendName").val() == '') {
+        handleError("Gamer! All fields are required");
         return false;
     }
     
@@ -34,12 +33,14 @@ const FriendForm = (props) => {
 }
 
 const AccountData = function(props) {
+    console.log(props.account.experience);
     return (
         <div>
             <h3 className="accountName"><b>User:</b> {props.account.username} </h3>
             <h3 className="accountAthletics"><b>Athletics:</b> {props.account.athletics}</h3>
             <h3 className="accountWisdom"><b>Wisdom:</b> {props.account.wisdom}</h3>
             <h3 className="accountCharisma"><b>Charisma:</b> {props.account.charisma}</h3>
+            <h3 className="accountExp"><b>Charisma:</b> {props.account.experience}</h3>
         </div>
     );
 };
@@ -66,7 +67,7 @@ const FriendList = function(props) {
     const friendNodes = props.friends.map(function(friend) {
         return (
             <div key={friend.user} className="friend">
-                <img src="/assets/img/domoface.jpeg" alt="friend face" className="friendFace" />
+                <img src="/assets/img/gamifyLife.png" alt="friend face" className="friendFace" />
                 <h3 className="friendName">Name: {friend.friend} </h3>
             </div>
         );

@@ -3,8 +3,6 @@
 var handleCreation = function handleCreation(e) {
     e.preventDefault();
 
-    $("#domoMessage").animate({ width: 'hide' }, 350);
-
     var maxTotal = 10;
 
     var athletics = $("#accountAthletics");
@@ -12,7 +10,7 @@ var handleCreation = function handleCreation(e) {
     var charisma = $("#accountCharisma");
 
     if (athletics.val() == '' || wisdom.val() == '' || charisma.val() == '') {
-        handleError("RAWR! Fill in the stats you fuck.");
+        handleError("Gamer! Fill in the stats you lazy bum.");
         return false;
     }
 
