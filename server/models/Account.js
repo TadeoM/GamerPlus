@@ -28,6 +28,10 @@ const AccountSchema = new mongoose.Schema({
     type: Number,
     default: 1,
   },
+  experience:{
+    type:Number,
+    default:0,
+  },
   salt: {
     type: Buffer,
     required: true,
@@ -53,6 +57,7 @@ AccountSchema.statics.toAPI = doc => ({
   wisdom: doc.wisdom,
   charisma: doc.charisma,
   friendList: doc.friendList,
+  experience: doc.experience,
   _id: doc._id,
 });
 
@@ -102,10 +107,6 @@ AccountModel.findByUsername(username, (err, doc) => {
   });
 });
 
-AccountSchema.statics.changePassword = (newPassword, callback) =>{
-    AccountModel.update(password, newPassword)
-    return callback();
-};
 AccountModel = mongoose.model('Account', AccountSchema);
 
 module.exports.AccountModel = AccountModel;

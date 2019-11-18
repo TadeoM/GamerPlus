@@ -22,6 +22,8 @@ const router = (app) => {
 
     
     app.get('/getQuests', mid.requiresLogin, controllers.Quest.getQuests);
+    app.post('/completeQuest', mid.requiresLogin,controllers.Account.completeQuest);
+    app.get('/getUserQuests', mid.requiresLogin, controllers.Friend.getUserQuests,);
     app.post('/deleteQuest',mid.requiresLogin, controllers.Quest.deleteQuest);
     app.post('/changePswd',mid.requiresLogin, controllers.Account.changePassword);
 

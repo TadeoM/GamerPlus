@@ -1,8 +1,7 @@
 const models = require('../models');
-
-const Friend = models.Friend;
 const Account = models.Account;
-
+const Friend = models.Friend;
+const Quest = models.Quest;
 const profilePage = (req, res) => {
     Friend.FriendModel.findByUser(req.session.account.username, (err, docs) => {
         if(err) {
@@ -49,7 +48,7 @@ const addFriend = (request,response) => {
 const getFriends = (request, response) => {
     const req = request;
     const res = response;
-    
+
     return Friend.FriendModel.findByUser(req.session.account.username, (err, docs) => {
         if (err) {
             console.log(err);
@@ -60,6 +59,47 @@ const getFriends = (request, response) => {
     });
 };
 
+const getUserQuests = (request, response)=>{
+    const req = request;
+    const res = response;
+
+    console.log()
+      
+    return Friend.FriendModel.findByUser(req.session.account.username, (err, docs) => {
+        if (err) {
+            console.log(err);
+            return res.status(400).json({ error: 'An error occurred' });
+        }
+
+        for(let i = 0; i<docs.length; i++)
+        {
+        return Account.AccountModel.findByUsername(docs[i].friend, (err2, doc2) => {
+            if(err2)
+            {
+                console.log(err2);
+                return res.status(400).json({ error: 'An error occured in Getting' });
+            }
+ 
+            console.log(doc2._id);
+            return Quest.QuestModel.findbyOwner(doc2._id, (err, docs) => {
+                if (err) {
+                console.log(err);
+                return res.status(400).json({ error: 'An error occured in Getting' });
+                }
+                return res.json({ quests: docs });
+            });
+        });
+        }
+    });
+    
+  };
+/*
+const getPendingQuests = (request, response) =>{
+    const req = request;
+    const res = response;
+}
+*/
 module.exports.getFriends = getFriends;
 module.exports.profilePage = profilePage;
+module.exports.getUserQuests = getUserQuests;
 module.exports.addFriend = addFriend;

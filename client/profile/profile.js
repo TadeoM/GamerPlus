@@ -78,8 +78,42 @@ const FriendList = function(props) {
         </div>
     );
 };
+const ChangePasswordForm = (props)=>{
+    return (
+        <form id="changePswdForm" 
+            name="changePswdForm"
+            onSubmit={changePassword}
+            action="/changePswd"
+            method="POST"
+            className="mainForm"
+        >
+             <label htmlFor="username">Username: </label>
+            <input id="user" type="text" name="username" placeholder="username"/>
+            <label htmlFor="currPass">Current Password: </label>
+            <input id="currPass" type="password" name="currPass" placeholder="password"/>
+            <label htmlFor="pass">New Password: </label>
+            <input id="pass" type="password" name="pass" placeholder="password"/>
+            <input id="pass2" type="password" name="pass2" placeholder="password"/>
+            <input type="hidden" name="_csrf" value={props.csrf}/>
+            <input className="formSubmit" type="submit" value="Confirm Password Change"/>
 
+        </form>
+    ); 
+};
+
+const createChangePasswordForm =(csrf) => {
+    ReactDOM.render(
+        <ChangePasswordForm csrf={csrf} />,
+        document.querySelector("#pswdChange")
+    );
+};
 const setup = function(csrf) {
+    const changePswdBtn = document.querySelector("#changePswdBtn");
+    changePswdBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        createChangePasswordForm(csrf);
+        return false;
+    });
     ReactDOM.render(
         <FriendForm csrf={csrf} />, document.querySelector("#addFriend")
     );

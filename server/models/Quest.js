@@ -64,6 +64,7 @@ QuestSchema.statics.findbyOwner = (ownerId, callback) => {
   };
   return QuestModel.find(search).select('name questType questExperience questContent').exec(callback);
 };
+
 // Find by username and then edit.
 // Find Quest By ID and delete
 QuestSchema.statics.deleteQuest = (id, callback) => {

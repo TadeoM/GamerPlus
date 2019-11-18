@@ -21,14 +21,15 @@ const handleQuest = (e) =>{
 
 const completeQuest = (e) =>{
     e.preventDefault();
+
+    sendAjax('POST',$("#pendingQuestForm").attr("action"), $("#pendingQuestForm").serialize(), function(){
+        loadPendingQuestsFromServer();
+        
+    });
 }
 
 const deleteQuest = (e) =>{
     e.preventDefault();
-
-    
-    //data.quests = $("#questList").props;
-    console.log( $("#curQuestForm").serialize());
 
     //Delete in our database and reload quests. 
     sendAjax('POST',$("#curQuestForm").attr("action"), $("#curQuestForm").serialize(), function(){
@@ -48,36 +49,6 @@ const changePassword = (e) =>{
 const showProfile = (e) => {
     showProfile("PROFILE");
 }
-
-const ChangePasswordForm = (props)=>{
-    return (
-        <form id="changePswdForm" 
-            name="changePswdForm"
-            onSubmit={changePassword}
-            action="/changePswd"
-            method="POST"
-            className="mainForm"
-        >
-             <label htmlFor="username">Username: </label>
-            <input id="user" type="text" name="username" placeholder="username"/>
-            <label htmlFor="currPass">Current Password: </label>
-            <input id="currPass" type="password" name="currPass" placeholder="password"/>
-            <label htmlFor="pass">New Password: </label>
-            <input id="pass" type="password" name="pass" placeholder="password"/>
-            <input id="pass2" type="password" name="pass2" placeholder="password"/>
-            <input type="hidden" name="_csrf" value={props.csrf}/>
-            <input className="formSubmit" type="submit" value="Confirm Password Change"/>
-
-        </form>
-    ); 
-};
-
-const createChangePasswordForm =(csrf) => {
-    ReactDOM.render(
-        <ChangePasswordForm csrf={csrf} />,
-        document.querySelector("#pswdChange")
-    );
-};
 
 const QuestForm = (props) =>{
     return(
@@ -117,7 +88,6 @@ const QuestList = function(props)
     }
     const questNodes = props.quests.map(function(quest)
     {
-        console.log(quest._id);
         return(
             <form id="curQuestForm" name ="curQuestForm"
                 onSubmit ={deleteQuest}
@@ -126,7 +96,7 @@ const QuestList = function(props)
                 className="curQuestForm"
                 >
             <div key={quest._id} className="quest">
-                <img src="/assets/img/scrollQuest.png" alt="domo face" className="scrollQuest"/>
+                <img src="/assets/img/scrollQuest.png" alt="Quest Scroll" className="scrollQuest"/>
                 <h3 className="questName">Name: {quest.name}</h3>
                 <h3 className="questType">Quest Type: {quest.questType}</h3>
                 <h3 className="questExperience">EXP: {quest.questExperience}</h3>
@@ -150,7 +120,7 @@ const PendingQuestList = function(props)
     {
         return(
             <div className="pendingQuestList">
-                <h3 className="emptyQuest">No Quests Yet</h3>
+                <h3 className="emptyQuest">Your Friends Don't Have Quests Yet!</h3>
             </div>
         );
     }
@@ -165,14 +135,15 @@ const pendingQuestNodes = props.quests.map(function(quest)
             className="curQuestForm"
             >
         <div key={quest._id} className="quest">
-            <img src="/assets/img/scrollQuest.png" alt="domo face" className="scrollQuest"/>
+            <img src="/assets/img/scrollQuest.png" alt="Quest Scroll" className="scrollQuest"/>
             <h3 className="questName">Name: {quest.name}</h3>
             <h3 className="questType">Quest Type: {quest.questType}</h3>
             <h3 className="questExperience">EXP: {quest.questExperience}</h3>
             <h4 className="questContent">Quest Content: {quest.questContent}</h4>
-            <input type="submit" name="deleteQuest" value="Delete Quest" />
-            <input type ="hidden" name ="_id" value ={quest._id}/>
+            <input type="submit" name="completeQuest" value="Complete Quest" />
             <input type="hidden" name="_csrf" value={props.csrf}/>
+            <input type="hidden" name="experience" value={quest.questExperience}/>
+            <input type="hidden" name="questID" value={quest._id}/>
         </div>
          </form>
     );
@@ -226,10 +197,16 @@ const loadQuestsFromServer = () =>{
     });
 };
 const loadPendingQuestsFromServer = () =>{
-    sendAjax('GET', '/getPendingQuests', null, (data) =>{
-        ReactDOM.render(
-            <QuestList quests ={data.quests} csrf = {csrfToken} />, document.querySelector("#quests")
-        );
+    sendAjax('GET', '/getFriends', null, (data) =>{
+        for (let i = 0; i < data.friends.length; i++) {
+            
+            sendAjax('GET', '/getUserQuests', data.friends[i].friend, (dataPartTwo) =>{
+                console.log(data.friends[i].friend);
+                ReactDOM.render(
+                    <PendingQuestList quests ={dataPartTwo.quests} csrf = {csrfToken} />, document.querySelector("#pendingQuests")
+                );
+            });
+        };
     });
 };
 const loadAccountFromServer = () => {
@@ -244,12 +221,7 @@ const loadAccountFromServer = () => {
 };
 
 const setup = function(csrf) {
-    const changePswdBtn = document.querySelector("#changePswdBtn");
-    changePswdBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        createChangePasswordForm(csrf);
-        return false;
-    });
+ 
     ReactDOM.render(
         <QuestForm csrf ={csrf}/>, document.querySelector("#makeQuest")
     );
@@ -265,6 +237,7 @@ const setup = function(csrf) {
         return false;
     });
     loadAccountFromServer();
+    loadPendingQuestsFromServer();
     $("#profileContent").animate({ width:'hide'}, 0);
 };
 

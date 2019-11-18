@@ -1,5 +1,4 @@
 const models = require('../models');
-
 const Quest = models.Quest;
 
 const makerPage = (req, res) => {
@@ -55,10 +54,11 @@ const getQuests = (request, response) => {
   });
 };
 
+
 const deleteQuest = (request, response) => {
   const req = request;
   const res = response;
-  console.log(req.body);
+
   return Quest.QuestModel.deleteQuest(req.body, (err, docs) => {
     if (err) {
       console.log(err);
@@ -79,5 +79,4 @@ module.exports.makerPage = makerPage;
 module.exports.make = makeQuest;
 module.exports.getQuests = getQuests;
 module.exports.deleteQuest = deleteQuest;
-//module.exports.getPendingQuests = getPendingQuests;
 

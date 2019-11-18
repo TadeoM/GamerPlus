@@ -21,13 +21,14 @@ var handleQuest = function handleQuest(e) {
 
 var completeQuest = function completeQuest(e) {
     e.preventDefault();
+
+    sendAjax('POST', $("#pendingQuestForm").attr("action"), $("#pendingQuestForm").serialize(), function () {
+        loadPendingQuestsFromServer();
+    });
 };
 
 var deleteQuest = function deleteQuest(e) {
     e.preventDefault();
-
-    //data.quests = $("#questList").props;
-    console.log($("#curQuestForm").serialize());
 
     //Delete in our database and reload quests. 
     sendAjax('POST', $("#curQuestForm").attr("action"), $("#curQuestForm").serialize(), function () {
@@ -44,44 +45,6 @@ var changePassword = function changePassword(e) {
 
 var showProfile = function showProfile(e) {
     showProfile("PROFILE");
-};
-
-var ChangePasswordForm = function ChangePasswordForm(props) {
-    return React.createElement(
-        "form",
-        { id: "changePswdForm",
-            name: "changePswdForm",
-            onSubmit: changePassword,
-            action: "/changePswd",
-            method: "POST",
-            className: "mainForm"
-        },
-        React.createElement(
-            "label",
-            { htmlFor: "username" },
-            "Username: "
-        ),
-        React.createElement("input", { id: "user", type: "text", name: "username", placeholder: "username" }),
-        React.createElement(
-            "label",
-            { htmlFor: "currPass" },
-            "Current Password: "
-        ),
-        React.createElement("input", { id: "currPass", type: "password", name: "currPass", placeholder: "password" }),
-        React.createElement(
-            "label",
-            { htmlFor: "pass" },
-            "New Password: "
-        ),
-        React.createElement("input", { id: "pass", type: "password", name: "pass", placeholder: "password" }),
-        React.createElement("input", { id: "pass2", type: "password", name: "pass2", placeholder: "password" }),
-        React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
-        React.createElement("input", { className: "formSubmit", type: "submit", value: "Confirm Password Change" })
-    );
-};
-
-var createChangePasswordForm = function createChangePasswordForm(csrf) {
-    ReactDOM.render(React.createElement(ChangePasswordForm, { csrf: csrf }), document.querySelector("#pswdChange"));
 };
 
 var QuestForm = function QuestForm(props) {
@@ -153,7 +116,6 @@ var QuestList = function QuestList(props) {
         );
     }
     var questNodes = props.quests.map(function (quest) {
-        console.log(quest._id);
         return React.createElement(
             "form",
             { id: "curQuestForm", name: "curQuestForm",
@@ -165,7 +127,7 @@ var QuestList = function QuestList(props) {
             React.createElement(
                 "div",
                 { key: quest._id, className: "quest" },
-                React.createElement("img", { src: "/assets/img/scrollQuest.png", alt: "domo face", className: "scrollQuest" }),
+                React.createElement("img", { src: "/assets/img/scrollQuest.png", alt: "Quest Scroll", className: "scrollQuest" }),
                 React.createElement(
                     "h3",
                     { className: "questName" },
@@ -210,7 +172,7 @@ var PendingQuestList = function PendingQuestList(props) {
             React.createElement(
                 "h3",
                 { className: "emptyQuest" },
-                "No Quests Yet"
+                "Your Friends Don't Have Quests Yet!"
             )
         );
     }
@@ -227,7 +189,7 @@ var PendingQuestList = function PendingQuestList(props) {
             React.createElement(
                 "div",
                 { key: quest._id, className: "quest" },
-                React.createElement("img", { src: "/assets/img/scrollQuest.png", alt: "domo face", className: "scrollQuest" }),
+                React.createElement("img", { src: "/assets/img/scrollQuest.png", alt: "Quest Scroll", className: "scrollQuest" }),
                 React.createElement(
                     "h3",
                     { className: "questName" },
@@ -252,9 +214,10 @@ var PendingQuestList = function PendingQuestList(props) {
                     "Quest Content: ",
                     quest.questContent
                 ),
-                React.createElement("input", { type: "submit", name: "deleteQuest", value: "Delete Quest" }),
-                React.createElement("input", { type: "hidden", name: "_id", value: quest._id }),
-                React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf })
+                React.createElement("input", { type: "submit", name: "completeQuest", value: "Complete Quest" }),
+                React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
+                React.createElement("input", { type: "hidden", name: "experience", value: quest.questExperience }),
+                React.createElement("input", { type: "hidden", name: "questID", value: quest._id })
             )
         );
     });
@@ -369,8 +332,18 @@ var loadQuestsFromServer = function loadQuestsFromServer() {
     });
 };
 var loadPendingQuestsFromServer = function loadPendingQuestsFromServer() {
-    sendAjax('GET', '/getPendingQuests', null, function (data) {
-        ReactDOM.render(React.createElement(QuestList, { quests: data.quests, csrf: csrfToken }), document.querySelector("#quests"));
+    sendAjax('GET', '/getFriends', null, function (data) {
+        var _loop = function _loop(i) {
+
+            sendAjax('GET', '/getUserQuests', data.friends[i].friend, function (dataPartTwo) {
+                console.log(data.friends[i].friend);
+                ReactDOM.render(React.createElement(PendingQuestList, { quests: dataPartTwo.quests, csrf: csrfToken }), document.querySelector("#pendingQuests"));
+            });
+        };
+
+        for (var i = 0; i < data.friends.length; i++) {
+            _loop(i);
+        };
     });
 };
 var loadAccountFromServer = function loadAccountFromServer() {
@@ -381,12 +354,7 @@ var loadAccountFromServer = function loadAccountFromServer() {
 };
 
 var setup = function setup(csrf) {
-    var changePswdBtn = document.querySelector("#changePswdBtn");
-    changePswdBtn.addEventListener("click", function (e) {
-        e.preventDefault();
-        createChangePasswordForm(csrf);
-        return false;
-    });
+
     ReactDOM.render(React.createElement(QuestForm, { csrf: csrf }), document.querySelector("#makeQuest"));
     ReactDOM.render(React.createElement(QuestList, { csrf: csrf, quests: [] }), document.querySelector("#quests"));
     loadQuestsFromServer();
@@ -398,6 +366,7 @@ var setup = function setup(csrf) {
         return false;
     });
     loadAccountFromServer();
+    loadPendingQuestsFromServer();
     $("#profileContent").animate({ width: 'hide' }, 0);
 };
 
