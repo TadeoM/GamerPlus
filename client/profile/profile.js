@@ -44,7 +44,27 @@ const FriendForm = (props) => {
         </form>
     );    
 }
-
+const ChangePasswordForm = (props)=>{
+    return (
+        <form id="changePswdForm" 
+            name="changePswdForm"
+            onSubmit={changePassword}
+            action="/changePswd"
+            method="POST"
+            className="mainForm"
+        >
+             <label htmlFor="username">Username: </label>
+            <input id="user" type="text" name="username" placeholder="username"/>
+            <label htmlFor="currPass">Current Password: </label>
+            <input id="currPass" type="password" name="currPass" placeholder="password"/>
+            <label htmlFor="pass">New Password: </label>
+            <input id="pass" type="password" name="pass" placeholder="password"/>
+            <input id="pass2" type="password" name="pass2" placeholder="password"/>
+            <input type="hidden" name="_csrf" value={props.csrf}/>
+            <input className="formSubmit" type="submit" value="Confirm Password Change"/>
+            </form>
+    )
+}
 const showFriends = function(props) {
     sendAjax('GET', '/getFriends', null, (data) =>{
         console.log(data.friends);
@@ -79,29 +99,9 @@ const FriendList = function(props) {
         </div>
     );
 };
-const ChangePasswordForm = (props)=>{
+const AccountData = function(props) {
+    console.log(props.account);
     return (
-        <form id="changePswdForm" 
-            name="changePswdForm"
-            onSubmit={changePassword}
-            action="/changePswd"
-            method="POST"
-            className="mainForm"
-        >
-             <label htmlFor="username">Username: </label>
-            <input id="user" type="text" name="username" placeholder="username"/>
-            <label htmlFor="currPass">Current Password: </label>
-            <input id="currPass" type="password" name="currPass" placeholder="password"/>
-            <label htmlFor="pass">New Password: </label>
-            <input id="pass" type="password" name="pass" placeholder="password"/>
-            <input id="pass2" type="password" name="pass2" placeholder="password"/>
-            <input type="hidden" name="_csrf" value={props.csrf}/>
-            <input className="formSubmit" type="submit" value="Confirm Password Change"/>
-            </form>
-    )
-}
-    return (
-        
         <div>
             <img id="char" src={`/assets/img/${props.account.profilePic}`} alt="character"/>
             <h3 className="accountName"><b>User:</b> {props.account.username} </h3>

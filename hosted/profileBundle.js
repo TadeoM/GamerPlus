@@ -48,7 +48,39 @@ var FriendForm = function FriendForm(props) {
         React.createElement("input", { className: "makeFriendSubmit", type: "submit", value: "Add Friend" })
     );
 };
-
+var ChangePasswordForm = function ChangePasswordForm(props) {
+    return React.createElement(
+        "form",
+        { id: "changePswdForm",
+            name: "changePswdForm",
+            onSubmit: changePassword,
+            action: "/changePswd",
+            method: "POST",
+            className: "mainForm"
+        },
+        React.createElement(
+            "label",
+            { htmlFor: "username" },
+            "Username: "
+        ),
+        React.createElement("input", { id: "user", type: "text", name: "username", placeholder: "username" }),
+        React.createElement(
+            "label",
+            { htmlFor: "currPass" },
+            "Current Password: "
+        ),
+        React.createElement("input", { id: "currPass", type: "password", name: "currPass", placeholder: "password" }),
+        React.createElement(
+            "label",
+            { htmlFor: "pass" },
+            "New Password: "
+        ),
+        React.createElement("input", { id: "pass", type: "password", name: "pass", placeholder: "password" }),
+        React.createElement("input", { id: "pass2", type: "password", name: "pass2", placeholder: "password" }),
+        React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
+        React.createElement("input", { className: "formSubmit", type: "submit", value: "Confirm Password Change" })
+    );
+};
 var showFriends = function showFriends(props) {
     sendAjax('GET', '/getFriends', null, function (data) {
         console.log(data.friends);
@@ -88,39 +120,6 @@ var FriendList = function FriendList(props) {
         "div",
         { className: "friendList" },
         friendNodes
-    );
-};
-var ChangePasswordForm = function ChangePasswordForm(props) {
-    return React.createElement(
-        "form",
-        { id: "changePswdForm",
-            name: "changePswdForm",
-            onSubmit: changePassword,
-            action: "/changePswd",
-            method: "POST",
-            className: "mainForm"
-        },
-        React.createElement(
-            "label",
-            { htmlFor: "username" },
-            "Username: "
-        ),
-        React.createElement("input", { id: "user", type: "text", name: "username", placeholder: "username" }),
-        React.createElement(
-            "label",
-            { htmlFor: "currPass" },
-            "Current Password: "
-        ),
-        React.createElement("input", { id: "currPass", type: "password", name: "currPass", placeholder: "password" }),
-        React.createElement(
-            "label",
-            { htmlFor: "pass" },
-            "New Password: "
-        ),
-        React.createElement("input", { id: "pass", type: "password", name: "pass", placeholder: "password" }),
-        React.createElement("input", { id: "pass2", type: "password", name: "pass2", placeholder: "password" }),
-        React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
-        React.createElement("input", { className: "formSubmit", type: "submit", value: "Confirm Password Change" })
     );
 };
 var AccountData = function AccountData(props) {
