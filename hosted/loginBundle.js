@@ -206,6 +206,10 @@ var showProfile = function showProfile(message) {
     $("#profileContent").animate({ width: 'toggle' }, 350);
 };
 
+var showAd = function showAd() {
+    $("#ad").animate({ width: 'toggle' }, 350);
+};
+
 var redirect = function redirect(response) {
     $("#questMessage").animate({ width: 'hide' }, 350);
     window.location = response.redirect;

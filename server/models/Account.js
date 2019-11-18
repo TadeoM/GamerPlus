@@ -48,6 +48,9 @@ const AccountSchema = new mongoose.Schema({
     type: Array,
     default: [],
   },
+  profilePic: {
+    type: String
+  }
 });
 
 AccountSchema.statics.toAPI = doc => ({
