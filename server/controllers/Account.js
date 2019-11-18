@@ -111,13 +111,17 @@ const changePassword = (request, response) =>{
     return res.status(400).json({ error: 'Passwords do not match' });
   }
 
-  return Account.AccountModel.authenticate(req.body.username,  req.body.currPass, (err, account) => {
+  return Account.AccountModel.authenticate(req.body.username,  
+    req.body.currPass, (err, account) => {
     if (err || !account) {
       return res.status(401).json({ error: 'Wrong username or password' });
     }
     
-    return Account.AccountModel.generateHash(req.body.pass, (salt, hash) => {
-      return Account.AccountModel.updateOne({ username: req.session.account.username },
+    return Account.AccountModel
+    .generateHash(req.body.pass, (salt, hash) => {
+      return Account.AccountModel.updateOne({ 
+        username: req.session.account.username 
+      },
         { salt, password: hash }, (err2) => {           
         if(err) {             
             return res.status(400).json({err2});           

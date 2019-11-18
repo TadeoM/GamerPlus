@@ -42,6 +42,7 @@ const addFriend = (request,response) => {
             
             return friendPromise;
         }
+        return res.status(400).json({ error: 'Something went wrong' });
     });
 };
 
@@ -63,7 +64,6 @@ const getUserQuests = (request, response)=>{
     const req = request;
     const res = response;
 
-    console.log()
       
     return Friend.FriendModel.findByUser(req.session.account.username, (err, docs) => {
         if (err) {
@@ -81,15 +81,15 @@ const getUserQuests = (request, response)=>{
             }
  
             console.log(doc2._id);
-            return Quest.QuestModel.findbyOwner(doc2._id, (err, doc3) => {
-                if (err) {
-                console.log(err);
-                return res.status(400).json({ error: 'An error occured in Getting' });
-                }
-                return res.json({ quests: doc3 });
+            return Quest.QuestModel.findbyOwner(doc2._id, (err3, doc3) => {
+                    if (err3) {
+                        return res.status(400).json({ error: 'An error occured in Getting' });
+                    }
+                    return res.json({ quests: doc3 });
+                });
             });
-        });
         }
+        return res.status(400).json({ error: 'An error occured.' });
     });
     
   };
