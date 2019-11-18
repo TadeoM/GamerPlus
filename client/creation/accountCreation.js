@@ -22,7 +22,16 @@ const handleCreation = (e) => {
     }
 
     console.log($("input[name=_csrf]").val());
+    
+    const selections = document.querySelector(".slider").children;
 
+    for (let i = 0; i < selections.length; i++) {
+        if(selections[i].checked) {
+            //$("#profilePic")[0].value = selections[i].nam;
+            console.log(selections[i]);
+        }
+    }
+    
     sendAjax('POST', $("#accountForm").attr("action"), $("#accountForm").serialize(), redirect);
 
     return false;
@@ -48,10 +57,10 @@ const AccountForm = (props) => {
                 <label htmlFor="charisma">Charisma: </label>
                 <input id="accountCharisma" onChange={checkValues} type="number" name="charisma" placeholder="1" min="1" />
                 <input type="hidden" name="_csrf" value={props.csrf}/>
+                <input type="hidden" id="profilePic" name="profilePic" value="" />
                 <input className="makeAccountSubmit" type="submit" value="Make Account"/>
             </form>
         
-
     );
 };
 
@@ -93,7 +102,15 @@ const checkValues = (e) => {
 
 const setup = (csrf) => {
     createAcountWindow(csrf); // default view
-    //createCarousel(csrf);
+    //createCarousel(csrf);   
+    const selections = document.querySelector(".slider").children;
+
+    for (let i = 0; i < selections.length; i++) {
+        if(selections[i].checked) {
+            //$("#profilePic")[0].value = selections[i].nam;
+            console.log(selections[i].title);
+        }
+    }
 };
 
 const getToken = () => {

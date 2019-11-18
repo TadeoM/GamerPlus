@@ -25,6 +25,15 @@ var handleCreation = function handleCreation(e) {
 
     console.log($("input[name=_csrf]").val());
 
+    var selections = document.querySelector(".slider").children;
+
+    for (var i = 0; i < selections.length; i++) {
+        if (selections[i].checked) {
+            //$("#profilePic")[0].value = selections[i].nam;
+            console.log(selections[i]);
+        }
+    }
+
     sendAjax('POST', $("#accountForm").attr("action"), $("#accountForm").serialize(), redirect);
 
     return false;
@@ -72,6 +81,7 @@ var AccountForm = function AccountForm(props) {
         ),
         React.createElement("input", { id: "accountCharisma", onChange: checkValues, type: "number", name: "charisma", placeholder: "1", min: "1" }),
         React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
+        React.createElement("input", { type: "hidden", id: "profilePic", name: "profilePic", value: "" }),
         React.createElement("input", { className: "makeAccountSubmit", type: "submit", value: "Make Account" })
     );
 };
@@ -104,7 +114,15 @@ var checkValues = function checkValues(e) {
 
 var setup = function setup(csrf) {
     createAcountWindow(csrf); // default view
-    //createCarousel(csrf);
+    //createCarousel(csrf);   
+    var selections = document.querySelector(".slider").children;
+
+    for (var i = 0; i < selections.length; i++) {
+        if (selections[i].checked) {
+            //$("#profilePic")[0].value = selections[i].nam;
+            console.log(selections[i].title);
+        }
+    }
 };
 
 var getToken = function getToken() {
@@ -154,6 +172,10 @@ var handleError = function handleError(message) {
 
 var showProfile = function showProfile(message) {
     $("#profileContent").animate({ width: 'toggle' }, 350);
+};
+
+var showAd = function showAd() {
+    $("#ad").animate({ width: 'toggle' }, 350);
 };
 
 var redirect = function redirect(response) {

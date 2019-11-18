@@ -150,6 +150,8 @@ const createStats = (request, response) => {
     updateAccount.wisdom = req.body.wisdom;
     updateAccount.charisma = req.body.charisma;
 
+    console.dir(req.body.profilePic.toString());
+
     const savePromise = updateAccount.save();
 
     savePromise.then(() => {
