@@ -1,7 +1,7 @@
 const models = require('../models');
 
 const Account = models.Account;
-const Quest = models.Quest;
+
 const loginPage = (req, res) => {
   res.render('login', { csrfToken: req.csrfToken() });
 };
@@ -117,9 +117,10 @@ const changePassword = (request, response) =>{
     }
     
     return Account.AccountModel.generateHash(req.body.pass, (salt, hash) => {
-      return Account.AccountModel.updateOne({ username: req.session.account.username },{ salt, password: hash }, (err) => {           
+      return Account.AccountModel.updateOne({ username: req.session.account.username },
+        { salt, password: hash }, (err2) => {           
         if(err) {             
-            return res.status(400).json({err});           
+            return res.status(400).json({err2});           
         }
         return res.json({message: "password successfully changed"});         
     });
@@ -133,7 +134,7 @@ const getAccount = (request, response) => {
   return Account.AccountModel.findByUsername(req.session.account.username, (err, docs) => {
     if (err) {
       console.log(err);
-      return res.status(400).json({ error: 'An error occurred' });
+      return res.status(400).json({ err: 'An error occurred' });
     }
 
     return res.json({ account: docs });
@@ -179,8 +180,11 @@ const createStats = (request, response) => {
       case "slide9":
         updateAccount.profilePic = "ShamanChar.png"
         break;
+      default:
+        updateAccount.profilePic = "ShamanChar.png"
     }
 
+    
     const savePromise = updateAccount.save();
 
     savePromise.then(() => {
@@ -200,35 +204,6 @@ const createStats = (request, response) => {
     });
   });
 };
-
-const completeQuest = (request,response) =>{
-  const req = request;
-  const res = response;
-console.log(req.body.experience);
-  return Account.AccountModel.findByUsername(req.session.account.username, (err, doc) => {
-
-    const expGain = req.body.experience;
-    console.log(expGain);
-   return Account.AccountModel.updateOne({ username: req.session.account.username },{experience:expGain},(err) => {   
-     //console.log();        
-    if(err) {             
-        return res.status(400).json({err});           
-    }
-    return Quest.QuestModel.deleteQuest(req.body.questID, (err, docs) => {
-      console.log(docs);
-      if (err) {
-        console.log(err);
-        return res.status(400).json({ error: 'An error occured during deletion' });
-      }
-      // Reload Quests
-      return res.json({message: "Experience successfully Added"});   
-    });
-          
-});
-
-  });
-
-}
 
 const getToken = (request, response) => {
   const req = request;
@@ -250,4 +225,3 @@ module.exports.getAccount = getAccount;
 module.exports.creatorPage = creatorPage;
 module.exports.createStats = createStats;
 module.exports.changePassword = changePassword;
-module.exports.completeQuest = completeQuest;

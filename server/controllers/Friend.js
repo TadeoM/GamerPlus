@@ -31,9 +31,9 @@ const addFriend = (request,response) => {
                 
             friendPromise.then(() => res.json({ redirect: '/maker' }));
         
-            friendPromise.catch((err) => {
-                console.log(err);
-                if(err.code === 11000) {
+            friendPromise.catch((err2) => {
+                console.log(err2);
+                if(err2.code === 11000) {
                     return res.status(400).json({ error: 'Friend already exists.' });
                 }
                 
@@ -81,12 +81,12 @@ const getUserQuests = (request, response)=>{
             }
  
             console.log(doc2._id);
-            return Quest.QuestModel.findbyOwner(doc2._id, (err, docs) => {
+            return Quest.QuestModel.findbyOwner(doc2._id, (err, doc3) => {
                 if (err) {
                 console.log(err);
                 return res.status(400).json({ error: 'An error occured in Getting' });
                 }
-                return res.json({ quests: docs });
+                return res.json({ quests: doc3 });
             });
         });
         }
