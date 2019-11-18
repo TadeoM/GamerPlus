@@ -36,6 +36,12 @@ const showProfile = (message) => {
     $("#profileContent").animate({width:'toggle'},350);
 };
 
+const showAd = () => {
+    $("#ad").animate({width:'toggle'},350);
+}
+
+
+
 const redirect = (response) => {
     $("#questMessage").animate({width:'hide'},350);
     window.location = response.redirect;

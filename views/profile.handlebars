@@ -1,7 +1,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <title>DomoMaker</title>
+  <title>Gamer+</title>
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
@@ -14,7 +14,7 @@
   <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/remarkable/1.6.2/remarkable.min.js"></script>
   <link rel="shortcut icon" href="/assets/img/favicon.png"/>
-  <link rel="stylesheet" type="text/css" href="/assets/style.css"/>
+  <link rel="stylesheet" type="text/css" href="/assets/style.scss"/>
   
 </head>
 <body>
@@ -23,7 +23,7 @@
       <a href="/login"><img class="logo" src="/assets/img/gamifyLife.png" alt="face logo"/></a>
         <div class="button">
           <div class="btn btn-one">
-            <button class="navButton" id="profileButton">Profile</button>
+            <a class="navButton" href="/maker" id="mainButton">Main</a>
           </div>
         </div>
         <div class="button">
@@ -36,9 +36,11 @@
 
   <div id="wrapper">
     <div class="box">
-        <section id="friendList">
+      <section id="accountData" class="col-1">
       </section>
-      <section id="addFriend">
+      <section id="friendList" class="col-2">
+      </section>
+      <section id="addFriend" class="col-3">
       </section>  
 
     </div>

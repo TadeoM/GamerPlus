@@ -91,7 +91,7 @@ var QuestForm = function QuestForm(props) {
             onSubmit: handleQuest,
             action: "/maker",
             method: "GET",
-            className: "questForm"
+            className: "mainForm"
         },
         React.createElement(
             "label",
@@ -105,27 +105,31 @@ var QuestForm = function QuestForm(props) {
             "Quest Type: "
         ),
         React.createElement(
-            "select",
-            { id: "questType", type: "text", name: "questType", placeholder: "Quest Type" },
+            "div",
+            { className: "select" },
             React.createElement(
-                "option",
-                { value: "Daily" },
-                "Daily"
-            ),
-            React.createElement(
-                "option",
-                { value: "Weekly" },
-                "Weekly"
-            ),
-            React.createElement(
-                "option",
-                { value: "Monthly" },
-                "Monthly"
-            ),
-            React.createElement(
-                "option",
-                { value: "Special" },
-                "Special"
+                "select",
+                { id: "questType slct", type: "text", name: "questType", placeholder: "Quest Type" },
+                React.createElement(
+                    "option",
+                    { value: "Daily" },
+                    "Daily"
+                ),
+                React.createElement(
+                    "option",
+                    { value: "Weekly" },
+                    "Weekly"
+                ),
+                React.createElement(
+                    "option",
+                    { value: "Monthly" },
+                    "Monthly"
+                ),
+                React.createElement(
+                    "option",
+                    { value: "Special" },
+                    "Special"
+                )
             )
         ),
         React.createElement(
@@ -215,7 +219,6 @@ var PendingQuestList = function PendingQuestList(props) {
         );
     }
     var pendingQuestNodes = props.quests.map(function (quest) {
-
         return React.createElement(
             "form",
             { id: "pendingQuestForm", name: "pendingQuestForm",
@@ -449,6 +452,10 @@ var handleError = function handleError(message) {
 
 var showProfile = function showProfile(message) {
     $("#profileContent").animate({ width: 'toggle' }, 350);
+};
+
+var showAd = function showAd() {
+    $("#ad").animate({ width: 'toggle' }, 350);
 };
 
 var redirect = function redirect(response) {

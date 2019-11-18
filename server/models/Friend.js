@@ -18,7 +18,6 @@ const FriendSchema = new mongoose.Schema({
     friend: {
         type: String,
         require: true,
-
     }
 });
 

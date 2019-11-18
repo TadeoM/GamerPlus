@@ -33,9 +33,51 @@ var FriendForm = function FriendForm(props) {
             { htmlFor: "name" },
             "Name: "
         ),
-        React.createElement("input", { id: "friendName", type: "text", name: "name", placeholder: "Domo Name" }),
+        React.createElement("input", { id: "friendName", type: "text", name: "name", placeholder: "Friend Name" }),
         React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
         React.createElement("input", { className: "makeFriendSubmit", type: "submit", value: "Add Friend" })
+    );
+};
+
+var showFriends = function showFriends(props) {
+    sendAjax('GET', '/getFriends', null, function (data) {
+        console.log(data.friends);
+        ReactDOM.render(React.createElement(FriendList, { friends: data.friends }), document.querySelector("#friendList"));
+    });
+};
+
+var FriendList = function FriendList(props) {
+    if (props.friends.length === 0) {
+        return React.createElement(
+            "div",
+            { className: "friendList" },
+            React.createElement(
+                "h3",
+                { className: "emptyFriend" },
+                "No Friends yet, loser"
+            )
+        );
+    }
+
+    var friendNodes = props.friends.map(function (friend) {
+        return React.createElement(
+            "div",
+            { key: friend.user, className: "friend" },
+            React.createElement("img", { src: "/assets/img/domoface.jpeg", alt: "friend face", className: "friendFace" }),
+            React.createElement(
+                "h3",
+                { className: "friendName" },
+                "Name: ",
+                friend.friend,
+                " "
+            )
+        );
+    });
+
+    return React.createElement(
+        "div",
+        { className: "friendList" },
+        friendNodes
     );
 };
 
@@ -43,6 +85,7 @@ var AccountData = function AccountData(props) {
     return React.createElement(
         "div",
         null,
+        React.createElement("img", { id: "char", src: "/assets/img/BardChar.png", alt: "character" }),
         React.createElement(
             "h3",
             { className: "accountName" },
@@ -91,51 +134,18 @@ var AccountData = function AccountData(props) {
     );
 };
 
-var showFriends = function showFriends(props) {
-    sendAjax('GET', '/getFriends', null, function (data) {
-        console.log(data.friends);
-        ReactDOM.render(React.createElement(FriendList, { friends: data.friends }), document.querySelector("#friendList"));
+var loadAccountFromServer = function loadAccountFromServer() {
+    sendAjax('GET', '/getAccount', null, function (data) {
+        ReactDOM.render(React.createElement(AccountData, { account: data.account }), document.querySelector("#accountData"));
     });
-};
-
-var FriendList = function FriendList(props) {
-    if (props.friends.length === 0) {
-        return React.createElement(
-            "div",
-            { className: "friendList" },
-            React.createElement(
-                "h3",
-                { className: "emptyFriend" },
-                "No Friends yet, loser"
-            )
-        );
-    }
-
-    var friendNodes = props.friends.map(function (friend) {
-        return React.createElement(
-            "div",
-            { key: friend.user, className: "friend" },
-            React.createElement("img", { src: "/assets/img/domoface.jpeg", alt: "friend face", className: "friendFace" }),
-            React.createElement(
-                "h3",
-                { className: "friendName" },
-                "Name: ",
-                friend.friend,
-                " "
-            )
-        );
-    });
-
-    return React.createElement(
-        "div",
-        { className: "friendList" },
-        friendNodes
-    );
 };
 
 var setup = function setup(csrf) {
+
     ReactDOM.render(React.createElement(FriendForm, { csrf: csrf }), document.querySelector("#addFriend"));
+
     showFriends();
+    loadAccountFromServer();
 };
 
 var getToken = function getToken() {
@@ -185,6 +195,10 @@ var handleError = function handleError(message) {
 
 var showProfile = function showProfile(message) {
     $("#profileContent").animate({ width: 'toggle' }, 350);
+};
+
+var showAd = function showAd() {
+    $("#ad").animate({ width: 'toggle' }, 350);
 };
 
 var redirect = function redirect(response) {

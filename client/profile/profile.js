@@ -26,23 +26,12 @@ const FriendForm = (props) => {
             className="mainForm"
         >
             <label htmlFor="name">Name: </label>
-            <input id="friendName" type="text" name="name" placeholder="Domo Name"/>
+            <input id="friendName" type="text" name="name" placeholder="Friend Name"/>
             <input type="hidden" name="_csrf" value={props.csrf}/>
             <input className="makeFriendSubmit" type="submit" value="Add Friend"/>
         </form>
     );    
 }
-
-const AccountData = function(props) {
-    return (
-        <div>
-            <h3 className="accountName"><b>User:</b> {props.account.username} </h3>
-            <h3 className="accountAthletics"><b>Athletics:</b> {props.account.athletics}</h3>
-            <h3 className="accountWisdom"><b>Wisdom:</b> {props.account.wisdom}</h3>
-            <h3 className="accountCharisma"><b>Charisma:</b> {props.account.charisma}</h3>
-        </div>
-    );
-};
 
 const showFriends = function(props) {
     sendAjax('GET', '/getFriends', null, (data) =>{
@@ -79,11 +68,34 @@ const FriendList = function(props) {
     );
 };
 
+const AccountData = function(props) {    
+    return (
+        <div>
+            <img id="char" src="/assets/img/BardChar.png" alt="character"/>
+            <h3 className="accountName"><b>User:</b> {props.account.username} </h3>
+            <h3 className="accountAthletics"><b>Athletics:</b> {props.account.athletics}</h3>
+            <h3 className="accountWisdom"><b>Wisdom:</b> {props.account.wisdom}</h3>
+            <h3 className="accountCharisma"><b>Charisma:</b> {props.account.charisma}</h3>
+        </div>
+    );
+};
+
+const loadAccountFromServer = () => {
+    sendAjax('GET', '/getAccount', null, (data) => {
+        ReactDOM.render(
+            <AccountData account={data.account} />, document.querySelector("#accountData")
+        );
+    });
+};
+
 const setup = function(csrf) {
+
     ReactDOM.render(
         <FriendForm csrf={csrf} />, document.querySelector("#addFriend")
     );
+
     showFriends();
+    loadAccountFromServer();
 };
 
 const getToken = () => {

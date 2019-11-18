@@ -85,17 +85,19 @@ const QuestForm = (props) =>{
         onSubmit ={handleQuest}
         action ="/maker"
         method="GET"
-        className ="questForm"
+        className ="mainForm"
         >
             <label htmlFor ="name">Name: </label>
             <input id="questName" type="text" name="name" placeholder ="Quest Name"/>
             <label htmlFor ="Quest Type">Quest Type: </label>
-            <select id="questType" type="text" name="questType" placeholder ="Quest Type">
-                <option value="Daily">Daily</option>
-                <option value="Weekly">Weekly</option>
-                <option value="Monthly">Monthly</option>
-                <option value="Special">Special</option>
+            <div className="select">
+                <select id="questType slct" type="text" name="questType" placeholder ="Quest Type">
+                    <option value="Daily">Daily</option>
+                    <option value="Weekly">Weekly</option>
+                    <option value="Monthly">Monthly</option>
+                    <option value="Special">Special</option>
                 </select>
+            </div>
             <label htmlFor ="questExperience">Quest Experiece: </label>
             <input id="questExperience" type="number" name="questExperience" placeholder ="EXP Reward" min="0"/>
             <textarea id="questContent" class="text" name="questContent" placeholder ="Details of the Quest"></textarea>
@@ -156,14 +158,13 @@ const PendingQuestList = function(props)
     }
 const pendingQuestNodes = props.quests.map(function(quest)
 {
-   
     return(
         <form id="pendingQuestForm" name ="pendingQuestForm"
             onSubmit ={completeQuest}
             action ="/completeQuest"
             method="POST"
             className="curQuestForm"
-            >
+        >
         <div key={quest._id} className="quest">
             <img src="/assets/img/scrollQuest.png" alt="domo face" className="scrollQuest"/>
             <h3 className="questName">Name: {quest.name}</h3>
@@ -194,9 +195,7 @@ const ProfileBar = function(props) {
                         <a href="/profile">To Profile</a>
                     </div>
                 </div>
-                
             </div>
-            
             <h3>
                 <span id="profileStats">
                     <h3 className="accountName"><b>User:</b> {props.account.username} </h3>
