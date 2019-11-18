@@ -149,9 +149,39 @@ const createStats = (request, response) => {
     updateAccount.athletics = req.body.athletics;
     updateAccount.wisdom = req.body.wisdom;
     updateAccount.charisma = req.body.charisma;
+    
 
-    console.dir(req.body.profilePic.toString());
+    switch(req.body.profilePic) {
+      case "slide1":
+        updateAccount.profilePic = "BarbarianChar.png"
+        break;
+      case "slide2":
+        updateAccount.profilePic = "BardChar.png"
+        break;
+      case "slide3":
+        updateAccount.profilePic = "BeastMasterChar.png"
+        break;
+      case "slide4":
+        updateAccount.profilePic = "DruidChar.png"
+        break;
+      case "slide5":
+        updateAccount.profilePic = "FighterChar.png"
+        break;
+      case "slide6":
+        updateAccount.profilePic = "PirateChar.png"
+        break;
+      case "slide7":
+        updateAccount.profilePic = "PaladinChar.png"
+        break;
+      case "slide8":
+        updateAccount.profilePic = "RogueChar.png"
+        break;
+      case "slide9":
+        updateAccount.profilePic = "ShamanChar.png"
+        break;
+    }
 
+    console.log(updateAccount.profilePic);
     const savePromise = updateAccount.save();
 
     savePromise.then(() => {

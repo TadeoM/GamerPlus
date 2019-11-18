@@ -27,8 +27,7 @@ const handleCreation = (e) => {
 
     for (let i = 0; i < selections.length; i++) {
         if(selections[i].checked) {
-            //$("#profilePic")[0].value = selections[i].nam;
-            console.log(selections[i]);
+            $("#profilePic")[0].value = selections[i].title;
         }
     }
     
@@ -102,15 +101,6 @@ const checkValues = (e) => {
 
 const setup = (csrf) => {
     createAcountWindow(csrf); // default view
-    //createCarousel(csrf);   
-    const selections = document.querySelector(".slider").children;
-
-    for (let i = 0; i < selections.length; i++) {
-        if(selections[i].checked) {
-            //$("#profilePic")[0].value = selections[i].nam;
-            console.log(selections[i].title);
-        }
-    }
 };
 
 const getToken = () => {

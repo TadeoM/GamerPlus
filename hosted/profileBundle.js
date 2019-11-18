@@ -82,10 +82,11 @@ var FriendList = function FriendList(props) {
 };
 
 var AccountData = function AccountData(props) {
+    console.log(props.account);
     return React.createElement(
         "div",
         null,
-        React.createElement("img", { id: "char", src: "/assets/img/BardChar.png", alt: "character" }),
+        React.createElement("img", { id: "char", src: "/assets/img/" + props.account.profilePic, alt: "character" }),
         React.createElement(
             "h3",
             { className: "accountName" },

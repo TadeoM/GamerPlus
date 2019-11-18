@@ -275,13 +275,13 @@ var ProfileBar = function ProfileBar(props) {
         React.createElement(
             "div",
             null,
-            React.createElement("img", { id: "char", src: "/assets/img/BardChar.png", alt: "character" }),
+            React.createElement("img", { id: "char", src: "/assets/img/" + props.account.profilePic, alt: "character" }),
             React.createElement(
                 "div",
-                { "class": "button" },
+                { className: "button", id: "profileBar" },
                 React.createElement(
                     "div",
-                    { "class": "btn btn-one" },
+                    { className: "btn btn-one" },
                     React.createElement(
                         "a",
                         { href: "/profile" },
@@ -350,7 +350,7 @@ var AccountData = function AccountData(props) {
     return React.createElement(
         "div",
         null,
-        React.createElement("img", { id: "char", src: "/assets/img/BardChar.png", alt: "character" }),
+        React.createElement("img", { id: "char", src: "/assets/img/" + props.account.profilePic, alt: "character" }),
         React.createElement(
             "h3",
             { className: "accountName" },
