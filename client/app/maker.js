@@ -154,9 +154,9 @@ const ProfileBar = function(props) {
     return (
         <div className="profileBox">
             <div> 
-                <img id="char" src="/assets/img/BardChar.png" alt="character"/>
-                <div class="button">
-                    <div class="btn btn-one">
+                <img id="char" src={`/assets/img/${props.account.profilePic}`} alt="character"/>
+                <div className="button" id="profileBar">
+                    <div className="btn btn-one">
                         <a href="/profile">To Profile</a>
                     </div>
                 </div>
@@ -174,10 +174,10 @@ const ProfileBar = function(props) {
     );
 };
 
-const AccountData = function(props) {    
+const AccountData = function(props) { 
     return (
         <div>
-            <img id="char" src="/assets/img/BardChar.png" alt="character"/>
+            <img id="char" src={`/assets/img/${props.account.profilePic}`} alt="character"/>
             <h3 className="accountName"><b>User:</b> {props.account.username} </h3>
         </div>
     );
