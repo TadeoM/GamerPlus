@@ -1,0 +1,50 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>Gamer+</title>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+  <script crossorigin src="https://unpkg.com/react@15/dist/react.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@15/dist/react-dom.min.js"></script>
+  <script crossorigin src="https://unpkg.com/prop-types/prop-types.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+  <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/remarkable/1.6.2/remarkable.min.js"></script>
+  <link rel="shortcut icon" href="/assets/img/favicon.png"/>
+  <link rel="stylesheet" type="text/css" href="/assets/style.scss"/>
+  
+</head>
+<body>
+  <nav>
+    <div id="nav">
+      <a href="/login"><img class="logo" src="/assets/img/gamifyLife.png" alt="face logo"/></a>
+        <div class="button">
+          <div class="btn btn-one">
+            <button class="navButton" id="profileButton">Profile</button>
+          </div>
+        </div>
+        <div class="button">
+          <div class="btn btn-one">
+            <a class="navButton" id="logoutButton" href="/logout">Log out</a>
+          </div>
+        </div>
+      <div class="button">
+        <div class="btn btn-one">
+          <a href="/changePswd" id="changePswdBtn"> Change Password </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div id="wrapper">
+    <div class="box">
+      <section id="uploadArea" class="col-1">
+      </section>
+    </div>
+  </div>
+  <script src="/assets/uploadBundle.js"></script>
+</body>
+</html>
