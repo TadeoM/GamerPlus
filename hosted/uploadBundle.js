@@ -1,7 +1,9 @@
 "use strict";
 
+var csrfToken = null;
+
 // File Upload Test
-var handleQuest = function handleQuest(e) {
+var handleUpload = function handleUpload(e) {
     e.preventDefault();
 
     $("#questMessage").animate({ width: 'hide' }, 350);
@@ -11,35 +13,35 @@ var handleQuest = function handleQuest(e) {
         return false;
     }
 
-    sendAjax('POST', $("#uploadForm").attr("action"), $("#uploadForm").serialize(), function () {
-        loadQuestsFromServer();
-    });
+    sendAjax('POST', $("#uploadForm").attr("action"), $("#uploadForm").serialize(), function () {});
 
     return false;
 };
 
 var UploadFile = function UploadFile(props) {
+    console.log(csrfToken);
     return React.createElement(
         "form",
-        { ref: "uploadForm",
-            id: "uploadForm",
+        { id: "uploadForm",
+            name: "uploadForm",
             action: "/upload",
-            method: "post",
-            encType: "multipart/form-data" },
+            method: "POST",
+            encType: "multipart/form-data",
+            className: "mainForm"
+        },
+        React.createElement("input", { type: "hidden", name: "_csrf", value: csrfToken }),
         React.createElement("input", { type: "file", name: "sampleFile" }),
-        React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
         React.createElement("input", { type: "submit", value: "Upload!" })
     );
 };
 
 var setup = function setup(csrf) {
-    createAcountWindow(csrf); // default view
-
-    ReactDOM.render(React.createElement(UploadFile, { csrf: csrf }), document.querySelector("#makeQuest"));
+    ReactDOM.render(React.createElement(UploadFile, null), document.querySelector("#uploadArea"));
 };
 
 var getToken = function getToken() {
     sendAjax('GET', '/getToken', null, function (result) {
+        csrfToken = result.csrfToken;
         setup(result.csrfToken);
     });
 };

@@ -29,6 +29,7 @@ const router = (app) => {
     app.post('/upload', mid.requiresLogin, controllers.FileUpload.upload);
     //Images can be retrieved using /retrieve?name=THE_FILE_NAME_WITH_EXTENSION
     app.get('/retrieve', mid.requiresLogin, controllers.FileUpload.retrieve);
+    app.get('/uploadPage', mid.requiresLogin, controllers.FileUpload.uploadPage);
 
     app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
 };

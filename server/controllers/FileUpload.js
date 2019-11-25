@@ -4,7 +4,7 @@ const models = require('../models');
 const FileStore = models.FileStore;
 
 const uploadPage = (req, res) => {
-    res.render('login', { csrfToken: req.csrfToken() });
+    res.render('fileUpload', { csrfToken: req.csrfToken() });
 }
 
 //Our upload controller
@@ -68,3 +68,4 @@ const retrieveImage = (req, res) => {
 
 module.exports.upload = upload;
 module.exports.retrieve = retrieveImage;
+module.exports.uploadPage = uploadPage;
