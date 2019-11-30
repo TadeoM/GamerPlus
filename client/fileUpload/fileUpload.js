@@ -1,35 +1,39 @@
 let csrfToken = null;
 
 // File Upload Test
-const handleUpload = (e) =>{
+const fileUpload = (e) => {
     e.preventDefault();
+    //https://stackoverflow.com/questions/5587973/javascript-upload-file
+    let formData = new FormData();
+    let picture = document.querySelector('#fileData').files[0];
 
-    $("#questMessage").animate({width:'hide'},350);
-
-    if($("#questName").val()==''|| $("#questExp").val()==''||$("#questType").val()==''||$("#questContent").val()=='')
-    {
-        handleError("Gamer! All fields are required");
-        return false;
-    }
-
-    sendAjax('POST',$("#uploadForm").attr("action"), $("#uploadForm").serialize(), function(){
-    });
-    
+    formData.append("sampleFile", picture);
+    formData.append('_csrf', csrfToken);
+    fetch(`/upload`, {method: "POST", body: formData})
+    .then(
+        function(response){
+            if(response.status === 200){
+                response.json().then(function(data){
+                    window.location = data.redirect;
+                });
+            }
+        }
+    );
     return false;
 };
 
 const UploadFile = (props) => {
-    console.log(csrfToken);
     return (
         <form id='uploadForm' 
             name="uploadForm"
-            action='/upload' // ?_csrf={csrfToken}
+            //action="/upload" // ?_csrf={csrfToken}
+            onSubmit={fileUpload}
             method='POST' 
             encType="multipart/form-data"
             className="mainForm"
             >
             <input type="hidden" name="_csrf" value={csrfToken}/>
-            <input type="file" name="sampleFile" />
+            <input type="file" name="sampleFile" id="fileData" />
             <input type='submit' value='Upload!' />
         </form> 
     )

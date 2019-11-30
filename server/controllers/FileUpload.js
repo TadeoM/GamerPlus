@@ -4,7 +4,7 @@ const models = require('../models');
 const FileStore = models.FileStore;
 
 const uploadPage = (req, res) => {
-    res.render('fileUpload', { csrfToken: req.csrfToken() });
+  res.render('fileUpload', { csrfToken: req.csrfToken() });
 }
 
 //Our upload controller

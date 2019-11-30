@@ -1,37 +1,40 @@
-"use strict";
+'use strict';
 
 var csrfToken = null;
 
 // File Upload Test
-var handleUpload = function handleUpload(e) {
+var fileUpload = function fileUpload(e) {
     e.preventDefault();
+    //https://stackoverflow.com/questions/5587973/javascript-upload-file
+    var formData = new FormData();
+    var picture = document.querySelector('#fileData').files[0];
 
-    $("#questMessage").animate({ width: 'hide' }, 350);
-
-    if ($("#questName").val() == '' || $("#questExp").val() == '' || $("#questType").val() == '' || $("#questContent").val() == '') {
-        handleError("Gamer! All fields are required");
-        return false;
-    }
-
-    sendAjax('POST', $("#uploadForm").attr("action"), $("#uploadForm").serialize(), function () {});
-
+    formData.append("sampleFile", picture);
+    formData.append('_csrf', csrfToken);
+    fetch('/upload', { method: "POST", body: formData }).then(function (response) {
+        if (response.status === 200) {
+            response.json().then(function (data) {
+                window.location = data.redirect;
+            });
+        }
+    });
     return false;
 };
 
 var UploadFile = function UploadFile(props) {
-    console.log(csrfToken);
     return React.createElement(
-        "form",
-        { id: "uploadForm",
-            name: "uploadForm",
-            action: "/upload",
-            method: "POST",
-            encType: "multipart/form-data",
-            className: "mainForm"
+        'form',
+        { id: 'uploadForm',
+            name: 'uploadForm'
+            //action="/upload" // ?_csrf={csrfToken}
+            , onSubmit: fileUpload,
+            method: 'POST',
+            encType: 'multipart/form-data',
+            className: 'mainForm'
         },
-        React.createElement("input", { type: "hidden", name: "_csrf", value: csrfToken }),
-        React.createElement("input", { type: "file", name: "sampleFile" }),
-        React.createElement("input", { type: "submit", value: "Upload!" })
+        React.createElement('input', { type: 'hidden', name: '_csrf', value: csrfToken }),
+        React.createElement('input', { type: 'file', name: 'sampleFile', id: 'fileData' }),
+        React.createElement('input', { type: 'submit', value: 'Upload!' })
     );
 };
 
