@@ -11,7 +11,7 @@ var fileUpload = function fileUpload(e) {
 
     formData.append("sampleFile", picture);
     formData.append('_csrf', csrfToken);
-    fetch('/upload', { method: "POST", body: formData }).then(function (response) {
+    fetch('/upload?_csrf=' + csrfToken, { method: "POST", body: formData }).then(function (response) {
         if (response.status === 200) {
             response.json().then(function (data) {
                 window.location = data.redirect;
