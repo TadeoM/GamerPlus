@@ -9,14 +9,13 @@ const fileUpload = (e) => {
 
     formData.append("files", picture);
     formData.append('_csrf', csrfToken);
-    console.log(formData.getAll("files"));
-    fetch(`/upload?_csrf=${csrfToken}`, 
+    fetch(`/upload?_csrf=${csrfToken}`,
     {
-        method: "POST", 
-        headers: { 
-            "Content-Type": "application/json" 
+        method: "POST",
+        body: formData,
+        headers: {
+            "Content-Type": "application/json"
         },
-        body: formData
     })
     .then(
         function(response){

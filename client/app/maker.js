@@ -208,7 +208,7 @@ const ProfileBar = function(props) {
     );
 };
 
-const AccountData = function(props) { 
+const AccountData = function(props) {
     return (
         <div>
             <img id="char" src={`/assets/img/${props.account.profilePic}`} alt="character"/>
