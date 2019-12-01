@@ -1,7 +1,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <title>Gamer+</title>
+  <title>Gamify</title>
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
@@ -14,53 +14,41 @@
   <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/remarkable/1.6.2/remarkable.min.js"></script>
   <link rel="shortcut icon" href="/assets/img/favicon.png"/>
-  <link rel="stylesheet" type="text/css" href="/assets/style.scss"/>
+  <link rel="stylesheet" type="text/css" href="/assets/style.css"/>
   
 </head>
 <body>
   <nav>
     <div id="nav">
-      <a href="/login"><img class="logo" src="/assets/img/gamifyLife.png" alt="face logo"/></a>
-        <div class="button">
-          <div class="btn btn-one">
-            <button class="navButton" id="profileButton">Profile</button>
-          </div>
-        </div>
-        <div class="button">
-          <div class="btn btn-one">
-            <button class="navButton" id="chatButton">Tavern Room</button>
-          </div>
-        </div>
         <div class="button">
           <div class="btn btn-one">
             <a class="navButton" id="logoutButton" href="/logout">Log out</a>
           </div>
         </div>
+        <div class="button">
+          <div class="btn btn-one">
+            <a href="/changePswd" id="changePswdBtn"> Change Password </a>
+          </div>
+        </div>
+        
     </div>
-    
   </nav>
-
-    <div id="profileContent" className="grid-box">
-    </div>
-
   <div id="wrapper">
-    <div class="box">
-        <section id="accountData" class="col-1">
-        </section>
-        <section id="quests" class="col-2">
-      </section>
-        <section id="makeQuest" class="col-3">
-      </section>   
-
-    </div>
-    <div class="box">
-      <section id="pswdChange">
-      </section>
+        <ul class="pages">
+    <li class="chat page">
+      <div class="chatArea">
+        <ul class="messages"></ul>
+      </div>
+      <input class="inputMessage" placeholder="Type here..."/>
+    </li>
+    <li class="login page">
+      <div class="form">
+        <h3 class="title">What's your nickname?</h3>
+        <input class="usernameInput" type="text" maxlength="14" />
+      </div>
+    </li>
+  </ul>
   </div>
-  <div class="box">
-    <section id="pendingQuests"></section>
-  </div>
-  </div>
-  <script src="/assets/bundle.js"></script>
+  <script src="/assets/chatBundle.js"></script>
 </body>
 </html>

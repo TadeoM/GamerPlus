@@ -26,8 +26,7 @@ const router = (app) => {
     app.get('/getUserQuests', mid.requiresLogin, controllers.Friend.getUserQuests);
     app.post('/deleteQuest',mid.requiresLogin, controllers.Quest.deleteQuest);
     app.post('/changePswd',mid.requiresLogin, controllers.Account.changePassword);
-
-
+    app.get('/chatroom',mid.requiresLogin, controllers.Chat.chatRoom);
     app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
 };
 
