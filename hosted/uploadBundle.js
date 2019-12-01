@@ -9,9 +9,16 @@ var fileUpload = function fileUpload(e) {
     var formData = new FormData();
     var picture = document.querySelector('#fileData').files[0];
 
-    formData.append("sampleFile", picture);
+    formData.append("files", picture);
     formData.append('_csrf', csrfToken);
-    fetch('/upload?_csrf=' + csrfToken, { method: "POST", body: formData }).then(function (response) {
+    console.log(formData.getAll("files"));
+    fetch('/upload?_csrf=' + csrfToken, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: formData
+    }).then(function (response) {
         if (response.status === 200) {
             response.json().then(function (data) {
                 window.location = data.redirect;
@@ -25,9 +32,8 @@ var UploadFile = function UploadFile(props) {
     return React.createElement(
         'form',
         { id: 'uploadForm',
-            name: 'uploadForm'
-            //action="/upload" // ?_csrf={csrfToken}
-            , onSubmit: fileUpload,
+            name: 'uploadForm',
+            onSubmit: fileUpload,
             method: 'POST',
             encType: 'multipart/form-data',
             className: 'mainForm'

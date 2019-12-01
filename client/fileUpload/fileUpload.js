@@ -7,9 +7,17 @@ const fileUpload = (e) => {
     let formData = new FormData();
     let picture = document.querySelector('#fileData').files[0];
 
-    formData.append("sampleFile", picture);
+    formData.append("files", picture);
     formData.append('_csrf', csrfToken);
-    fetch(`/upload?_csrf=${csrfToken}`, {method: "POST", body: formData})
+    console.log(formData.getAll("files"));
+    fetch(`/upload?_csrf=${csrfToken}`, 
+    {
+        method: "POST", 
+        headers: { 
+            "Content-Type": "application/json" 
+        },
+        body: formData
+    })
     .then(
         function(response){
             if(response.status === 200){
@@ -26,7 +34,6 @@ const UploadFile = (props) => {
     return (
         <form id='uploadForm' 
             name="uploadForm"
-            //action="/upload" // ?_csrf={csrfToken}
             onSubmit={fileUpload}
             method='POST' 
             encType="multipart/form-data"

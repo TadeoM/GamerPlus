@@ -10,7 +10,9 @@ const uploadPage = (req, res) => {
 //Our upload controller
 const upload = (req, res) => {
   //If there are no files, return an error
+  console.dir(req);
   if(!req.files || Object.keys(req.files).length === 0) {
+    console.log("WHere my data at boy");
     return res.status(400).json({error: 'No files were uploaded'});
   }
   
