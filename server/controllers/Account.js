@@ -118,7 +118,8 @@ const changePassword = (request, response) =>{
     }
     
     return Account.AccountModel
-    .generateHash(req.body.pass, (salt, hash) => {
+    .generateHash
+    (req.body.pass, (salt, hash) => {
       return Account.AccountModel.updateOne({ username: req.session.account.username },
         { salt, password: hash }, (error) => {           
         if(error) {             
