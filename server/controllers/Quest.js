@@ -14,7 +14,8 @@ const makerPage = (req, res) => {
   });
 };
 const makeQuest = (req, res) => {
-  if (!req.body.name || !req.body.questExperience || !req.body.questType||!req.body.questContent) {
+  if (!req.body.name || !req.body.questExperience 
+    || !req.body.questType||!req.body.questContent) {
     return res.status(400).json({ error: 'All Parameters Are Required For Quest Submission' });
   }
   const questData = {

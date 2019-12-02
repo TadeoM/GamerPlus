@@ -116,13 +116,14 @@ const changePassword = (request, response) =>{
       return res.status(401).json({ error: 'Wrong username or password' });
     }
     
-    return Account.AccountModel.generateHash(req.body.pass, (salt, hash) => {
-      return Account.AccountModel.updateOne({ username: req.session.account.username },{ salt, password: hash }, (err) => {           
-        if(err) {             
-            return res.status(400).json({err});           
+    return Account.AccountModel.generateHash(req.body.pass, 
+      (salt, hash) => {
+      return Account.AccountModel.updateOne({ username: req.session.account.username },{ salt, password: hash }, (error) => {           
+        if(error) {             
+            return res.status(400).json({error});           
         }
         return res.json({message: "password successfully changed"});         
-    });
+      });
     });
   });
 }
@@ -178,6 +179,8 @@ const createStats = (request, response) => {
         break;
       case "slide9":
         updateAccount.profilePic = "ShamanChar.png"
+        break;
+      case "default":
         break;
     }
 
