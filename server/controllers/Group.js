@@ -10,7 +10,7 @@ const groupPage = (req, res) => {
             return res.status(400).json({ error: 'An error occurred' });
         }
         
-        return res.render('profile', { csrfToken: req.csrfToken(), friends: docs });
+        return res.render('profile', { csrfToken: req.csrfToken(), groups: docs });
     });
 };
 
@@ -58,7 +58,7 @@ const getOneGroup = (request, response) => {
             return res.status(400).json({ error: 'An error occurred' });
         }
 
-        return res.json({ friends: docs });
+        return res.json({ groups: docs });
     });
 };
 
@@ -72,7 +72,7 @@ const getGroups = (request, response) => {
             return res.status(400).json({ error: 'An error occurred' });
         }
 
-        return res.json({ friends: docs });
+        return res.json({ groups: docs });
     });
 };
 

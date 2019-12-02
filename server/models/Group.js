@@ -46,7 +46,7 @@ GroupSchema.statics.findByGroup = (groupName, callback) => {
     return GroupModel.find(search).select('user').exec(callback);
 };
 
-GroupModel = mongoose.model('Friend', GroupSchema);
+GroupModel = mongoose.model('Group', GroupSchema);
 
 module.exports.GroupModel = GroupModel;
 module.exports.GroupSchema = GroupSchema;
