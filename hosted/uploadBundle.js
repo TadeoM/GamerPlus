@@ -11,7 +11,6 @@ var fileUpload = function fileUpload(e) {
 
     formData.append("files", picture);
     formData.append('_csrf', csrfToken);
-    console.log(formData.getAll("files"));
     fetch('/upload?_csrf=' + csrfToken, {
         method: "POST",
         body: formData,
