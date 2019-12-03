@@ -9,18 +9,22 @@ var fileUpload = function fileUpload(e) {
     var formData = new FormData();
     var picture = document.querySelector('#fileData').files[0];
 
-    formData.append("files", picture);
+    formData.append("sampleFile", picture);
     formData.append('_csrf', csrfToken);
+    console.log(formData.getAll("sampleFile"));
     fetch('/upload?_csrf=' + csrfToken, {
         method: "POST",
-        body: formData,
-        headers: {
-            "Content-Type": "application/json"
-        }
+        body: formData
     }).then(function (response) {
         if (response.status === 200) {
             response.json().then(function (data) {
                 window.location = data.redirect;
+                fetch('/retrieve?name=' + data.imageName, {
+                    method: "GET",
+                    query: { name: data.imageName }
+                }).then(function (newData) {
+                    ReactDOM.render(React.createElement(ImageDisplay, { imageName: '' + data.imageName }), document.querySelector("#uploadArea"));
+                });
             });
         }
     });
@@ -41,6 +45,10 @@ var UploadFile = function UploadFile(props) {
         React.createElement('input', { type: 'file', name: 'sampleFile', id: 'fileData' }),
         React.createElement('input', { type: 'submit', value: 'Upload!' })
     );
+};
+var ImageDisplay = function ImageDisplay(props) {
+    e.preventDefault();
+    return React.createElement('img', { src: '/retrieve?name=' + props.imageName }), false;
 };
 
 var setup = function setup(csrf) {

@@ -7,21 +7,29 @@ const fileUpload = (e) => {
     let formData = new FormData();
     let picture = document.querySelector('#fileData').files[0];
 
-    formData.append("files", picture);
+    formData.append("sampleFile", picture);
     formData.append('_csrf', csrfToken);
+    console.log(formData.getAll("sampleFile"));
     fetch(`/upload?_csrf=${csrfToken}`,
     {
         method: "POST",
         body: formData,
-        headers: {
-            "Content-Type": "application/json"
-        },
     })
     .then(
         function(response){
             if(response.status === 200){
                 response.json().then(function(data){
                     window.location = data.redirect;
+                    fetch(`/retrieve?name=${data.imageName}`, { 
+                        method: "GET",
+                        query: {name: data.imageName},
+                    })
+                    .then(function(newData){
+                        ReactDOM.render(
+                            <ImageDisplay imageName={`${data.imageName}`}/>, document.querySelector("#uploadArea")
+                        );
+                    }
+                    )
                 });
             }
         }
@@ -42,6 +50,12 @@ const UploadFile = (props) => {
             <input type="file" name="sampleFile" id="fileData" />
             <input type='submit' value='Upload!' />
         </form> 
+    )
+}
+const ImageDisplay = (props) => {
+    e.preventDefault();
+    return (
+        <img src={`/retrieve?name=${props.imageName}`} />, false
     )
 }
 

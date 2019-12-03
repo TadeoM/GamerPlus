@@ -10,9 +10,8 @@ const uploadPage = (req, res) => {
 //Our upload controller
 const upload = (req, res) => {
   //If there are no files, return an error
-  console.dir(req);
   if(!req.files || Object.keys(req.files).length === 0) {
-    console.log("WHere my data at boy");
+    console.log("Where my data at boy");
     return res.status(400).json({error: 'No files were uploaded'});
   }
   
@@ -28,7 +27,7 @@ const upload = (req, res) => {
   
   //When it is finished saving, let the user know
   savePromise.then(()=>{
-    res.json({message: 'upload successful'});
+    res.json({message: 'upload successful', imageName: imageModel.name, redirect: `/retrieve?name=${imageModel.name}`});
   });
   
   //If there is an error while saving, let the user know
@@ -43,7 +42,6 @@ const upload = (req, res) => {
 
 //Our retrieval controller
 const retrieveImage = (req, res) => {
-  
   //Find the file by name in the database if it exists
   FileStore.FileModel.findOne({name: req.query.name}, (error, doc) => {
     

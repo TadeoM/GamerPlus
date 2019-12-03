@@ -45,7 +45,7 @@ const AccountSchema = new mongoose.Schema({
     default: [],
   },
   profilePic: {
-    type: String
+    type: String,
   }
 });
 
