@@ -10,9 +10,13 @@ const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
 const url = require('url');
 const csrf = require('csurf');
-const io = require('socket.io');
+const app = express();
 const redisAdapter = require('socket.io-redis');
-
+const http = require('http').Server(app)
+const io = require('socket.io');
+const socket = io(http);
+const models = require('../models');
+const Chat = models.Chat;
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
 const dbURL = process.env.MONGODB_URI || 'mongodb://localhost/DomoMaker';
@@ -39,10 +43,10 @@ if (process.env.REDISCLOUD_URL) {
 // pull in our routes
 const router = require('./router.js');
 
-const app = express();
+
 app.use('/assets', express.static(path.resolve(`${__dirname}/../hosted/`)));
 app.use(favicon(`${__dirname}/../hosted/img/gamifyLife.png`));
-
+app.use('/')
 app.use(compression());
 app.use(bodyParser.urlencoded({
   extended: true,
@@ -66,13 +70,25 @@ app.set('view engine', 'handlebars');
 app.set('views', `${__dirname}/../views`);
 app.disable('x-powered-by');
 app.use(cookieParser());
-/*
-io.on('connection', function(socket){
-  socket.on('chat message', function(msg){
-    io.emit('chat message', msg);
+socket.on("connection", socket  =>  {
+  console.log("user connected");
+  socket.on("disconnect", function() {
+  console.log("user disconnected");
+  });  
+  socket.on("chat message", function(msg) {
+      console.log("message: "  +  msg);
+      //broadcast message to everyone in port:5000 except yourself.
+  socket.broadcast.emit("received", { message: msg  });
+  mongoose.connect(dbURL, (err) => {
+    if (err) {
+      console.log('Could not connect to database');
+      throw err;
+    }
+    let  chatMessage  =  new Chat({ message: msg, sender: "Anonymous"});
+  chatMessage.save();
+  });
   });
 });
-*/
 app.use(csrf());
 app.use((err, req, res, next) => {
   if (err.code !== 'EBADCSRFTOKEN') return next(err);
@@ -89,3 +105,5 @@ app.listen(port, (err) => {
   }
   console.log(`Listening on port ${port}`);
 });
+module.exports.dbURL = dbURL;
+module.exports.socket = socket;

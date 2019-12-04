@@ -1,24 +1,24 @@
 {
-  "name": "Logins",
+  "name": "GamifyLife",
   "version": "1.0.0",
   "engines": {
     "node": "10.16.0",
     "npm": "4.0.5"
   },
-  "description": "A Simple Login Example using Node.js, Mongo and Redis",
+  "description": "Gaimify Your Life! An App made by using Node.js, Mongo, Redis, and React",
   "main": "./server/app.js",
   "scripts": {
     "buildLoginBundle": "babel ./client/login ./client/helper --presets react --out-file ./hosted/loginBundle.js",
     "buildCreationBundle": "babel ./client/creation ./client/helper --presets react --out-file ./hosted/creationBundle.js",
     "buildProfileBundle": "babel ./client/profile ./client/helper --presets react --out-file ./hosted/profileBundle.js",
     "buildAppBundle": "babel ./client/app ./client/helper --presets react --out-file ./hosted/bundle.js",
-    "buildChatBundle": "babel ./client/app ./client/helper --presets react --out-file ./hosted/chatBundle.js",
+    "buildChatBundle": "babel ./client/chat ./client/helper --presets react --out-file ./hosted/chatBundle.js",
     "build": "npm run buildLoginBundle && npm run buildAppBundle && npm run buildCreationBundle && npm run buildChatBundle",
     "watchLoginBundle": "babel --watch ./client/login ./client/helper --presets react --out-file ./hosted/loginBundle.js",
     "watchProfileBundle": "babel --watch ./client/profile ./client/helper --presets react --out-file ./hosted/profileBundle.js",
     "watchAppBundle": "babel --watch ./client/app ./client/helper --presets react --out-file ./hosted/bundle.js",
     "watchCreatorBundle": "babel --watch ./client/creation ./client/helper --presets react --out-file ./hosted/creationBundle.js",
-    "watchChatBundle": "babel --watch ./client/creation ./client/helper --presets react --out-file ./hosted/chatBundle.js",
+    "watchChatBundle": "babel --watch ./client/chat ./client/helper --presets react --out-file ./hosted/chatBundle.js",
     "nodemon": "nodemon --watch ./server ./server/app.js",
     "start": "node ./server/app.js",
     "pretest": "eslint ./server --fix",
@@ -28,9 +28,9 @@
     "Node",
     "MVC",
     "Redis",
-    "Login"
+    "React"
   ],
-  "author": "Cody Van De Mark",
+  "author": "Sean Koh && Tadeo Menichelli",
   "license": "Apache 2.0",
   "dependencies": {
     "body-parser": "^1.15.0",
