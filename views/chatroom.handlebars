@@ -34,21 +34,28 @@
     </div>
   </nav>
   <div id="wrapper">
-        <ul class="pages">
-    <li class="chat page">
-      <div class="chatArea">
-        <ul class="messages"></ul>
-      </div>
-      <input class="inputMessage" placeholder="Type here..."/>
-    </li>
-    <li class="login page">
-      <div class="form">
-        <h3 class="title">What's your nickname?</h3>
-        <input class="usernameInput" type="text" maxlength="14" />
-      </div>
-    </li>
-  </ul>
+       <div  class="chat_window">
+    <div  class="top_menu">
+    <div  class="buttons">
+    <div  class="button close"></div>
+    <div  class="button minimize"></div>
+    <div  class="button maximize"></div>
+</div>
+    <div  class="title">Chat</div>
+</div>
+    <ul id="messages"  class="messages"></ul>
+<div  class="bottom_wrapper clearfix">
+<i  id="typing"></i>
+    <form  id="form">
+        <div  class="message_input_wrapper">
+        <input  id="message"  class="message_input"  placeholder="Type your message here..."  />
+        </div>
+        <button  class="send_message">Send</button>
+    </form>
+</div>
+</div>
   </div>
+  <script  src="/js/socket.js"></script>
   <script src="/assets/chatBundle.js"></script>
 </body>
 </html>

@@ -105,5 +105,3 @@ app.listen(port, (err) => {
   }
   console.log(`Listening on port ${port}`);
 });
-module.exports.dbURL = dbURL;
-module.exports.socket = socket;
