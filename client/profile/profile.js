@@ -73,7 +73,7 @@ const AccountData = function(props) {
     return (
         
         <div>
-            <img id="char" src={`/assets/img/${props.account.profilePic}`} alt="character"/>
+            <img id="char" src={`/retrieve?name=${props.account.profilePic}`} alt="character"/>
             <h3 className="accountName"><b>User:</b> {props.account.username} </h3>
             <h3 className="accountAthletics"><b>Athletics:</b> {props.account.athletics}</h3>
             <h3 className="accountWisdom"><b>Wisdom:</b> {props.account.wisdom}</h3>

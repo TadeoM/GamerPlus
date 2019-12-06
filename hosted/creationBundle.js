@@ -1,5 +1,6 @@
 "use strict";
 
+var csrfToken = null;
 var handleCreation = function handleCreation(e) {
     e.preventDefault();
 
@@ -27,11 +28,30 @@ var handleCreation = function handleCreation(e) {
 
     var selections = document.querySelector(".slider").children;
 
+    e.preventDefault();
+    //https://stackoverflow.com/questions/5587973/javascript-upload-file
+    var formData = new FormData();
+    var picture = void 0;
+
     for (var i = 0; i < selections.length; i++) {
         if (selections[i].checked) {
-            $("#profilePic")[0].value = selections[i].title;
+            picture = selections[i].title;
         }
     }
+
+    formData.append("sampleFile", picture);
+    formData.append('_csrf', csrfToken);
+    console.log(formData.getAll("sampleFile"));
+    fetch("/upload?_csrf=" + csrfToken, {
+        method: "POST",
+        body: formData
+    }).then(function (response) {
+        if (response.status === 200) {
+            response.json().then(function (data) {
+                console.log("Uploaded");
+            });
+        }
+    });
 
     sendAjax('POST', $("#accountForm").attr("action"), $("#accountForm").serialize(), redirect);
 
@@ -85,8 +105,6 @@ var AccountForm = function AccountForm(props) {
     );
 };
 
-var CharacterSelector = function CharacterSelector(props) {};
-
 var createAcountWindow = function createAcountWindow(csrf) {
     ReactDOM.render(React.createElement(AccountForm, { csrf: csrf }), document.querySelector("#content"));
 };
@@ -118,6 +136,7 @@ var setup = function setup(csrf) {
 var getToken = function getToken() {
     sendAjax('GET', '/getToken', null, function (result) {
         setup(result.csrfToken);
+        csrfToken = result.csrfToken;
     });
 };
 

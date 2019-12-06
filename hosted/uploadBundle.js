@@ -18,12 +18,11 @@ var fileUpload = function fileUpload(e) {
     }).then(function (response) {
         if (response.status === 200) {
             response.json().then(function (data) {
-                window.location = data.redirect;
                 fetch('/retrieve?name=' + data.imageName, {
                     method: "GET",
                     query: { name: data.imageName }
                 }).then(function (newData) {
-                    ReactDOM.render(React.createElement(ImageDisplay, { imageName: '' + data.imageName }), document.querySelector("#uploadArea"));
+                    ReactDOM.render(React.createElement(ImageDisplay, { imageName: '' + data.imageName }), document.querySelector("#imageArea"));
                 });
             });
         }
@@ -47,8 +46,7 @@ var UploadFile = function UploadFile(props) {
     );
 };
 var ImageDisplay = function ImageDisplay(props) {
-    e.preventDefault();
-    return React.createElement('img', { src: '/retrieve?name=' + props.imageName }), false;
+    return React.createElement('img', { src: '/retrieve?name=' + props.imageName });
 };
 
 var setup = function setup(csrf) {

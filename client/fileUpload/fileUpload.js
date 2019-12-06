@@ -19,14 +19,13 @@ const fileUpload = (e) => {
         function(response){
             if(response.status === 200){
                 response.json().then(function(data){
-                    window.location = data.redirect;
                     fetch(`/retrieve?name=${data.imageName}`, { 
                         method: "GET",
                         query: {name: data.imageName},
                     })
                     .then(function(newData){
                         ReactDOM.render(
-                            <ImageDisplay imageName={`${data.imageName}`}/>, document.querySelector("#uploadArea")
+                            <ImageDisplay imageName={`${data.imageName}`}/>, document.querySelector("#imageArea")
                         );
                     }
                     )
@@ -53,9 +52,8 @@ const UploadFile = (props) => {
     )
 }
 const ImageDisplay = (props) => {
-    e.preventDefault();
     return (
-        <img src={`/retrieve?name=${props.imageName}`} />, false
+        <img src={`/retrieve?name=${props.imageName}`} />
     )
 }
 
