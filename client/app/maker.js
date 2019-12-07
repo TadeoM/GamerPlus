@@ -1,5 +1,4 @@
 let csrfToken = null;
-let quests = [];
 
 const handleQuest = (e) =>{
     e.preventDefault();
@@ -282,7 +281,7 @@ const AccountData = function(props) {
 };
 
 const loadQuestsFromServer = () =>{
-    
+    let quests = [];
     sendAjax('GET', '/getQuests', null, (data) =>{
         for(let j = 0; j < data.quests.length; j++){
             quests[j] = data.quests[j];
@@ -299,7 +298,12 @@ const loadQuestsFromServer = () =>{
             }
         });
     });
-    
+    console.log("Quest array")
+    console.log(quests);
+    console.log("First quest data");
+    console.log(quests[0]);
+    console.log("Quest Array length");
+    console.log(quests.length);
     ReactDOM.render(
         <QuestList quests ={quests} csrf = {csrfToken} />, document.querySelector("#quests")
     );
