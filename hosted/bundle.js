@@ -1,7 +1,6 @@
 "use strict";
 
 var csrfToken = null;
-var quests = [];
 
 var handleQuest = function handleQuest(e) {
     e.preventDefault();
@@ -201,8 +200,7 @@ var QuestForm = function QuestForm(props) {
 };
 
 var QuestList = function QuestList(props) {
-    //console.log(props.quests);
-    console.log(quests);
+    console.log(props.quests.length);
     if (props.quests.length === 0) {
         return React.createElement(
             "div",
@@ -426,10 +424,10 @@ var AccountData = function AccountData(props) {
 };
 
 var loadQuestsFromServer = function loadQuestsFromServer() {
-
+    var quests = [];
     sendAjax('GET', '/getQuests', null, function (data) {
         for (var j = 0; j < data.quests.length; j++) {
-            quests[j] = data.quests[j];
+            quests.push(data.quests[j]);
         }
         sendAjax('GET', '/getFriends', null, function (friendData) {
             for (var i = 0; i < friendData.friends.length; i++) {
@@ -442,9 +440,9 @@ var loadQuestsFromServer = function loadQuestsFromServer() {
                 });
             }
         });
+        console.log(quests);
+        ReactDOM.render(React.createElement(QuestList, { quests: quests, csrf: csrfToken }), document.querySelector("#quests"));
     });
-
-    ReactDOM.render(React.createElement(QuestList, { quests: quests, csrf: csrfToken }), document.querySelector("#quests"));
 };
 var loadPendingQuestsFromServer = function loadPendingQuestsFromServer() {
     sendAjax('GET', '/getPendingQuests', null, function (data) {

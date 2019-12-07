@@ -169,8 +169,7 @@ const QuestForm = (props) =>{
 
 const QuestList = function(props)
 {
-    //console.log(props.quests);
-    console.log(quests);
+    console.log(props.quests.length);
     if(props.quests.length === 0)
     {
         return(
@@ -284,7 +283,7 @@ const loadQuestsFromServer = () =>{
     let quests = [];
     sendAjax('GET', '/getQuests', null, (data) =>{
         for(let j = 0; j < data.quests.length; j++){
-            quests[j] = data.quests[j];
+            quests.push(data.quests[j]);
         }
         sendAjax('GET', '/getFriends', null, (friendData) => {
             for(let i = 0; i < friendData.friends.length; i++){
@@ -296,17 +295,14 @@ const loadQuestsFromServer = () =>{
                     });
                 });
             }
+
         });
+        console.log(quests)
+        ReactDOM.render(
+            <QuestList quests ={quests} csrf = {csrfToken} />, document.querySelector("#quests")
+        );
     });
-    console.log("Quest array")
-    console.log(quests);
-    console.log("First quest data");
-    console.log(quests[0]);
-    console.log("Quest Array length");
-    console.log(quests.length);
-    ReactDOM.render(
-        <QuestList quests ={quests} csrf = {csrfToken} />, document.querySelector("#quests")
-    );
+
 };
 const loadPendingQuestsFromServer = () =>{
     sendAjax('GET', '/getPendingQuests', null, (data) =>{
