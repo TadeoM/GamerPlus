@@ -52,12 +52,21 @@ const makeQuest = (req, res) => {
 const getQuests = (request, response) => {
   const req = request;
   const res = response;
-  
-  return Quest.QuestModel.findbyOwner(req.session.account._id, (err, docs) => {
+  console.log(req.query.user);
+  let userToFind = "";
+  if(req.query.user){
+    userToFind = req.query.user;
+  }
+  else {
+    userToFind = req.session.account._id;
+  }
+  console.log("Get Quests for " + userToFind);
+  return Quest.QuestModel.findbyOwner(userToFind, (err, docs) => {
     if (err) {
       console.log(err);
       return res.status(400).json({ error: 'An error occured in Getting' });
     }
+    console.log(docs);
     return res.json({ quests: docs });
   });
 };

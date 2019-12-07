@@ -1,31 +1,40 @@
 let csrfToken = null;
+let quests = [];
 
 const handleQuest = (e) =>{
     e.preventDefault();
 
     $("#questMessage").animate({width:'hide'},350);
     
-    if($("#questName").val()==''|| $("#questExp").val()==''||$("#questType").val()==''||$("#questContent").val()=='')
+    if($("#questName").val()==''|| $("#questExperience").val()==''||$("#questType").val()==''||$(".questContent").val()==''||document.querySelector('#fileData').files.length===0)
     {
+        console.log("Missing something");
         handleError("Gamer! All fields are required");
         return false;
     }
     let formData = new FormData();
     let imageData = new FormData();
     let picture = document.querySelector('#fileData').files[0];
+    if(picture)
+    {
+        let imageName = picture.name;
+        imageData.append("sampleFile", picture);
+        formData.append('imageName', imageName);
+    }
+    
     let questName = document.querySelector('#questName').value;
     let questExp = document.querySelector('#questExperience').value;
     let a = document.querySelector('#questType');
     let questType = a.options[a.selectedIndex].text;
-    let questContent = document.querySelector('#questContent').value;
-    let imageName = picture.name;
+    let questContent = document.querySelector('.questContent').value;
 
-    imageData.append("sampleFile", picture);
+
+    
     formData.append('questName', questName);
     formData.append('questExp', questExp);
     formData.append('questType', questType);
     formData.append('questContent', questContent);
-    formData.append('imageName', imageName);
+    
     formData.append('_csrf', csrfToken);
 
     fetch(`/upload?_csrf=${csrfToken}`,
@@ -126,22 +135,33 @@ const QuestForm = (props) =>{
         encType="multipart/form-data"
         className ="mainForm"
         >
-            <label htmlFor ="name">Name: </label>
-            <input id="questName" type="text" name="name" placeholder ="Quest Name"/>
-            <label htmlFor ="Quest Type">Quest Type: </label>
-            <div className="select">
-                <select id="questType" type="text" name="questType" placeholder ="Quest Type">
-                    <option value="Daily">Daily</option>
-                    <option value="Weekly">Weekly</option>
-                    <option value="Monthly">Monthly</option>
-                    <option value="Special">Special</option>
-                </select>
+            <div className="col-1 questBox">
+                <label htmlFor ="name">Name: </label>
+                <input id="questName" type="text" name="name" placeholder ="Quest Name"/>
             </div>
-            <label htmlFor ="questExperience">Quest Experiece: </label>
-            <input id="questExperience" type="number" name="questExperience" placeholder ="EXP Reward" min="0"/>
-            <textarea id="questContent" class="text" name="questContent" placeholder ="Details of the Quest"></textarea>
+            <div className="col-2 questBox">
+                <label htmlFor ="Quest Type">Quest Type: </label>
+                <div className="select">
+                    <select id="questType" type="text" name="questType" placeholder ="Quest Type">
+                        <option value="Daily">Daily</option>
+                        <option value="Weekly">Weekly</option>
+                        <option value="Monthly">Monthly</option>
+                        <option value="Special">Special</option>
+                    </select>
+                </div>
+            </div>
+
+            <div className="col-1 questBox">
+                <label htmlFor ="questExperience">Quest Experiece: </label>
+                <input id="questExperience" type="number" name="questExperience" placeholder ="EXP Reward" min="0"/>
+            </div>
+            <div className="col-2 questBox">
+                <input type="file" name="sampleFile" id="fileData" />
+            </div>
+            
+            <textarea id="questContent" className="questContent" name="questContent" placeholder ="Details of the Quest"></textarea>
             <input type="hidden" name="_csrf" value={csrfToken}/>
-            <input type="file" name="sampleFile" id="fileData" />
+            
             <input type="hidden" name="_csrf" value={csrfToken}/>
             <input className ="makeQuestSubmit" type="submit" value ="Make Quest"/>
         </form>
@@ -150,6 +170,8 @@ const QuestForm = (props) =>{
 
 const QuestList = function(props)
 {
+    //console.log(props.quests);
+    console.log(quests);
     if(props.quests.length === 0)
     {
         return(
@@ -158,9 +180,10 @@ const QuestList = function(props)
             </div>
         );
     }
+    
     const questNodes = props.quests.map(function(quest)
     {
-        console.log(quest);
+        //console.log(quest);
         return(
             <form id="curQuestForm" name ="curQuestForm"
                 onSubmit ={deleteQuest}
@@ -259,11 +282,27 @@ const AccountData = function(props) {
 };
 
 const loadQuestsFromServer = () =>{
+    
     sendAjax('GET', '/getQuests', null, (data) =>{
-        ReactDOM.render(
-            <QuestList quests ={data.quests} csrf = {csrfToken} />, document.querySelector("#quests")
-        );
+        for(let j = 0; j < data.quests.length; j++){
+            quests[j] = data.quests[j];
+        }
+        sendAjax('GET', '/getFriends', null, (friendData) => {
+            for(let i = 0; i < friendData.friends.length; i++){
+                sendAjax('GET', `/getAccount?user=${friendData.friends[i].friend}`, null, (friendAccount) => {
+                    sendAjax('GET', `/getQuests?user=${friendAccount.account._id}`, null, (friendQuestData) => {
+                        for(let j = 0; j < friendQuestData.quests.length; j++){
+                            quests.push(friendQuestData.quests[j]);
+                        }
+                    });
+                });
+            }
+        });
     });
+    
+    ReactDOM.render(
+        <QuestList quests ={quests} csrf = {csrfToken} />, document.querySelector("#quests")
+    );
 };
 const loadPendingQuestsFromServer = () =>{
     sendAjax('GET', '/getPendingQuests', null, (data) =>{
@@ -292,9 +331,6 @@ const setup = function(csrf) {
     });
     ReactDOM.render(
         <QuestForm csrf ={csrf}/>, document.querySelector("#makeQuest")
-    );
-    ReactDOM.render(
-        <QuestList csrf = {csrf} quests ={[]}/>, document.querySelector("#quests")
     );
     loadQuestsFromServer();
     const signupButton = document.querySelector("#profileButton");

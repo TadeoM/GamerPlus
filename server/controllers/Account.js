@@ -134,7 +134,14 @@ const getAccount = (request, response) => {
   const req = request;
   const res = response;
 
-  return Account.AccountModel.findByUsername(req.session.account.username, (err, docs) => {
+  let username = "";
+  if(req.query.user){
+    username = req.query.user;
+  }
+  else {
+    username = req.session.account.username;
+  }
+  return Account.AccountModel.findByUsername(username, (err, docs) => {
     if (err) {
       console.log(err);
       return res.status(400).json({ error: 'An error occurred' });

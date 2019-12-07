@@ -25,8 +25,8 @@ const FriendForm = (props) => {
             method="POST"
             className="mainForm"
         >
-            <label htmlFor="name">Name: </label>
-            <input id="friendName" type="text" name="name" placeholder="Friend Name"/>
+            <label htmlFor="friendName">Friend Name: </label>
+            <input id="friendName" type="text" name="friendName" placeholder="Friend Name"/>
             <input type="hidden" name="_csrf" value={props.csrf}/>
             <input className="makeFriendSubmit" type="submit" value="Add Friend"/>
         </form>

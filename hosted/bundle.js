@@ -1,32 +1,38 @@
 "use strict";
 
 var csrfToken = null;
+var quests = [];
 
 var handleQuest = function handleQuest(e) {
     e.preventDefault();
 
     $("#questMessage").animate({ width: 'hide' }, 350);
 
-    if ($("#questName").val() == '' || $("#questExp").val() == '' || $("#questType").val() == '' || $("#questContent").val() == '') {
+    if ($("#questName").val() == '' || $("#questExperience").val() == '' || $("#questType").val() == '' || $(".questContent").val() == '' || document.querySelector('#fileData').files.length === 0) {
+        console.log("Missing something");
         handleError("Gamer! All fields are required");
         return false;
     }
     var formData = new FormData();
     var imageData = new FormData();
     var picture = document.querySelector('#fileData').files[0];
+    if (picture) {
+        var imageName = picture.name;
+        imageData.append("sampleFile", picture);
+        formData.append('imageName', imageName);
+    }
+
     var questName = document.querySelector('#questName').value;
     var questExp = document.querySelector('#questExperience').value;
     var a = document.querySelector('#questType');
     var questType = a.options[a.selectedIndex].text;
-    var questContent = document.querySelector('#questContent').value;
-    var imageName = picture.name;
+    var questContent = document.querySelector('.questContent').value;
 
-    imageData.append("sampleFile", picture);
     formData.append('questName', questName);
     formData.append('questExp', questExp);
     formData.append('questType', questType);
     formData.append('questContent', questContent);
-    formData.append('imageName', imageName);
+
     formData.append('_csrf', csrfToken);
 
     fetch("/upload?_csrf=" + csrfToken, {
@@ -126,59 +132,77 @@ var QuestForm = function QuestForm(props) {
             className: "mainForm"
         },
         React.createElement(
-            "label",
-            { htmlFor: "name" },
-            "Name: "
-        ),
-        React.createElement("input", { id: "questName", type: "text", name: "name", placeholder: "Quest Name" }),
-        React.createElement(
-            "label",
-            { htmlFor: "Quest Type" },
-            "Quest Type: "
+            "div",
+            { className: "col-1 questBox" },
+            React.createElement(
+                "label",
+                { htmlFor: "name" },
+                "Name: "
+            ),
+            React.createElement("input", { id: "questName", type: "text", name: "name", placeholder: "Quest Name" })
         ),
         React.createElement(
             "div",
-            { className: "select" },
+            { className: "col-2 questBox" },
             React.createElement(
-                "select",
-                { id: "questType", type: "text", name: "questType", placeholder: "Quest Type" },
+                "label",
+                { htmlFor: "Quest Type" },
+                "Quest Type: "
+            ),
+            React.createElement(
+                "div",
+                { className: "select" },
                 React.createElement(
-                    "option",
-                    { value: "Daily" },
-                    "Daily"
-                ),
-                React.createElement(
-                    "option",
-                    { value: "Weekly" },
-                    "Weekly"
-                ),
-                React.createElement(
-                    "option",
-                    { value: "Monthly" },
-                    "Monthly"
-                ),
-                React.createElement(
-                    "option",
-                    { value: "Special" },
-                    "Special"
+                    "select",
+                    { id: "questType", type: "text", name: "questType", placeholder: "Quest Type" },
+                    React.createElement(
+                        "option",
+                        { value: "Daily" },
+                        "Daily"
+                    ),
+                    React.createElement(
+                        "option",
+                        { value: "Weekly" },
+                        "Weekly"
+                    ),
+                    React.createElement(
+                        "option",
+                        { value: "Monthly" },
+                        "Monthly"
+                    ),
+                    React.createElement(
+                        "option",
+                        { value: "Special" },
+                        "Special"
+                    )
                 )
             )
         ),
         React.createElement(
-            "label",
-            { htmlFor: "questExperience" },
-            "Quest Experiece: "
+            "div",
+            { className: "col-1 questBox" },
+            React.createElement(
+                "label",
+                { htmlFor: "questExperience" },
+                "Quest Experiece: "
+            ),
+            React.createElement("input", { id: "questExperience", type: "number", name: "questExperience", placeholder: "EXP Reward", min: "0" })
         ),
-        React.createElement("input", { id: "questExperience", type: "number", name: "questExperience", placeholder: "EXP Reward", min: "0" }),
-        React.createElement("textarea", { id: "questContent", "class": "text", name: "questContent", placeholder: "Details of the Quest" }),
+        React.createElement(
+            "div",
+            { className: "col-2 questBox" },
+            React.createElement("input", { type: "file", name: "sampleFile", id: "fileData" })
+        ),
+        React.createElement("textarea", { id: "questContent", className: "questContent", name: "questContent", placeholder: "Details of the Quest" }),
         React.createElement("input", { type: "hidden", name: "_csrf", value: csrfToken }),
-        React.createElement("input", { type: "file", name: "sampleFile", id: "fileData" }),
         React.createElement("input", { type: "hidden", name: "_csrf", value: csrfToken }),
         React.createElement("input", { className: "makeQuestSubmit", type: "submit", value: "Make Quest" })
     );
 };
 
 var QuestList = function QuestList(props) {
+    //console.log(props.quests);
+    console.log(quests);
     if (props.quests.length === 0) {
         return React.createElement(
             "div",
@@ -190,8 +214,9 @@ var QuestList = function QuestList(props) {
             )
         );
     }
+
     var questNodes = props.quests.map(function (quest) {
-        console.log(quest);
+        //console.log(quest);
         return React.createElement(
             "form",
             { id: "curQuestForm", name: "curQuestForm",
@@ -401,9 +426,25 @@ var AccountData = function AccountData(props) {
 };
 
 var loadQuestsFromServer = function loadQuestsFromServer() {
+
     sendAjax('GET', '/getQuests', null, function (data) {
-        ReactDOM.render(React.createElement(QuestList, { quests: data.quests, csrf: csrfToken }), document.querySelector("#quests"));
+        for (var j = 0; j < data.quests.length; j++) {
+            quests[j] = data.quests[j];
+        }
+        sendAjax('GET', '/getFriends', null, function (friendData) {
+            for (var i = 0; i < friendData.friends.length; i++) {
+                sendAjax('GET', "/getAccount?user=" + friendData.friends[i].friend, null, function (friendAccount) {
+                    sendAjax('GET', "/getQuests?user=" + friendAccount.account._id, null, function (friendQuestData) {
+                        for (var _j = 0; _j < friendQuestData.quests.length; _j++) {
+                            quests.push(friendQuestData.quests[_j]);
+                        }
+                    });
+                });
+            }
+        });
     });
+
+    ReactDOM.render(React.createElement(QuestList, { quests: quests, csrf: csrfToken }), document.querySelector("#quests"));
 };
 var loadPendingQuestsFromServer = function loadPendingQuestsFromServer() {
     sendAjax('GET', '/getPendingQuests', null, function (data) {
@@ -425,7 +466,6 @@ var setup = function setup(csrf) {
         return false;
     });
     ReactDOM.render(React.createElement(QuestForm, { csrf: csrf }), document.querySelector("#makeQuest"));
-    ReactDOM.render(React.createElement(QuestList, { csrf: csrf, quests: [] }), document.querySelector("#quests"));
     loadQuestsFromServer();
     var signupButton = document.querySelector("#profileButton");
 
