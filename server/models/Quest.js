@@ -26,6 +26,9 @@ const QuestSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  groupQuest: {
+    type: String,
+  },
   questType: {
     type: String,
     required: true,
@@ -39,6 +42,10 @@ const QuestSchema = new mongoose.Schema({
     type:String,
     required: true,
   },
+  imageName: {
+    type: String,
+    required: true,
+  }
   /*
   questReciever:{
     type:mongoose.Schema.ObjectId,
@@ -54,6 +61,7 @@ QuestSchema.statics.toAPI = (doc) => ({
   questType: doc.questType,
   questExperience: doc.questExperience,
   questContent: doc.questContent,
+  imageName: doc.imageName,
   _id: doc._id,
 });
 
@@ -63,7 +71,7 @@ QuestSchema.statics.findbyOwner = (ownerId, callback) => {
     owner: convertID(ownerId),
   };
   return QuestModel.find(search)
-  .select('name questType questExperience questContent')
+  .select('name questType questExperience questContent imageName')
   .exec(callback);
 };
 // Find by username and then edit.

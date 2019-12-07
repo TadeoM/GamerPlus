@@ -12,12 +12,12 @@ const GroupSchema = new mongoose.Schema({
         required: true,
         set: setName,
     },
-    owner: {
+    groupOwner: {
         type: Boolean,
         required: true,
         set: setName,
     },
-    user: {
+    groupMember: {
         type: String,
         require: true,
         set: setName,
@@ -26,16 +26,16 @@ const GroupSchema = new mongoose.Schema({
 
 GroupSchema.statics.toAPI = (doc) => ({
     groupName: doc.groupName,
-    owner: doc.owner,
-    user: doc.user,
+    groupOwner: doc.groupOwner,
+    groupMember: doc.groupMember,
 });
 
 GroupSchema.statics.findByUser = (username, callback) => {
     const search = {
-        user: username,
+        groupMember: username,
     };
     
-    return GroupModel.find(search).select('user friend').exec(callback);
+    return GroupModel.find(search).select('groupName groupOwner groupMember').exec(callback);
 };
 
 GroupSchema.statics.findByGroup = (groupName, callback) => {

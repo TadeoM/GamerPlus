@@ -1,7 +1,6 @@
 const models = require('../models');
 
 const Group = models.Group;
-const Account = models.Account;
 
 const groupPage = (req, res) => {
     Group.GroupModel.findByGroup(req.body.groupName, (err, docs) => {
@@ -10,7 +9,7 @@ const groupPage = (req, res) => {
             return res.status(400).json({ error: 'An error occurred' });
         }
         
-        return res.render('profile', { csrfToken: req.csrfToken(), groups: docs });
+        return res.render('group', { csrfToken: req.csrfToken(), groups: docs });
     });
 };
 
@@ -18,34 +17,29 @@ const addMember = (request,response) => {
     const req = request;
     const res = response;
 
-    console.log(req.body);
-    return Account.AccountModel.findByUsername(req.body.name, (error, docs) => {
-        if(docs) {
-            const memberData = {
-                group: req.body.groupName,
-                user: req.session.account.username,
-                owner: req.body.owner,
-            };
-            
-            const newMember = new Group.GroupModel(memberData);
-            
-            const memberPromise = newMember.save();
-                
-            memberPromise.then(() => res.json({ redirect: '/maker' }));
+    if(req.body) {
+        const memberData = {
+            groupName: req.body.groupName,
+            groupMember: req.session.account.username,
+            groupOwner: req.body.groupOwner,
+        };
         
-            memberPromise.catch((err) => {
-                console.log(err);
-                if(err.code === 11000) {
-                    return res.status(400).json({ error: 'Member already exists in group.' });
-                }
-                
-                return res.status(400).json({ error: 'An error occurred' });
-            });
+        const newMember = new Group.GroupModel(memberData);
+        
+        const memberPromise = newMember.save();
+         
+        memberPromise.catch((err) => {
+            console.log(err);
+            if(err.code === 11000) {
+                return res.status(400).json({ error: 'Member already exists in group.' });
+            }
             
-            return memberPromise;
-        }
-        return res.status(400).json({ error: 'No docs' });
-    });
+            return res.status(400).json({ error: 'An error occurred' });
+        });
+        console.log("this far");   
+        return memberPromise;
+    }
+    return res.status(400).json({ error: 'No docs' });
 };
 
 const getOneGroup = (request, response) => {
@@ -58,7 +52,7 @@ const getOneGroup = (request, response) => {
             return res.status(400).json({ error: 'An error occurred' });
         }
 
-        return res.json({ groups: docs });
+        return res.json({ group: docs });
     });
 };
 

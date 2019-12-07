@@ -4,17 +4,56 @@ const handleQuest = (e) =>{
     e.preventDefault();
 
     $("#questMessage").animate({width:'hide'},350);
-
+    
     if($("#questName").val()==''|| $("#questExp").val()==''||$("#questType").val()==''||$("#questContent").val()=='')
     {
         handleError("Gamer! All fields are required");
         return false;
     }
+    let formData = new FormData();
+    let imageData = new FormData();
+    let picture = document.querySelector('#fileData').files[0];
+    let questName = document.querySelector('#questName').value;
+    let questExp = document.querySelector('#questExperience').value;
+    let a = document.querySelector('#questType');
+    let questType = a.options[a.selectedIndex].text;
+    let questContent = document.querySelector('#questContent').value;
+    let imageName = picture.name;
 
-    sendAjax('POST',$("#questForm").attr("action"), $("#questForm").serialize(), function(){
-        loadQuestsFromServer();
-        
-    });
+    imageData.append("sampleFile", picture);
+    formData.append('questName', questName);
+    formData.append('questExp', questExp);
+    formData.append('questType', questType);
+    formData.append('questContent', questContent);
+    formData.append('imageName', imageName);
+    formData.append('_csrf', csrfToken);
+
+    fetch(`/upload?_csrf=${csrfToken}`,
+    {
+        method: "POST",
+        body: imageData,
+    })
+    .then(
+        function(response){
+            if(response.status === 200){
+                console.log("Image Uploaded");
+            }
+        }
+    );
+
+    fetch(`${$("#questForm").attr("action")}?_csrf=${csrfToken}`,
+    {
+        method: "POST",
+        body: formData,
+    })
+    .then(
+        function(response){
+            if(response.status === 200){
+                console.log("Quest made");
+                loadQuestsFromServer();
+            }
+        }
+    );
     
     return false;
 };
@@ -84,14 +123,14 @@ const QuestForm = (props) =>{
         <form id="questForm" name="questForm"
         onSubmit ={handleQuest}
         action ="/maker"
-        method="GET"
+        encType="multipart/form-data"
         className ="mainForm"
         >
             <label htmlFor ="name">Name: </label>
             <input id="questName" type="text" name="name" placeholder ="Quest Name"/>
             <label htmlFor ="Quest Type">Quest Type: </label>
             <div className="select">
-                <select id="questType slct" type="text" name="questType" placeholder ="Quest Type">
+                <select id="questType" type="text" name="questType" placeholder ="Quest Type">
                     <option value="Daily">Daily</option>
                     <option value="Weekly">Weekly</option>
                     <option value="Monthly">Monthly</option>
@@ -101,7 +140,9 @@ const QuestForm = (props) =>{
             <label htmlFor ="questExperience">Quest Experiece: </label>
             <input id="questExperience" type="number" name="questExperience" placeholder ="EXP Reward" min="0"/>
             <textarea id="questContent" class="text" name="questContent" placeholder ="Details of the Quest"></textarea>
-            <input type="hidden" name="_csrf" value={props.csrf}/>
+            <input type="hidden" name="_csrf" value={csrfToken}/>
+            <input type="file" name="sampleFile" id="fileData" />
+            <input type="hidden" name="_csrf" value={csrfToken}/>
             <input className ="makeQuestSubmit" type="submit" value ="Make Quest"/>
         </form>
     );
@@ -119,7 +160,7 @@ const QuestList = function(props)
     }
     const questNodes = props.quests.map(function(quest)
     {
-        console.log(quest._id);
+        console.log(quest);
         return(
             <form id="curQuestForm" name ="curQuestForm"
                 onSubmit ={deleteQuest}
@@ -128,7 +169,7 @@ const QuestList = function(props)
                 className="curQuestForm"
                 >
             <div key={quest._id} className="quest">
-                <img src="/assets/img/scrollQuest.png" alt="domo face" className="scrollQuest"/>
+                <img src={`/retrieve?name=${quest.imageName}`} alt="domo face" className="scrollQuest"/>
                 <h3 className="questName">Name: {quest.name}</h3>
                 <h3 className="questType">Quest Type: {quest.questType}</h3>
                 <h3 className="questExperience">EXP: {quest.questExperience}</h3>

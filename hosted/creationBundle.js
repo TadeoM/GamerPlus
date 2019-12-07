@@ -27,31 +27,11 @@ var handleCreation = function handleCreation(e) {
     console.log($("input[name=_csrf]").val());
 
     var selections = document.querySelector(".slider").children;
-
-    e.preventDefault();
-    //https://stackoverflow.com/questions/5587973/javascript-upload-file
-    var formData = new FormData();
-    var picture = void 0;
-
     for (var i = 0; i < selections.length; i++) {
         if (selections[i].checked) {
-            picture = selections[i].title;
+            $("#profilePic")[0].value = selections[i].title;
         }
     }
-
-    formData.append("sampleFile", picture);
-    formData.append('_csrf', csrfToken);
-    console.log(formData.getAll("sampleFile"));
-    fetch("/upload?_csrf=" + csrfToken, {
-        method: "POST",
-        body: formData
-    }).then(function (response) {
-        if (response.status === 200) {
-            response.json().then(function (data) {
-                console.log("Uploaded");
-            });
-        }
-    });
 
     sendAjax('POST', $("#accountForm").attr("action"), $("#accountForm").serialize(), redirect);
 

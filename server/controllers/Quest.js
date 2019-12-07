@@ -14,18 +14,24 @@ const makerPage = (req, res) => {
   });
 };
 const makeQuest = (req, res) => {
-  if (!req.body.name || !req.body.questExperience 
+  console.log(req.body);
+  if (!req.body.questName || !req.body.questExp 
     || !req.body.questType||!req.body.questContent) {
+      console.log("here");
     return res.status(400).json({ error: 'All Parameters Are Required For Quest Submission' });
   }
   const questData = {
-    name: req.body.name,
+    name: req.body.questName,
     questType: req.body.questType,
-    questExperience: req.body.questExperience,
+    questExperience: req.body.questExp,
     questContent: req.body.questContent,
+    imageName: req.body.imageName,
     owner: req.session.account._id,
   };
-
+  if(req.body.groupName) {
+    questData.groupQuest = req.body.groupName;
+  }
+  
   const newQuest = new Quest.QuestModel(questData);
 
   const questPromise = newQuest.save();

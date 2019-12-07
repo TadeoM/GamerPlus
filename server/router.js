@@ -31,6 +31,11 @@ const router = (app) => {
     app.get('/retrieve', mid.requiresLogin, controllers.FileUpload.retrieve);
     app.get('/uploadPage', mid.requiresLogin, controllers.FileUpload.uploadPage);
 
+    app.post('/addMember', mid.requiresLogin, controllers.Group.addMember);
+    app.get('/getGroup', mid.requiresLogin, controllers.Group.getOneGroup);
+    app.get('/getGroups', mid.requiresLogin, controllers.Group.getGroups);
+    app.get('/groupPage', mid.requiresLogin, controllers.Group.groupPage);
+
     app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
 };
 

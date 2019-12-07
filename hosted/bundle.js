@@ -11,9 +11,41 @@ var handleQuest = function handleQuest(e) {
         handleError("Gamer! All fields are required");
         return false;
     }
+    var formData = new FormData();
+    var imageData = new FormData();
+    var picture = document.querySelector('#fileData').files[0];
+    var questName = document.querySelector('#questName').value;
+    var questExp = document.querySelector('#questExperience').value;
+    var a = document.querySelector('#questType');
+    var questType = a.options[a.selectedIndex].text;
+    var questContent = document.querySelector('#questContent').value;
+    var imageName = picture.name;
 
-    sendAjax('POST', $("#questForm").attr("action"), $("#questForm").serialize(), function () {
-        loadQuestsFromServer();
+    imageData.append("sampleFile", picture);
+    formData.append('questName', questName);
+    formData.append('questExp', questExp);
+    formData.append('questType', questType);
+    formData.append('questContent', questContent);
+    formData.append('imageName', imageName);
+    formData.append('_csrf', csrfToken);
+
+    fetch("/upload?_csrf=" + csrfToken, {
+        method: "POST",
+        body: imageData
+    }).then(function (response) {
+        if (response.status === 200) {
+            console.log("Image Uploaded");
+        }
+    });
+
+    fetch($("#questForm").attr("action") + "?_csrf=" + csrfToken, {
+        method: "POST",
+        body: formData
+    }).then(function (response) {
+        if (response.status === 200) {
+            console.log("Quest made");
+            loadQuestsFromServer();
+        }
     });
 
     return false;
@@ -90,7 +122,7 @@ var QuestForm = function QuestForm(props) {
         { id: "questForm", name: "questForm",
             onSubmit: handleQuest,
             action: "/maker",
-            method: "GET",
+            encType: "multipart/form-data",
             className: "mainForm"
         },
         React.createElement(
@@ -109,7 +141,7 @@ var QuestForm = function QuestForm(props) {
             { className: "select" },
             React.createElement(
                 "select",
-                { id: "questType slct", type: "text", name: "questType", placeholder: "Quest Type" },
+                { id: "questType", type: "text", name: "questType", placeholder: "Quest Type" },
                 React.createElement(
                     "option",
                     { value: "Daily" },
@@ -139,7 +171,9 @@ var QuestForm = function QuestForm(props) {
         ),
         React.createElement("input", { id: "questExperience", type: "number", name: "questExperience", placeholder: "EXP Reward", min: "0" }),
         React.createElement("textarea", { id: "questContent", "class": "text", name: "questContent", placeholder: "Details of the Quest" }),
-        React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
+        React.createElement("input", { type: "hidden", name: "_csrf", value: csrfToken }),
+        React.createElement("input", { type: "file", name: "sampleFile", id: "fileData" }),
+        React.createElement("input", { type: "hidden", name: "_csrf", value: csrfToken }),
         React.createElement("input", { className: "makeQuestSubmit", type: "submit", value: "Make Quest" })
     );
 };
@@ -157,7 +191,7 @@ var QuestList = function QuestList(props) {
         );
     }
     var questNodes = props.quests.map(function (quest) {
-        console.log(quest._id);
+        console.log(quest);
         return React.createElement(
             "form",
             { id: "curQuestForm", name: "curQuestForm",
@@ -169,7 +203,7 @@ var QuestList = function QuestList(props) {
             React.createElement(
                 "div",
                 { key: quest._id, className: "quest" },
-                React.createElement("img", { src: "/assets/img/scrollQuest.png", alt: "domo face", className: "scrollQuest" }),
+                React.createElement("img", { src: "/retrieve?name=" + quest.imageName, alt: "domo face", className: "scrollQuest" }),
                 React.createElement(
                     "h3",
                     { className: "questName" },
