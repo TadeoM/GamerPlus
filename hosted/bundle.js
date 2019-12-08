@@ -2,6 +2,9 @@
 
 var csrfToken = null;
 var quests = [];
+var accountAthletics = 0;
+var accountCharisma = 0;
+var accountWisdom = 0;
 
 var handleQuest = function handleQuest(e) {
     e.preventDefault();
@@ -326,6 +329,9 @@ var PendingQuestList = function PendingQuestList(props) {
 };
 
 var ProfileBar = function ProfileBar(props) {
+    accountAthletics = props.account.athletics;
+    accountWisdom = props.account.wisdom;
+    accountCharisma = props.account.charisma;
     return React.createElement(
         "div",
         { className: "profileBox" },
@@ -461,12 +467,30 @@ var loadAccountFromServer = function loadAccountFromServer() {
         ReactDOM.render(React.createElement(ProfileBar, { account: data.account }), document.querySelector("#profileContent"));
     });
 };
+var goToDungeon = function goToDungeon() {
+    var dungeonBtn = document.querySelector("#goToDungeonButton");
 
+    if (accountAthletics > accountCharisma && accountAthletics > accountWisdom) {
+        dungeonBtn.href = "views/dungeons/AthleticChar.html";
+    } else if (accountCharisma > accountAthletics && accountCharisma > accountWisdom) {
+        dungeonBtn.href = "views/dungeons/CharismaticChar.html";
+    } else if (accountWisdom > accountAthletics && accountWisdom > accountCharisma) {
+        dungeonBtn.href = "views/dungeons/WisdomChar.html";
+    } else {
+        dungeonBtn.href = "views/dungeons/WisdomChar.html";
+    }
+};
 var setup = function setup(csrf) {
     var changePswdBtn = document.querySelector("#changePswdBtn");
     changePswdBtn.addEventListener("click", function (e) {
         e.preventDefault();
         createChangePasswordForm(csrf);
+        return false;
+    });
+    var dungeonBtn = document.querySelector("#goToDungeonButton");
+    dungeonBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        goToDungeon();
         return false;
     });
     ReactDOM.render(React.createElement(QuestForm, { csrf: csrf }), document.querySelector("#makeQuest"));

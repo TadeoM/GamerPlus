@@ -4,7 +4,7 @@ var csrfToken = null;
 var handleCreation = function handleCreation(e) {
     e.preventDefault();
 
-    $("#domoMessage").animate({ width: 'hide' }, 350);
+    $("#errorMessage").animate({ width: 'hide' }, 350);
 
     var maxTotal = 10;
 

@@ -1,5 +1,8 @@
 let csrfToken = null;
 let quests = [];
+let accountAthletics = 0;
+let accountCharisma = 0;
+let accountWisdom = 0;
 
 const handleQuest = (e) =>{
     e.preventDefault();
@@ -248,6 +251,9 @@ return (
 };
 
 const ProfileBar = function(props) {
+    accountAthletics = props.account.athletics;
+    accountWisdom = props.account.wisdom;
+    accountCharisma = props.account.charisma;
     return (
         <div className="profileBox">
             <div> 
@@ -322,12 +328,40 @@ const loadAccountFromServer = () => {
         );
     });
 };
+const goToDungeon = ()=>
+{
+    const dungeonBtn = document.querySelector("#goToDungeonButton");
 
+    if(accountAthletics>accountCharisma&& accountAthletics>accountWisdom)
+    {
+        dungeonBtn.href = "views/dungeons/AthleticChar.html";
+    }
+    else if(accountCharisma>accountAthletics && accountCharisma>accountWisdom)
+    {
+        dungeonBtn.href = "views/dungeons/CharismaticChar.html";
+    }
+    else if(accountWisdom>accountAthletics && accountWisdom>accountCharisma)
+    {
+        dungeonBtn.href = "views/dungeons/WisdomChar.html";
+    }
+    else
+    {
+        dungeonBtn.href = "views/dungeons/WisdomChar.html";
+    }
+
+
+}
 const setup = function(csrf) {
     const changePswdBtn = document.querySelector("#changePswdBtn");
     changePswdBtn.addEventListener("click", (e) => {
         e.preventDefault();
         createChangePasswordForm(csrf);
+        return false;
+    });
+    const dungeonBtn = document.querySelector("#goToDungeonButton");
+    dungeonBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        goToDungeon();
         return false;
     });
     ReactDOM.render(

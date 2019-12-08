@@ -37,6 +37,10 @@ const router = (app) => {
     app.get('/getGroups', mid.requiresLogin, controllers.Group.getGroups);
     app.get('/groupPage', mid.requiresLogin, controllers.Group.groupPage);
 
+    //Dungeons
+    app.get('/dungeonComplete', mid.requiresLogin, controllers.Dungeon.dungeonComplete);
+    app.post('/getReward', mid.requiresLogin, controllers.Dungeon.getReward);
+
     app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
 };
 
