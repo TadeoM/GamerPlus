@@ -1,4 +1,5 @@
 let csrfToken = null;
+let quests = [];
 
 const handleQuest = (e) =>{
     e.preventDefault();
@@ -181,7 +182,6 @@ const QuestList = function(props)
     
     const questNodes = props.quests.map(function(quest)
     {
-        //console.log(quest);
         return(
             <form id="curQuestForm" name ="curQuestForm"
                 onSubmit ={deleteQuest}
@@ -280,7 +280,6 @@ const AccountData = function(props) {
 };
 
 const loadQuestsFromServer = () =>{
-    let quests = [];
     sendAjax('GET', '/getQuests', null, (data) =>{
         for(let j = 0; j < data.quests.length; j++){
             quests.push(data.quests[j]);
@@ -292,17 +291,19 @@ const loadQuestsFromServer = () =>{
                         for(let j = 0; j < friendQuestData.quests.length; j++){
                             quests.push(friendQuestData.quests[j]);
                         }
+                        if (i === friendData.friends.length -1 ){
+                            ReactDOM.render(
+                                <QuestList quests ={quests} csrf = {csrfToken} />, document.querySelector("#quests")
+                            );
+                        }
                     });
                 });
             }
-
         });
-        console.log(quests)
-        ReactDOM.render(
-            <QuestList quests ={quests} csrf = {csrfToken} />, document.querySelector("#quests")
-        );
     });
-
+    console.log(quests)
+    console.log(quests.length)
+    
 };
 const loadPendingQuestsFromServer = () =>{
     sendAjax('GET', '/getPendingQuests', null, (data) =>{

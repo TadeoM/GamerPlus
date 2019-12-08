@@ -40,10 +40,10 @@ GroupSchema.statics.findByUser = (username, callback) => {
 
 GroupSchema.statics.findByGroup = (groupName, callback) => {
     const search = {
-        group: groupName,
+        groupName: groupName,
     };
     
-    return GroupModel.find(search).select('user').exec(callback);
+    return GroupModel.find(search).select('groupOwner groupMember').exec(callback);
 };
 
 GroupModel = mongoose.model('Group', GroupSchema);

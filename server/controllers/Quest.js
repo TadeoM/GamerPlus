@@ -3,7 +3,7 @@ const models = require('../models');
 const Quest = models.Quest;
 
 const makerPage = (req, res) => {
-  Quest.QuestModel.findbyOwner(req.session.account._id, (err, docs) => {
+  Quest.QuestModel.findByOwner(req.session.account._id, (err, docs) => {
     if (err) {
       console.log(err);
       return res.status(400).json({
@@ -14,7 +14,6 @@ const makerPage = (req, res) => {
   });
 };
 const makeQuest = (req, res) => {
-  console.log(req.body);
   if (!req.body.questName || !req.body.questExp 
     || !req.body.questType||!req.body.questContent) {
       console.log("here");
@@ -28,6 +27,7 @@ const makeQuest = (req, res) => {
     imageName: req.body.imageName,
     owner: req.session.account._id,
   };
+  console.log(req.body.groupName);
   if(req.body.groupName) {
     questData.groupQuest = req.body.groupName;
   }
@@ -52,7 +52,7 @@ const makeQuest = (req, res) => {
 const getQuests = (request, response) => {
   const req = request;
   const res = response;
-  console.log(req.query.user);
+
   let userToFind = "";
   if(req.query.user){
     userToFind = req.query.user;
@@ -60,16 +60,31 @@ const getQuests = (request, response) => {
   else {
     userToFind = req.session.account._id;
   }
-  console.log("Get Quests for " + userToFind);
-  return Quest.QuestModel.findbyOwner(userToFind, (err, docs) => {
+  
+  return Quest.QuestModel.findByOwner(userToFind, (err, docs) => {
     if (err) {
       console.log(err);
       return res.status(400).json({ error: 'An error occured in Getting' });
     }
-    console.log(docs);
     return res.json({ quests: docs });
   });
 };
+
+const getGroupQuests = (request, response) => {
+  const req = request;
+  const res = response;
+
+  return Quest.QuestModel.findByGroup(req.query.groupName, (err, docs) => {
+    if (err) {
+      console.log(err);
+      return res.status(400).json({ error: 'An error occured in Getting' });
+    }
+    
+    console.log("In the getGroupQuests");
+    console.log(docs);
+    return res.json({ quests: docs });
+  });
+}
 
 const deleteQuest = (request, response) => {
   const req = request;
@@ -84,16 +99,10 @@ const deleteQuest = (request, response) => {
     return res.json({ quests: docs });
   });
 };
-/*
-const getPendingQuests = (request, response)=>{
-  const req = request;
-  const res = response;
 
-}
-*/
 module.exports.makerPage = makerPage;
 module.exports.make = makeQuest;
 module.exports.getQuests = getQuests;
 module.exports.deleteQuest = deleteQuest;
-//module.exports.getPendingQuests = getPendingQuests;
+module.exports.getGroupQuests = getGroupQuests;
 

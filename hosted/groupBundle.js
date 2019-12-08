@@ -1,6 +1,64 @@
 "use strict";
 
 var csrfToken = null;
+var groupsListed = [];
+var groupPage = "";
+var quests = [];
+
+var handleQuest = function handleQuest(e) {
+    e.preventDefault();
+
+    $("#questMessage").animate({ width: 'hide' }, 350);
+
+    if ($("#questName").val() == '' || $("#questExperience").val() == '' || $("#questType").val() == '' || $(".questContent").val() == '' || document.querySelector('#fileData').files.length === 0) {
+        console.log("Missing something");
+        handleError("Gamer! All fields are required");
+        return false;
+    }
+    var formData = new FormData();
+    var imageData = new FormData();
+    var picture = document.querySelector('#fileData').files[0];
+    if (picture) {
+        var imageName = picture.name;
+        imageData.append("sampleFile", picture);
+        formData.append('imageName', imageName);
+    }
+
+    var questName = document.querySelector('#questName').value;
+    var questExp = document.querySelector('#questExperience').value;
+    var a = document.querySelector('#questType');
+    var questType = a.options[a.selectedIndex].text;
+    var questContent = document.querySelector('.questContent').value;
+    console.log(groupPage);
+
+    formData.append('questName', questName);
+    formData.append('questExp', questExp);
+    formData.append('questType', questType);
+    formData.append('questContent', questContent);
+    formData.append('groupName', groupPage);
+    formData.append('_csrf', csrfToken);
+
+    fetch("/upload?_csrf=" + csrfToken, {
+        method: "POST",
+        body: imageData
+    }).then(function (response) {
+        if (response.status === 200) {
+            console.log("Image Uploaded");
+        }
+    });
+
+    fetch($("#questForm").attr("action") + "?_csrf=" + csrfToken, {
+        method: "POST",
+        body: formData
+    }).then(function (response) {
+        if (response.status === 200) {
+            console.log("Quest made");
+            loadGroupQuestsFromServer();
+        }
+    });
+
+    return false;
+};
 
 var handleGroup = function handleGroup(e) {
     e.preventDefault();
@@ -26,13 +84,7 @@ var handleGroup = function handleGroup(e) {
         method: "POST",
         body: formData
     }).then(function (response) {
-        console.log("FUCK");
-        if (response.status === 200) {
-            console.log("Group made");
-            loadGroupsFromServer();
-        } else {
-            console.log("response.error");
-        }
+        loadGroupsFromServer();
     });
 
     return false;
@@ -49,6 +101,11 @@ var GroupForm = function GroupForm(props) {
         },
         React.createElement(
             "label",
+            null,
+            "Group Creation"
+        ),
+        React.createElement(
+            "label",
             { htmlFor: "name" },
             "Name: "
         ),
@@ -63,8 +120,168 @@ var GroupForm = function GroupForm(props) {
         ),
         React.createElement("input", { id: "groupMember", type: "text", name: "newMember", placeholder: "New Member" }),
         React.createElement("input", { type: "hidden", name: "_csrf", value: csrfToken }),
-        React.createElement("input", { className: "makeGroupSubmit", type: "submit", value: "Make Quest" })
+        React.createElement("input", { className: "makeGroupSubmit", type: "submit", value: "Make Group" })
     );
+};
+
+var QuestForm = function QuestForm(props) {
+    return React.createElement(
+        "form",
+        { id: "questForm", name: "questForm",
+            onSubmit: handleQuest,
+            action: "/maker",
+            encType: "multipart/form-data",
+            className: "mainForm"
+        },
+        React.createElement(
+            "div",
+            { className: "col-1 questBox" },
+            React.createElement(
+                "label",
+                { htmlFor: "name" },
+                "Name: "
+            ),
+            React.createElement("input", { id: "questName", type: "text", name: "name", placeholder: "Quest Name" })
+        ),
+        React.createElement(
+            "div",
+            { className: "col-2 questBox" },
+            React.createElement(
+                "label",
+                { htmlFor: "Quest Type" },
+                "Quest Type: "
+            ),
+            React.createElement(
+                "div",
+                { className: "select" },
+                React.createElement(
+                    "select",
+                    { id: "questType", type: "text", name: "questType", placeholder: "Quest Type" },
+                    React.createElement(
+                        "option",
+                        { value: "Daily" },
+                        "Daily"
+                    ),
+                    React.createElement(
+                        "option",
+                        { value: "Weekly" },
+                        "Weekly"
+                    ),
+                    React.createElement(
+                        "option",
+                        { value: "Monthly" },
+                        "Monthly"
+                    ),
+                    React.createElement(
+                        "option",
+                        { value: "Special" },
+                        "Special"
+                    )
+                )
+            )
+        ),
+        React.createElement(
+            "div",
+            { className: "col-1 questBox" },
+            React.createElement(
+                "label",
+                { htmlFor: "questExperience" },
+                "Quest Experiece: "
+            ),
+            React.createElement("input", { id: "questExperience", type: "number", name: "questExperience", placeholder: "EXP Reward", min: "0" })
+        ),
+        React.createElement(
+            "div",
+            { className: "col-2 questBox" },
+            React.createElement("input", { type: "file", name: "sampleFile", id: "fileData" })
+        ),
+        React.createElement("textarea", { id: "questContent", className: "questContent", name: "questContent", placeholder: "Details of the Quest" }),
+        React.createElement("input", { type: "hidden", name: "_csrf", value: csrfToken }),
+        React.createElement("input", { id: "groupName", type: "hidden", name: "groupName", value: groupName }),
+        React.createElement("input", { type: "hidden", name: "_csrf", value: csrfToken }),
+        React.createElement("input", { className: "makeQuestSubmit", type: "submit", value: "Make Quest" })
+    );
+};
+
+var QuestList = function QuestList(props) {
+    console.log(props.quests.length);
+    if (props.quests.length === 0) {
+        return React.createElement(
+            "div",
+            { className: "questList" },
+            React.createElement(
+                "h3",
+                { className: "emptyQuest" },
+                "No Quests Yet"
+            )
+        );
+    }
+
+    var questNodes = props.quests.map(function (quest) {
+        return React.createElement(
+            "form",
+            { id: "curQuestForm", name: "curQuestForm",
+                onSubmit: deleteQuest,
+                action: "/deleteQuest",
+                method: "POST",
+                className: "curQuestForm"
+            },
+            React.createElement(
+                "div",
+                { key: quest._id, className: "quest" },
+                React.createElement("img", { src: "/retrieve?name=" + quest.imageName, alt: "domo face", className: "scrollQuest" }),
+                React.createElement(
+                    "h3",
+                    { className: "questName" },
+                    "Name: ",
+                    quest.name
+                ),
+                React.createElement(
+                    "h3",
+                    { className: "questType" },
+                    "Quest Type: ",
+                    quest.questType
+                ),
+                React.createElement(
+                    "h3",
+                    { className: "questExperience" },
+                    "EXP: ",
+                    quest.questExperience
+                ),
+                React.createElement(
+                    "h4",
+                    { className: "questContent" },
+                    "Quest Content: ",
+                    quest.questContent
+                ),
+                React.createElement("input", { type: "submit", name: "deleteQuest", value: "Delete Quest" }),
+                React.createElement("input", { type: "hidden", name: "_id", value: quest._id }),
+                React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf })
+            )
+        );
+    });
+    return React.createElement(
+        "div",
+        { className: "questList" },
+        questNodes
+    );
+};
+
+var loadGroupQuestsFromServer = function loadGroupQuestsFromServer() {
+    console.log("Trying to Load Quests");
+    sendAjax('GET', "/getGroupQuests?groupName=" + groupPage, null, function (data) {
+        ReactDOM.render(React.createElement(QuestList, { quests: quests, csrf: csrfToken }), document.querySelector("#quests"));
+    });
+};
+
+var showGroup = function showGroup(groupName) {
+    groupPage = groupName;
+    sendAjax('GET', "/getGroup?groupName=" + groupName, null, function (data) {
+        ReactDOM.render(React.createElement(QuestForm, { groupName: groupPage, csrf: csrfToken }), document.querySelector("#groups"));
+        sendAjax('GET', "/getGroupQuests?groupName=" + groupPage, null, function (questData) {
+            console.log(questData);
+        });
+    });
 };
 
 var GroupList = function GroupList(props) {
@@ -79,31 +296,30 @@ var GroupList = function GroupList(props) {
             )
         );
     }
+    groupsListed = [];
+
     var groupNodes = props.groups.map(function (group) {
-        console.log(group.groupOwner);
-        return React.createElement(
-            "div",
-            { key: group._id, className: "quest" },
-            React.createElement(
-                "h3",
-                { className: "groupName" },
-                "Name: ",
-                group.groupName
-            ),
-            React.createElement(
-                "h3",
-                { className: "groupOwner" },
-                "Group Owner: ",
-                group.groupOwner.toString()
-            ),
-            React.createElement(
-                "h4",
-                { className: "groupMember" },
-                "Group Member: ",
-                group.groupMember
-            ),
-            React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf })
-        );
+        if (!groupsListed.includes(group.groupName)) {
+            groupsListed.push(group.groupName);
+            return React.createElement(
+                "div",
+                { key: group._id, className: "quest" },
+                React.createElement(
+                    "h3",
+                    { className: "groupName" },
+                    "Name: ",
+                    group.groupName
+                ),
+                React.createElement(
+                    "button",
+                    { name: "" + group.groupName, onClick: function onClick() {
+                            return showGroup(group.groupName);
+                        } },
+                    "Group Page Link"
+                ),
+                React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf })
+            );
+        }
     });
     return React.createElement(
         "div",

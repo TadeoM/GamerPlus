@@ -62,11 +62,12 @@ QuestSchema.statics.toAPI = (doc) => ({
   questExperience: doc.questExperience,
   questContent: doc.questContent,
   imageName: doc.imageName,
+  groupQuest: doc.groupQuest,
   _id: doc._id,
 });
 
 // Find its owner
-QuestSchema.statics.findbyOwner = (ownerId, callback) => {
+QuestSchema.statics.findByOwner = (ownerId, callback) => {
   const search = {
     owner: convertID(ownerId),
   };
@@ -74,6 +75,16 @@ QuestSchema.statics.findbyOwner = (ownerId, callback) => {
   .select('name questType questExperience questContent imageName')
   .exec(callback);
 };
+
+QuestSchema.statics.findByGroup = (groupName, callback) => {
+  const search = {
+    groupQuest: groupName,
+  };
+  return QuestModel.find(search)
+  .select('name questType questExperience questContent imageName')
+  .exec(callback);
+};
+
 // Find by username and then edit.
 // Find Quest By ID and delete
 QuestSchema.statics.deleteQuest = (id, callback) => {

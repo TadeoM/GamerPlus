@@ -1,6 +1,7 @@
 "use strict";
 
 var csrfToken = null;
+var quests = [];
 
 var handleQuest = function handleQuest(e) {
     e.preventDefault();
@@ -214,7 +215,6 @@ var QuestList = function QuestList(props) {
     }
 
     var questNodes = props.quests.map(function (quest) {
-        //console.log(quest);
         return React.createElement(
             "form",
             { id: "curQuestForm", name: "curQuestForm",
@@ -424,25 +424,31 @@ var AccountData = function AccountData(props) {
 };
 
 var loadQuestsFromServer = function loadQuestsFromServer() {
-    var quests = [];
     sendAjax('GET', '/getQuests', null, function (data) {
         for (var j = 0; j < data.quests.length; j++) {
             quests.push(data.quests[j]);
         }
         sendAjax('GET', '/getFriends', null, function (friendData) {
-            for (var i = 0; i < friendData.friends.length; i++) {
+            var _loop = function _loop(i) {
                 sendAjax('GET', "/getAccount?user=" + friendData.friends[i].friend, null, function (friendAccount) {
                     sendAjax('GET', "/getQuests?user=" + friendAccount.account._id, null, function (friendQuestData) {
                         for (var _j = 0; _j < friendQuestData.quests.length; _j++) {
                             quests.push(friendQuestData.quests[_j]);
                         }
+                        if (i === friendData.friends.length - 1) {
+                            ReactDOM.render(React.createElement(QuestList, { quests: quests, csrf: csrfToken }), document.querySelector("#quests"));
+                        }
                     });
                 });
+            };
+
+            for (var i = 0; i < friendData.friends.length; i++) {
+                _loop(i);
             }
         });
-        console.log(quests);
-        ReactDOM.render(React.createElement(QuestList, { quests: quests, csrf: csrfToken }), document.querySelector("#quests"));
     });
+    console.log(quests);
+    console.log(quests.length);
 };
 var loadPendingQuestsFromServer = function loadPendingQuestsFromServer() {
     sendAjax('GET', '/getPendingQuests', null, function (data) {
