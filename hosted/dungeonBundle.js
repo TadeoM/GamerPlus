@@ -6,6 +6,13 @@ var experienceValue = "0";
 var url = null;
 var parsedGold = 0;
 var parsedExperience = 0;
+var accountAthletics = 0;
+var accountCharisma = 0;
+var accountWisdom = 0;
+
+var accountExperience = 0;
+var experienceNeeded = 1000;
+
 var handleGetReward = function handleGetReward(e) {
     e.preventDefault();
     var formData = new FormData();
@@ -24,6 +31,40 @@ var handleGetReward = function handleGetReward(e) {
     }).then(function (response) {
         if (response.status === 200) {
             console.log("Got Reward");
+            var divForm = document.querySelector("#dungeonForm");
+            divForm.remove();
+            ReactDOM.render(React.createElement(DungeonSuccess, null), document.querySelector("#dungeonInfo"));
+        }
+    });
+    return false;
+};
+var showProfile = function showProfile(e) {
+    showProfile("PROFILE");
+};
+var levelUp = function levelUp(e) {
+    e.preventDefault();
+
+    var formData = new FormData();
+
+    var currExp = accountExperience;
+    var expNeeded = experienceNeeded;
+    console.log(currExp);
+    console.log(expNeeded);
+
+    formData.append('experience', currExp);
+    formData.append('experienceNeeded', expNeeded);
+
+    formData.append('_csrf', csrfToken);
+    console.log(formData);
+    fetch("/levelUp?_csrf=" + csrfToken, {
+        method: "POST",
+        body: formData
+    }).then(function (response) {
+        if (response.status === 200) {
+            console.log("Leveled Up");
+            window.onload = response.redirect;
+        } else if (response.status === 400) {
+            console.log("Not enough Experience Man");
         }
     });
     return false;
@@ -62,46 +103,189 @@ var DungeonData = function DungeonData(props) {
         )
     );
 };
-/*
-const ProfileBar = function(props) {
+var DungeonSuccess = function DungeonSuccess() {
+    return React.createElement(
+        "h3",
+        null,
+        "You Got Your Reward!"
+    );
+};
+
+var ProfileBar = function ProfileBar(props) {
 
     accountAthletics = props.account.athletics;
     accountWisdom = props.account.wisdom;
     accountCharisma = props.account.charisma;
-    return (
-        <div className="profileBox">
-            <div> 
-                <img id="char" src={`/assets/img/${props.account.profilePic}`} alt="character"/>
-                <div className="button" id="profileBar">
-                    <div className="btn btn-one">
-                        <a href="/profile">To Profile</a>
-                    </div>
-                </div>
-            </div>
-            <h3>
-                <span id="profileStats">
-                    <h3 className="accountName"><b>User:</b> {props.account.username} </h3>
-                    <h3 className="accountAthletics"><b>Athletics:</b> {props.account.athletics}</h3>
-                    <h3 className="accountWisdom"><b>Wisdom:</b> {props.account.wisdom}</h3>
-                    <h3 className="accountCharisma"><b>Charisma:</b> {props.account.charisma}</h3>
-                    <h3 className="accountGold"><b>Gold:</b> {props.account.gold}</h3>
-                    <h3 className="accountExperience"><b>Experience:</b> {props.account.experience}</h3>
-                    <h3 className="accountGem"><b>Gem:</b> {props.account.gem}</h3>
-                    <h3 className="accountLevel"><b>Level:</b> {props.account.level}</h3>
-                </span>
-            </h3>
-        </div>
+    return React.createElement(
+        "div",
+        { className: "profileBox" },
+        React.createElement(
+            "div",
+            null,
+            React.createElement("img", { id: "char", src: "/assets/img/" + props.account.profilePic, alt: "character" }),
+            React.createElement(
+                "div",
+                { className: "button", id: "profileBar" },
+                React.createElement(
+                    "div",
+                    { className: "btn btn-one" },
+                    React.createElement(
+                        "a",
+                        { href: "/profile" },
+                        "To Profile"
+                    )
+                )
+            )
+        ),
+        React.createElement(
+            "h3",
+            null,
+            React.createElement(
+                "span",
+                { id: "profileStats" },
+                React.createElement(
+                    "h3",
+                    { className: "accountName" },
+                    React.createElement(
+                        "b",
+                        null,
+                        "User:"
+                    ),
+                    " ",
+                    props.account.username,
+                    " "
+                ),
+                React.createElement(
+                    "h3",
+                    { className: "accountAthletics" },
+                    React.createElement(
+                        "b",
+                        null,
+                        "Athletics:"
+                    ),
+                    " ",
+                    props.account.athletics
+                ),
+                React.createElement(
+                    "h3",
+                    { className: "accountWisdom" },
+                    React.createElement(
+                        "b",
+                        null,
+                        "Wisdom:"
+                    ),
+                    " ",
+                    props.account.wisdom
+                ),
+                React.createElement(
+                    "h3",
+                    { className: "accountCharisma" },
+                    React.createElement(
+                        "b",
+                        null,
+                        "Charisma:"
+                    ),
+                    " ",
+                    props.account.charisma
+                ),
+                React.createElement(
+                    "h3",
+                    { className: "accountGold" },
+                    React.createElement(
+                        "b",
+                        null,
+                        "Gold:"
+                    ),
+                    " ",
+                    props.account.gold
+                ),
+                React.createElement(
+                    "h3",
+                    { className: "accountExperience" },
+                    React.createElement(
+                        "b",
+                        null,
+                        "Experience:"
+                    ),
+                    " ",
+                    props.account.experience
+                ),
+                React.createElement(
+                    "h3",
+                    { className: "accountGem" },
+                    React.createElement(
+                        "b",
+                        null,
+                        "Gem:"
+                    ),
+                    " ",
+                    props.account.gem
+                ),
+                React.createElement(
+                    "h3",
+                    { className: "accountLevel" },
+                    React.createElement(
+                        "b",
+                        null,
+                        "Level:"
+                    ),
+                    " ",
+                    props.account.level
+                )
+            )
+        )
     );
 };
-const AccountData = function(props) {
-    return (
-        <div>
-            <img id="char" src={`/assets/img/${props.account.profilePic}`} alt="character"/>
-            <h3 className="accountName"><b>User:</b> {props.account.username} </h3>
-        </div>
+var AccountData = function AccountData(props) {
+    accountExperience = props.account.experience;
+    return React.createElement(
+        "div",
+        null,
+        React.createElement("img", { id: "char", src: "/assets/img/" + props.account.profilePic, alt: "character" }),
+        React.createElement(
+            "h3",
+            { className: "accountName" },
+            React.createElement(
+                "b",
+                null,
+                "User:"
+            ),
+            " ",
+            props.account.username,
+            " "
+        ),
+        React.createElement(
+            "form",
+            { id: "levelUpForm", name: "levelUpForm",
+                onSubmit: levelUp,
+                action: "/levelUp",
+                method: "POST",
+                className: "levelUpForm"
+            },
+            React.createElement(
+                "h3",
+                { className: "accountLevel", name: "level" },
+                "Level:",
+                props.account.level
+            ),
+            React.createElement(
+                "h3",
+                { className: "accountExperience", name: "experience" },
+                "Experience: ",
+                props.account.experience
+            ),
+            React.createElement(
+                "h3",
+                { className: "accountExperienceNeeded", name: "experienceNeeded" },
+                "Experience Needed To Level Up: ",
+                experienceNeeded
+            ),
+            React.createElement("input", { type: "submit", name: "levelUp", value: "Level Up" }),
+            React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf })
+        )
     );
 };
-*/
+
 var getUrlInfo = function getUrlInfo() {
     url = new URL(window.location.href);
     goldValue = url.searchParams.get("gold");
@@ -110,18 +294,14 @@ var getUrlInfo = function getUrlInfo() {
     parsedExperience = parseInt(experienceValue);
     console.log(url);
 };
-/*
-const loadAccountFromServer = () => {
-    sendAjax('GET', '/getAccount', null, (data) =>{
-        ReactDOM.render(
-            <AccountData account={data.account} />, document.querySelector("#accountData")
-        );
-        ReactDOM.render(
-            <ProfileBar account={data.account} />, document.querySelector("#profileContent")
-        );
+
+var loadAccountFromServer = function loadAccountFromServer() {
+    sendAjax('GET', '/getAccount', null, function (data) {
+        ReactDOM.render(React.createElement(AccountData, { account: data.account }), document.querySelector("#accountData"));
+        ReactDOM.render(React.createElement(ProfileBar, { account: data.account }), document.querySelector("#profileContent"));
     });
 };
-*/
+
 var setup = function setup(csrf) {
     var changePswdBtn = document.querySelector("#changePswdBtn");
     changePswdBtn.addEventListener("click", function (e) {
@@ -130,15 +310,15 @@ var setup = function setup(csrf) {
         return false;
     });
     ReactDOM.render(React.createElement(DungeonData, { csrf: csrf }), document.querySelector("#dungeonInfo"));
-    var signupButton = document.querySelector("#profileButton");
+    var profileButton = document.querySelector("#profileButton");
 
-    signupButton.addEventListener("click", function (e) {
+    profileButton.addEventListener("click", function (e) {
         e.preventDefault();
         showProfile();
         return false;
     });
-    //loadAccountFromServer();
-    //$("#profileContent").animate({ width:'hide'}, 0);
+    loadAccountFromServer();
+    $("#profileContent").animate({ width: 'hide' }, 0);
 };
 var getToken = function getToken() {
     sendAjax('GET', '/getToken', null, function (result) {

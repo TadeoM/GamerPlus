@@ -230,8 +230,8 @@ const getReward = (req, res) => {
     return Account.AccountModel.findByUsername(req.session.account.username, (err, doc) => {
       const updateAccount = doc;
       console.log(updateAccount);
-      updateAccount.gold +=dungeonData.dungeonGold;
-      updateAccount.experience += dungeonData.dungeonExperience;
+      updateAccount.gold =parseInt(updateAccount.gold)+parseInt(dungeonData.dungeonGold);
+      updateAccount.experience = parseInt(updateAccount.experience) + parseInt(dungeonData.dungeonExperience);
       if (err) {
         console.log(err);
         return res.status(400).json({ error: 'An error occurred' });
@@ -256,6 +256,8 @@ const getReward = (req, res) => {
 const LevelUp = (req,res)=>{
   
   let newLevel = req.session.account.level;
+  console.log(newLevel);
+  console.log(req.body);
   if(req.body.experience>=req.body.experienceNeeded)
   {
     newLevel+=1;
@@ -284,7 +286,7 @@ const LevelUp = (req,res)=>{
   });
   }
   else{
-    return res.status(400).json({error:"YOU DON'T HAVE ENOUGH EXP LOSER!"})
+    return res.status(400);
   }
 }
 const getToken = (request, response) => {

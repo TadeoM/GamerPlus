@@ -66,9 +66,30 @@ var handleQuest = function handleQuest(e) {
 var levelUp = function levelUp(e) {
     e.preventDefault();
 
-    sendAjax('POST', $("#levelUpForm").attr("action"), $("#levelUpForm").serialize(), function () {
-        experienceNeeded = experienceNeeded * 3;
+    var formData = new FormData();
+
+    var currExp = accountExperience;
+    var expNeeded = experienceNeeded;
+    console.log(currExp);
+    console.log(expNeeded);
+
+    formData.append('experience', currExp);
+    formData.append('experienceNeeded', expNeeded);
+
+    formData.append('_csrf', csrfToken);
+    console.log(formData);
+    fetch("/levelUp?_csrf=" + csrfToken, {
+        method: "POST",
+        body: formData
+    }).then(function (response) {
+        if (response.status === 200) {
+            console.log("Leveled Up");
+            window.onload = response.redirect;
+        } else if (response.status === 400) {
+            console.log("Not enough Experience Man");
+        }
     });
+    return false;
 };
 var completeQuest = function completeQuest(e) {
     e.preventDefault();
@@ -342,7 +363,7 @@ var ProfileBar = function ProfileBar(props) {
     accountAthletics = props.account.athletics;
     accountWisdom = props.account.wisdom;
     accountCharisma = props.account.charisma;
-    accountExperience = props.account.experience;
+
     return React.createElement(
         "div",
         { className: "profileBox" },
@@ -454,6 +475,7 @@ var ProfileBar = function ProfileBar(props) {
 };
 
 var AccountData = function AccountData(props) {
+    accountExperience = props.account.experience;
     return React.createElement(
         "div",
         null,
@@ -473,7 +495,7 @@ var AccountData = function AccountData(props) {
         React.createElement(
             "form",
             { id: "levelUpForm", name: "levelUpForm",
-                onSubmit: "levelUp",
+                onSubmit: levelUp,
                 action: "/levelUp",
                 method: "POST",
                 className: "levelUpForm"

@@ -4,6 +4,14 @@ let experienceValue = "0";
 let url = null;
 let parsedGold = 0;
 let parsedExperience = 0;
+let accountAthletics = 0;
+let accountCharisma = 0;
+let accountWisdom = 0;
+
+let accountExperience = 0;
+let experienceNeeded=1000;
+
+
 const handleGetReward = (e) =>{
 e.preventDefault();
 let formData = new FormData();
@@ -25,6 +33,49 @@ let formData = new FormData();
         function(response){
             if(response.status === 200){
                 console.log("Got Reward");
+                let divForm = document.querySelector("#dungeonForm");
+                divForm.remove();
+                ReactDOM.render(
+                    <DungeonSuccess/>,document.querySelector("#dungeonInfo")
+                )
+            }
+        }
+    );
+    return false;
+
+}
+const showProfile = (e) => {
+    showProfile("PROFILE");
+}
+const levelUp = (e) =>{
+    e.preventDefault();
+
+    let formData = new FormData();
+
+    let currExp = accountExperience;
+    let expNeeded = experienceNeeded;
+    console.log(currExp);
+    console.log(expNeeded);
+
+    formData.append('experience',currExp);
+    formData.append('experienceNeeded', expNeeded);
+    
+    formData.append('_csrf', csrfToken);
+    console.log(formData);
+    fetch(`/levelUp?_csrf=${csrfToken}`,
+    {
+        method: "POST",
+        body: formData,
+    })
+    .then(
+        function(response){
+            if(response.status === 200){
+                console.log("Leveled Up");
+                window.onload=response.redirect;
+            }
+            else if(response.status===400)
+            {
+                console.log("Not enough Experience Man");
             }
         }
     );
@@ -51,7 +102,13 @@ const DungeonData = function(props) {
         </div>
     );
 };
-/*
+const DungeonSuccess = function()
+{
+    return(
+        <h3>You Got Your Reward!</h3>
+    )
+}
+
 const ProfileBar = function(props) {
 
     accountAthletics = props.account.athletics;
@@ -83,14 +140,28 @@ const ProfileBar = function(props) {
     );
 };
 const AccountData = function(props) {
+    accountExperience = props.account.experience;
     return (
         <div>
             <img id="char" src={`/assets/img/${props.account.profilePic}`} alt="character"/>
             <h3 className="accountName"><b>User:</b> {props.account.username} </h3>
+            <form id="levelUpForm" name="levelUpForm"
+            onSubmit={levelUp}
+            action="/levelUp"
+            method="POST"
+            className="levelUpForm"
+            >
+            <h3 className="accountLevel" name="level">Level:{props.account.level}</h3>
+            <h3 className="accountExperience" name="experience">Experience: {props.account.experience}</h3>
+            <h3 className="accountExperienceNeeded" name="experienceNeeded">Experience Needed To Level Up: {experienceNeeded}</h3>
+ 
+            <input type="submit" name="levelUp" value="Level Up" />
+            <input type="hidden" name="_csrf" value={props.csrf}/>
+            </form>
         </div>
     );
 };
-*/
+
 const getUrlInfo = ()=>{
     url=new URL(window.location.href);
     goldValue = url.searchParams.get("gold")
@@ -100,7 +171,7 @@ const getUrlInfo = ()=>{
     console.log(url);
 
 }
-/*
+
 const loadAccountFromServer = () => {
     sendAjax('GET', '/getAccount', null, (data) =>{
         ReactDOM.render(
@@ -111,7 +182,7 @@ const loadAccountFromServer = () => {
         );
     });
 };
-*/
+
 const setup = function(csrf) 
 {
     const changePswdBtn = document.querySelector("#changePswdBtn");
@@ -123,15 +194,15 @@ const setup = function(csrf)
     ReactDOM.render(
         <DungeonData csrf ={csrf}/>, document.querySelector("#dungeonInfo")
     );
-    const signupButton = document.querySelector("#profileButton");
+    const profileButton = document.querySelector("#profileButton");
 
-    signupButton.addEventListener("click", (e) => {
+    profileButton.addEventListener("click", (e) => {
         e.preventDefault();
         showProfile();
         return false;
     });
-    //loadAccountFromServer();
-    //$("#profileContent").animate({ width:'hide'}, 0);
+    loadAccountFromServer();
+    $("#profileContent").animate({ width:'hide'}, 0);
 };
 const getToken = () => {
     sendAjax('GET', '/getToken', null, (result) => {

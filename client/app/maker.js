@@ -78,10 +78,36 @@ const handleQuest = (e) =>{
 const levelUp = (e) =>{
     e.preventDefault();
 
-    sendAjax('POST',$("#levelUpForm").attr("action"), $("#levelUpForm").serialize(), function(){
-        experienceNeeded = experienceNeeded*3;
-        
-    });
+    let formData = new FormData();
+
+    let currExp = accountExperience;
+    let expNeeded = experienceNeeded;
+    console.log(currExp);
+    console.log(expNeeded);
+
+    formData.append('experience',currExp);
+    formData.append('experienceNeeded', expNeeded);
+    
+    formData.append('_csrf', csrfToken);
+    console.log(formData);
+    fetch(`/levelUp?_csrf=${csrfToken}`,
+    {
+        method: "POST",
+        body: formData,
+    })
+    .then(
+        function(response){
+            if(response.status === 200){
+                console.log("Leveled Up");
+                window.onload=response.redirect;
+            }
+            else if(response.status===400)
+            {
+                console.log("Not enough Experience Man");
+            }
+        }
+    );
+    return false;
 
 }
 const completeQuest = (e) =>{
@@ -268,7 +294,7 @@ const ProfileBar = function(props) {
     accountAthletics = props.account.athletics;
     accountWisdom = props.account.wisdom;
     accountCharisma = props.account.charisma;
-    accountExperience = props.account.experience;
+
     return (
         <div className="profileBox">
             <div> 
@@ -295,12 +321,13 @@ const ProfileBar = function(props) {
 };
 
 const AccountData = function(props) {
+    accountExperience = props.account.experience;
     return (
         <div>
             <img id="char" src={`/assets/img/${props.account.profilePic}`} alt="character"/>
             <h3 className="accountName"><b>User:</b> {props.account.username} </h3>
             <form id="levelUpForm" name="levelUpForm"
-            onSubmit="levelUp"
+            onSubmit={levelUp}
             action="/levelUp"
             method="POST"
             className="levelUpForm"
