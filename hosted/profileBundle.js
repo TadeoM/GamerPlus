@@ -86,7 +86,7 @@ var AccountData = function AccountData(props) {
     return React.createElement(
         "div",
         null,
-        React.createElement("img", { id: "char", src: "/retrieve?name=" + props.account.profilePic, alt: "character" }),
+        React.createElement("img", { id: "char", src: "/assets/img/" + props.account.profilePic, alt: "character" }),
         React.createElement(
             "h3",
             { className: "accountName" },
@@ -174,11 +174,17 @@ var loadAccountFromServer = function loadAccountFromServer() {
     });
 };
 
+var showPasswordChange = function showPasswordChange() {
+    $("#changePswdForm").animate({ width: 'toggle' }, 5);
+};
+
 var changePassword = function changePassword(e) {
     e.preventDefault();
 
     console.log($("#curQuestForm").serialize());
-    sendAjax('POST', $("#changePswdForm").attr("action"), $("#changePswdForm").serialize());
+    sendAjax('POST', $("#changePswdForm").attr("action"), $("#changePswdForm").serialize(), function () {
+        showPasswordChange();
+    });
 };
 
 var showProfile = function showProfile(e) {
@@ -225,13 +231,15 @@ var createChangePasswordForm = function createChangePasswordForm(csrf) {
 
 var setup = function setup(csrf) {
     var changePswdBtn = document.querySelector("#changePswdBtn");
+    createChangePasswordForm(csrf);
     changePswdBtn.addEventListener("click", function (e) {
         e.preventDefault();
-        //createChangePasswordForm(csrf);
+        showPasswordChange();
         return false;
     });
     ReactDOM.render(React.createElement(FriendForm, { csrf: csrf }), document.querySelector("#addFriend"));
 
+    showPasswordChange();
     showFriends();
     loadAccountFromServer();
 };

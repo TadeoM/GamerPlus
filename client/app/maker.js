@@ -280,6 +280,7 @@ const ProfileBar = function(props) {
 
 const AccountData = function(props) {
     accountExperience = props.account.experience;
+    console.log(props.account.profilePic);
     return (
         <div>
             <img id="char" src={`/assets/img/${props.account.profilePic}`} alt="character"/>

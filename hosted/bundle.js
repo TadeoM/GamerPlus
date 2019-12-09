@@ -427,6 +427,7 @@ var ProfileBar = function ProfileBar(props) {
 
 var AccountData = function AccountData(props) {
     accountExperience = props.account.experience;
+    console.log(props.account.profilePic);
     return React.createElement(
         "div",
         null,

@@ -93,11 +93,17 @@ const loadAccountFromServer = () => {
     });
 };
 
+const showPasswordChange = () => {
+    $("#changePswdForm").animate({width:'toggle'},5);
+};
+
 const changePassword = (e) =>{
     e.preventDefault();
 
     console.log($("#curQuestForm").serialize());
-    sendAjax('POST',$("#changePswdForm").attr("action"), $("#changePswdForm").serialize());
+    sendAjax('POST',$("#changePswdForm").attr("action"), $("#changePswdForm").serialize(), () => {
+        showPasswordChange();
+    });
 }
 
 const showProfile = (e) => {
@@ -113,7 +119,7 @@ const ChangePasswordForm = (props)=>{
             method="POST"
             className="mainForm"
         >
-             <label htmlFor="username">Username: </label>
+            <label htmlFor="username">Username: </label>
             <input id="user" type="text" name="username" placeholder="username"/>
             <label htmlFor="currPass">Current Password: </label>
             <input id="currPass" type="password" name="currPass" placeholder="password"/>
@@ -139,13 +145,14 @@ const setup = function(csrf) {
     createChangePasswordForm(csrf);
     changePswdBtn.addEventListener("click", (e) => {
         e.preventDefault();
-        
+        showPasswordChange();
         return false;
     });
     ReactDOM.render(
         <FriendForm csrf={csrf} />, document.querySelector("#addFriend")
     );
-
+    
+    showPasswordChange();
     showFriends();
     loadAccountFromServer();
 };
