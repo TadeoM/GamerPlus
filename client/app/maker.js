@@ -1,4 +1,5 @@
 let csrfToken = null;
+let groupsListed = []
 let quests = [];
 
 const handleQuest = (e) =>{
@@ -279,6 +280,68 @@ const AccountData = function(props) {
     );
 };
 
+const GroupList = function(props)
+{
+    if(props.groups.length === 0)
+    {
+        return(
+            <div className="groupList">
+                <h3 className="emptyGroup">No Groups Yet</h3>
+                <div className="button groupButtons">
+                    <div className="btn btn-one">
+                        <a href="/groupPage" className="navButton" id="groupButton">Join More Groups</a>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+    groupsListed = []
+    
+    const groupNodes = props.groups.map(function(group)
+    {
+        if(!groupsListed.includes(group.groupName)){
+            groupsListed.push(group.groupName);
+            return(
+                <div key={group._id} className="quest">
+                    <h3 className="groupName">Name: {group.groupName}</h3>
+                    <div className="button groupButtons">
+                        <div className="btn btn-one">
+                            <a name={`${group.groupName}`} onClick={() => gotToGroup(group.groupName)}>Group Page Link</a>
+                        </div>
+                    </div>
+                    <input type="hidden" name="_csrf" value={props.csrf}/>
+                </div>
+            );
+        }
+    });
+    return (
+        <div className="groupList">
+            {groupNodes}
+            <div className="button groupButtons">
+                <div className="btn btn-one">
+                    <a href="/groupPage" className="navButton" id="groupButton">Join More Groups</a>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+const gotToGroup = (props) =>{
+    sendAjax('GET', '/groupPage', null, (data) =>{
+        ReactDOM.render(
+            <GroupList groups ={data.groups} csrf = {csrfToken} />, document.querySelector("#groups")
+        );
+    });
+};
+
+const loadGroupsFromServer = () =>{
+    sendAjax('GET', '/getGroups', null, (data) =>{
+        ReactDOM.render(
+            <GroupList groups ={data.groups} csrf = {csrfToken} />, document.querySelector("#groups")
+        );
+    });
+};
+
 const loadQuestsFromServer = () =>{
     sendAjax('GET', '/getQuests', null, (data) =>{
         for(let j = 0; j < data.quests.length; j++){
@@ -330,6 +393,7 @@ const setup = function(csrf) {
         createChangePasswordForm(csrf);
         return false;
     });
+    loadGroupsFromServer();
     ReactDOM.render(
         <QuestForm csrf ={csrf}/>, document.querySelector("#makeQuest")
     );
@@ -342,6 +406,7 @@ const setup = function(csrf) {
         return false;
     });
     loadAccountFromServer();
+    
     $("#profileContent").animate({ width:'hide'}, 0);
 };
 

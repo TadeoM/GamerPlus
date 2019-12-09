@@ -236,7 +236,7 @@ const GroupList = function(props)
             </div>
         );
     }
-    groupsListed = []
+    groupsListed = [];
     
     const groupNodes = props.groups.map(function(group)
     {
@@ -245,7 +245,12 @@ const GroupList = function(props)
             return(
                 <div key={group._id} className="quest">
                     <h3 className="groupName">Name: {group.groupName}</h3>
-                    <button name={`${group.groupName}`} onClick={() => showGroup(group.groupName)}>Group Page Link</button>
+                    <div className="button groupButtons">
+                        <div className="btn btn-one">
+                            <a name={`${group.groupName}`} onClick={() => showGroup(group.groupName)}>Group Page Link</a>
+                        </div>
+                    </div>
+                    
                     <input type="hidden" name="_csrf" value={props.csrf}/>
                 </div>
             );
@@ -254,6 +259,7 @@ const GroupList = function(props)
     });
     return (
         <div className="groupList">
+            <a></a>
             {groupNodes}
         </div>
     );
@@ -279,6 +285,7 @@ const getToken = () => {
     sendAjax('GET', '/getToken', null, (result) => {
         setup(result.csrfToken);
         csrfToken = result.csrfToken;
+        console.log(result.groups)
     });
 };
 

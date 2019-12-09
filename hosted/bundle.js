@@ -1,6 +1,7 @@
 "use strict";
 
 var csrfToken = null;
+var groupsListed = [];
 var quests = [];
 
 var handleQuest = function handleQuest(e) {
@@ -423,6 +424,96 @@ var AccountData = function AccountData(props) {
     );
 };
 
+var GroupList = function GroupList(props) {
+    if (props.groups.length === 0) {
+        return React.createElement(
+            "div",
+            { className: "groupList" },
+            React.createElement(
+                "h3",
+                { className: "emptyGroup" },
+                "No Groups Yet"
+            ),
+            React.createElement(
+                "div",
+                { className: "button groupButtons" },
+                React.createElement(
+                    "div",
+                    { className: "btn btn-one" },
+                    React.createElement(
+                        "a",
+                        { href: "/groupPage", className: "navButton", id: "groupButton" },
+                        "Join More Groups"
+                    )
+                )
+            )
+        );
+    }
+    groupsListed = [];
+
+    var groupNodes = props.groups.map(function (group) {
+        if (!groupsListed.includes(group.groupName)) {
+            groupsListed.push(group.groupName);
+            return React.createElement(
+                "div",
+                { key: group._id, className: "quest" },
+                React.createElement(
+                    "h3",
+                    { className: "groupName" },
+                    "Name: ",
+                    group.groupName
+                ),
+                React.createElement(
+                    "div",
+                    { className: "button groupButtons" },
+                    React.createElement(
+                        "div",
+                        { className: "btn btn-one" },
+                        React.createElement(
+                            "a",
+                            { name: "" + group.groupName, onClick: function onClick() {
+                                    return gotToGroup(group.groupName);
+                                } },
+                            "Group Page Link"
+                        )
+                    )
+                ),
+                React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf })
+            );
+        }
+    });
+    return React.createElement(
+        "div",
+        { className: "groupList" },
+        groupNodes,
+        React.createElement(
+            "div",
+            { className: "button groupButtons" },
+            React.createElement(
+                "div",
+                { className: "btn btn-one" },
+                React.createElement(
+                    "a",
+                    { href: "/groupPage", className: "navButton", id: "groupButton" },
+                    "Join More Groups"
+                )
+            )
+        )
+    );
+};
+
+var gotToGroup = function gotToGroup(props) {
+    sendAjax('GET', '/groupPage', null, function (data) {
+        ReactDOM.render(React.createElement(GroupList, { groups: data.groups, csrf: csrfToken }), document.querySelector("#groups"));
+    });
+};
+
+var loadGroupsFromServer = function loadGroupsFromServer() {
+    sendAjax('GET', '/getGroups', null, function (data) {
+        ReactDOM.render(React.createElement(GroupList, { groups: data.groups, csrf: csrfToken }), document.querySelector("#groups"));
+    });
+};
+
 var loadQuestsFromServer = function loadQuestsFromServer() {
     sendAjax('GET', '/getQuests', null, function (data) {
         for (var j = 0; j < data.quests.length; j++) {
@@ -469,6 +560,7 @@ var setup = function setup(csrf) {
         createChangePasswordForm(csrf);
         return false;
     });
+    loadGroupsFromServer();
     ReactDOM.render(React.createElement(QuestForm, { csrf: csrf }), document.querySelector("#makeQuest"));
     loadQuestsFromServer();
     var signupButton = document.querySelector("#profileButton");
@@ -479,6 +571,7 @@ var setup = function setup(csrf) {
         return false;
     });
     loadAccountFromServer();
+
     $("#profileContent").animate({ width: 'hide' }, 0);
 };
 

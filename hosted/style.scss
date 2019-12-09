@@ -23,7 +23,7 @@ a:hover {
 nav{
     width:100vw;
     height: 75px;
-    background-color: #E83551;
+    background-color: #691824;
     box-shadow: 0px 0px 10px #691824; 
     position: fixed;
     top:0;
@@ -91,6 +91,11 @@ section {
     grid-column-start: 3;
     margin-left: 10px;
 }
+
+.quest {
+    text-align: center;
+}
+
 #accountData {
     margin-right: 10px;
     
@@ -313,8 +318,13 @@ div[class*=button] {
     line-height: 25px;
     height: 40px;
     text-align: center;
+    align-content: center;
     width: 1000%;
     cursor: pointer;
+}
+
+.groupButtons {
+    margin-left: 50% !important;
 }
 
 .btn-one {

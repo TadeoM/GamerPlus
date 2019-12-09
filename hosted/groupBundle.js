@@ -311,11 +311,19 @@ var GroupList = function GroupList(props) {
                     group.groupName
                 ),
                 React.createElement(
-                    "button",
-                    { name: "" + group.groupName, onClick: function onClick() {
-                            return showGroup(group.groupName);
-                        } },
-                    "Group Page Link"
+                    "div",
+                    { className: "button groupButtons" },
+                    React.createElement(
+                        "div",
+                        { className: "btn btn-one" },
+                        React.createElement(
+                            "a",
+                            { name: "" + group.groupName, onClick: function onClick() {
+                                    return showGroup(group.groupName);
+                                } },
+                            "Group Page Link"
+                        )
+                    )
                 ),
                 React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf })
             );
@@ -324,6 +332,7 @@ var GroupList = function GroupList(props) {
     return React.createElement(
         "div",
         { className: "groupList" },
+        React.createElement("a", null),
         groupNodes
     );
 };
@@ -344,6 +353,7 @@ var getToken = function getToken() {
     sendAjax('GET', '/getToken', null, function (result) {
         setup(result.csrfToken);
         csrfToken = result.csrfToken;
+        console.log(result.groups);
     });
 };
 

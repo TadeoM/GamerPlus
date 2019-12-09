@@ -219,6 +219,7 @@ const getToken = (request, response) => {
   const req = request;
   const res = response;
 
+  console.log(req);
   const csrfJSON = {
     csrfToken: req.csrfToken(),
   };
