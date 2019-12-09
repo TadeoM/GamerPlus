@@ -28,6 +28,18 @@ const AccountSchema = new mongoose.Schema({
     type: Number,
     default: 1,
   },
+  gold:{
+    type:Number,
+    default:0,
+  },
+  experience:{
+    type:Number,
+    default:0
+  },
+  level:{
+    type:Number,
+    default:1
+  },
   salt: {
     type: Buffer,
     required: true,
@@ -55,6 +67,9 @@ AccountSchema.statics.toAPI = doc => ({
   athletics: doc.athletics,
   wisdom: doc.wisdom,
   charisma: doc.charisma,
+  experience:doc.experience,
+  gold:doc.gold,
+  level:doc.level,
   friendList: doc.friendList,
   profilePic: doc.profilePic,
   _id: doc._id,

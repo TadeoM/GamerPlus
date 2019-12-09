@@ -20,7 +20,7 @@
 <body>
   <nav>
     <div id="nav">
-      <a href="/login"><img class="logo" src="/assets/img/gamifyLife.png" alt="face logo"/></a>
+      <a href="/maker"><img class="logo" src="/assets/img/gamifyLife.png" alt="face logo"/></a>
         <div class="button">
           <div class="btn btn-one">
             <button class="navButton" id="profileButton">Profile</button>
@@ -30,38 +30,26 @@
           <div class="btn btn-one">
             <a class="navButton" id="logoutButton" href="/logout">Log out</a>
           </div>
-        </div>        
+        </div>
+        <div class="button">
+          <div class="btn btn-one">
+            <a href="/changePswd" id="changePswdBtn"> Change Password </a>
+          </div>
+        </div>
+        
     </div>
     
   </nav>
-
     <div id="profileContent" className="grid-box">
     </div>
     
   <div id="wrapper">
     <div class="mainBox">
-      <section id="leftBar" class="fcol-1">
-        <section id="accountData">
+        <section id="accountData" class="col-1">
         </section>
-        <section id="groups">
-        </section>
-      </section>
-        
-        <section id="questContent" class="col-2 border">
-          <section id="makeQuest">
-          </section>   
-          <section id="quests">
-          </section>
-        </section>
-        <div id="dungeon">
-      <section id="goToDungeon">
-        <a class="navButton" id="goToDungeonButton" href="" target="_blank">Dungeon</a>
-      </section>
-    </div>
-        
-
+    <section id="dungeonInfo"></section>
     </div>
   </div>
-  <script src="/assets/bundle.js"></script>
+  <script src="/assets/dungeonBundle.js"></script>
 </body>
 </html>

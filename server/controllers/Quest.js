@@ -16,7 +16,6 @@ const makerPage = (req, res) => {
 const makeQuest = (req, res) => {
   if (!req.body.questName || !req.body.questExp 
     || !req.body.questType||!req.body.questContent) {
-      console.log("here");
     return res.status(400).json({ error: 'All Parameters Are Required For Quest Submission' });
   }
   const questData = {

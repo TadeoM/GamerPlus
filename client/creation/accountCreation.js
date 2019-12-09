@@ -2,7 +2,7 @@ let csrfToken = null;
 const handleCreation = (e) => {
     e.preventDefault();
 
-    $("#domoMessage").animate({width:'hide'}, 350);
+    $("#errorMessage").animate({width:'hide'}, 350);
 
     let maxTotal = 10;
 

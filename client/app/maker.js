@@ -1,6 +1,13 @@
 let csrfToken = null;
 let groupsListed = []
 let quests = [];
+let accountAthletics = 0;
+let accountCharisma = 0;
+let accountWisdom = 0;
+
+let accountExperience = 0;
+let experienceNeeded=1000;
+
 
 const handleQuest = (e) =>{
     e.preventDefault();
@@ -65,7 +72,41 @@ const handleQuest = (e) =>{
     
     return false;
 };
+const levelUp = (e) =>{
+    e.preventDefault();
 
+    let formData = new FormData();
+
+    let currExp = accountExperience;
+    let expNeeded = experienceNeeded;
+    console.log(currExp);
+    console.log(expNeeded);
+
+    formData.append('experience',currExp);
+    formData.append('experienceNeeded', expNeeded);
+    
+    formData.append('_csrf', csrfToken);
+    console.log(formData);
+    fetch(`/levelUp?_csrf=${csrfToken}`,
+    {
+        method: "POST",
+        body: formData,
+    })
+    .then(
+        function(response){
+            if(response.status === 200){
+                console.log("Leveled Up");
+                window.onload=response.redirect;
+            }
+            else if(response.status===400)
+            {
+                console.log("Not enough Experience Man");
+            }
+        }
+    );
+    return false;
+
+}
 const completeQuest = (e) =>{
     e.preventDefault();
 }
@@ -208,6 +249,10 @@ return (
 };
 
 const ProfileBar = function(props) {
+    accountAthletics = props.account.athletics;
+    accountWisdom = props.account.wisdom;
+    accountCharisma = props.account.charisma;
+
     return (
         <div className="profileBox">
             <div> 
@@ -224,6 +269,9 @@ const ProfileBar = function(props) {
                     <h3 className="accountAthletics"><b>Athletics:</b> {props.account.athletics}</h3>
                     <h3 className="accountWisdom"><b>Wisdom:</b> {props.account.wisdom}</h3>
                     <h3 className="accountCharisma"><b>Charisma:</b> {props.account.charisma}</h3>
+                    <h3 className="accountGold"><b>Gold:</b> {props.account.gold}</h3>
+                    <h3 className="accountExperience"><b>Experience:</b> {props.account.experience}</h3>
+                    <h3 className="accountLevel"><b>Level:</b> {props.account.level}</h3>
                 </span>
             </h3>
         </div>
@@ -231,10 +279,24 @@ const ProfileBar = function(props) {
 };
 
 const AccountData = function(props) {
+    accountExperience = props.account.experience;
     return (
         <div>
             <img id="char" src={`/assets/img/${props.account.profilePic}`} alt="character"/>
             <h3 className="accountName"><b>User:</b> {props.account.username} </h3>
+            <form id="levelUpForm" name="levelUpForm"
+            onSubmit={levelUp}
+            action="/levelUp"
+            method="POST"
+            className="levelUpForm"
+            >
+            <h3 className="accountLevel" name="level">Level:{props.account.level}</h3>
+            <h3 className="accountExperience" name="experience">Experience: {props.account.experience}</h3>
+            <h3 className="accountExperienceNeeded" name="experienceNeeded">Experience Needed To Level Up: {experienceNeeded}</h3>
+ 
+            <input type="submit" name="levelUp" value="Level Up" />
+            <input type="hidden" name="_csrf" value={props.csrf}/>
+            </form>
         </div>
     );
 };
@@ -317,8 +379,6 @@ const loadQuestsFromServer = () =>{
             }
         });
     });
-    console.log(quests)
-    console.log(quests.length)
     
 };
 const loadPendingQuestsFromServer = () =>{
@@ -331,13 +391,37 @@ const loadPendingQuestsFromServer = () =>{
 const loadAccountFromServer = () => {
     sendAjax('GET', '/getAccount', null, (data) =>{
         ReactDOM.render(
-            <AccountData account={data.account} />, document.querySelector("#accountData")
+            <AccountData account={data.account} csrf={csrfToken} />, document.querySelector("#accountData")
         );
         ReactDOM.render(
             <ProfileBar account={data.account} />, document.querySelector("#profileContent")
         );
     });
 };
+
+const SetUpDungeon = ()=>
+{
+    const dungeonBtn = document.querySelector("#goToDungeonButton");
+
+    if(accountAthletics>accountCharisma && accountAthletics>accountWisdom)
+    {
+        dungeonBtn.href = "assets/dungeons/AthleticChar.html";
+    }
+    else if(accountCharisma>accountAthletics && accountCharisma>accountWisdom)
+    {
+        dungeonBtn.href = "assets/dungeons/CharismaticChar.html";
+    }
+    else if(accountWisdom>accountAthletics && accountWisdom>accountCharisma)
+    {
+        dungeonBtn.href = "assets/dungeons/WisdomChar.html";
+    }
+    else
+    {
+        dungeonBtn.href = "assets/dungeons/WisdomChar.html";
+    }
+
+
+}
 
 const setup = function(csrf) {
     
@@ -346,9 +430,9 @@ const setup = function(csrf) {
         <QuestForm csrf ={csrf}/>, document.querySelector("#makeQuest")
     );
     loadQuestsFromServer();
-    const signupButton = document.querySelector("#profileButton");
+    const profileButton = document.querySelector("#profileButton");
 
-    signupButton.addEventListener("click", (e) => {
+    profileButton.addEventListener("click", (e) => {
         e.preventDefault();
         showProfile();
         return false;
@@ -367,5 +451,7 @@ const getToken = () => {
 
 $(document).ready(function() {
     getToken();
+    SetUpDungeon();
+    
 });
 
