@@ -439,17 +439,6 @@ var ProfileBar = function ProfileBar(props) {
                 ),
                 React.createElement(
                     "h3",
-                    { className: "accountGem" },
-                    React.createElement(
-                        "b",
-                        null,
-                        "Gem:"
-                    ),
-                    " ",
-                    props.account.gem
-                ),
-                React.createElement(
-                    "h3",
                     { className: "accountLevel" },
                     React.createElement(
                         "b",

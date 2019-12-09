@@ -219,16 +219,17 @@ const createStats = (request, response) => {
   });
 };
 const getReward = (req, res) => {
+
+  console.log(req.body);
   const dungeonData = {
       dungeonExperience: req.body.experience,
       dungeonGold: req.body.gold,
     };
     console.log(req.session.account);
-    parseInt(dungeonData.dungeonExperience);
-    parseInt(dungeonData.dungeonGold);
+    console.log(dungeonData);
     return Account.AccountModel.findByUsername(req.session.account.username, (err, doc) => {
       const updateAccount = doc;
-
+      console.log(updateAccount);
       updateAccount.gold +=dungeonData.dungeonGold;
       updateAccount.experience += dungeonData.dungeonExperience;
       if (err) {

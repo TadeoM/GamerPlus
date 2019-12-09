@@ -1,12 +1,32 @@
 "use strict";
 
 var csrfToken = null;
-var goldValue = 0;
-var experienceValue = 0;
+var goldValue = "0";
+var experienceValue = "0";
 var url = null;
+var parsedGold = 0;
+var parsedExperience = 0;
 var handleGetReward = function handleGetReward(e) {
     e.preventDefault();
-    sendAjax('POST', $("#dungeonForm").attr("action"), $("#dungeonForm").serialize());
+    var formData = new FormData();
+
+    var dungeonGold = parsedGold;
+    var dungeonExperience = parsedExperience;
+
+    formData.append('gold', dungeonGold);
+    formData.append('experience', dungeonExperience);
+
+    formData.append('_csrf', csrfToken);
+
+    fetch("/getReward?_csrf=" + csrfToken, {
+        method: "POST",
+        body: formData
+    }).then(function (response) {
+        if (response.status === 200) {
+            console.log("Got Reward");
+        }
+    });
+    return false;
 };
 var DungeonData = function DungeonData(props) {
     return React.createElement(
@@ -26,15 +46,15 @@ var DungeonData = function DungeonData(props) {
                 React.createElement("img", { src: "/assets/img/treasurechest.jpg", alt: "Treasure", className: "treasurechest" }),
                 React.createElement(
                     "h3",
-                    { className: "dungeonGold", name: "gold" },
+                    { className: "dungeonGold", name: "gold", id: "gold" },
                     "Gold Earned: ",
-                    goldValue
+                    parsedGold
                 ),
                 React.createElement(
-                    "h4",
-                    { className: "dungeonExperience", name: "experience" },
+                    "h3",
+                    { className: "dungeonExperience", name: "experience", id: "experience" },
                     "Experience Earned: ",
-                    experienceValue
+                    parsedExperience
                 ),
                 React.createElement("input", { type: "submit", name: "getReward", value: "Get Reward" }),
                 React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf })
@@ -86,6 +106,8 @@ var getUrlInfo = function getUrlInfo() {
     url = new URL(window.location.href);
     goldValue = url.searchParams.get("gold");
     experienceValue = url.searchParams.get("experience");
+    parsedGold = parseInt(goldValue);
+    parsedExperience = parseInt(experienceValue);
     console.log(url);
 };
 /*

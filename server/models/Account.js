@@ -32,10 +32,6 @@ const AccountSchema = new mongoose.Schema({
     type:Number,
     default:0,
   },
-  gem:{
-    type:Number,
-    default:0,
-  },
   experience:{
     type:Number,
     default:0
@@ -73,7 +69,6 @@ AccountSchema.statics.toAPI = doc => ({
   charisma: doc.charisma,
   experience:doc.experience,
   gold:doc.gold,
-  gem:doc.gem,
   level:doc.level,
   friendList: doc.friendList,
   profilePic: doc.profilePic,

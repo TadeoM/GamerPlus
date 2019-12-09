@@ -1,10 +1,34 @@
 let csrfToken = null;
-let goldValue = 0;
-let experienceValue = 0;
+let goldValue = "0";
+let experienceValue = "0";
 let url = null;
+let parsedGold = 0;
+let parsedExperience = 0;
 const handleGetReward = (e) =>{
 e.preventDefault();
-sendAjax('POST', $("#dungeonForm").attr("action"), $("#dungeonForm").serialize());
+let formData = new FormData();
+
+    let dungeonGold = parsedGold;
+    let dungeonExperience = parsedExperience;
+   
+    formData.append('gold', dungeonGold);
+    formData.append('experience', dungeonExperience);
+    
+    formData.append('_csrf', csrfToken);
+
+    fetch(`/getReward?_csrf=${csrfToken}`,
+    {
+        method: "POST",
+        body: formData,
+    })
+    .then(
+        function(response){
+            if(response.status === 200){
+                console.log("Got Reward");
+            }
+        }
+    );
+    return false;
 
 }
 const DungeonData = function(props) {
@@ -18,8 +42,8 @@ const DungeonData = function(props) {
         >
         <div>
             <img src="/assets/img/treasurechest.jpg" alt="Treasure" className="treasurechest"/>
-            <h3 className="dungeonGold" name="gold">Gold Earned: {goldValue}</h3>
-            <h4 className="dungeonExperience" name="experience">Experience Earned: {experienceValue}</h4>
+            <h3 className="dungeonGold" name="gold" id="gold">Gold Earned: {parsedGold}</h3>
+            <h3 className="dungeonExperience" name="experience" id="experience">Experience Earned: {parsedExperience}</h3>
             <input type="submit" name="getReward" value="Get Reward" />
             <input type="hidden" name="_csrf" value={props.csrf}/>
         </div>
@@ -71,6 +95,8 @@ const getUrlInfo = ()=>{
     url=new URL(window.location.href);
     goldValue = url.searchParams.get("gold")
     experienceValue = url.searchParams.get("experience");
+    parsedGold = parseInt(goldValue);
+    parsedExperience = parseInt(experienceValue);
     console.log(url);
 
 }

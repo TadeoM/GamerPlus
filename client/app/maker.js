@@ -287,7 +287,6 @@ const ProfileBar = function(props) {
                     <h3 className="accountCharisma"><b>Charisma:</b> {props.account.charisma}</h3>
                     <h3 className="accountGold"><b>Gold:</b> {props.account.gold}</h3>
                     <h3 className="accountExperience"><b>Experience:</b> {props.account.experience}</h3>
-                    <h3 className="accountGem"><b>Gem:</b> {props.account.gem}</h3>
                     <h3 className="accountLevel"><b>Level:</b> {props.account.level}</h3>
                 </span>
             </h3>
@@ -363,7 +362,7 @@ const SetUpDungeon = ()=>
 {
     const dungeonBtn = document.querySelector("#goToDungeonButton");
 
-    if(accountAthletics>accountCharisma&& accountAthletics>accountWisdom)
+    if(accountAthletics>accountCharisma && accountAthletics>accountWisdom)
     {
         dungeonBtn.href = "assets/dungeons/AthleticChar.html";
     }
