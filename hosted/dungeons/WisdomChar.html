@@ -16,7 +16,9 @@
 
 
 
+
 </style><script role="script" id="twine-user-script" type="text/twine-javascript">
+
 
 
 
@@ -91,7 +93,7 @@ What do you choose?
 [You find several tracks of large beasts, some of them belonging to the carniverous Saber Tiger and the Giant Half Moon Bear, which do you choose to follow,
 [[Follow the tracks of the Saber Tiger-&gt;Tracks of Saber Tiger]]
 [[Follow the tracks of the Giant Half Moon Bear-&gt;Tracks of Half Moon Bear]]
-]</tw-passagedata><tw-passagedata pid="8" name="A stick" tags="" position="1249,521" size="100,100">You pick up your trusty...stick? It feels light and sturdy you guess...It will have to do. You travel many hours and finally arrive, 
+]</tw-passagedata><tw-passagedata pid="8" name="A stick" tags="" position="1277,546" size="100,100">You pick up your trusty...stick? It feels light and sturdy you guess...It will have to do. You travel many hours and finally arrive, 
 (if: (history:)contains&quot;High Tower&quot;)[at the  entrance of the High Towers of Magic and the guards at the entrance escort you down to the labyrinth.]
 (else-if: (history:)contains&quot;Maw of Golgotha&quot;)[to the twenty meter wide and fifteen meter high cave entrance.You take a deep breath and with your stick brandished proceed to go in]
 (else-if: (history:)contains&quot;Forest of Beasts&quot;)[to the great Forest of Beasts and the further you go in the more you realize the trees looking much taller and thicker, and a unsettling feeling someone or something is watching you.]
@@ -143,7 +145,7 @@ An arcane golem crackling with eldritch energy appears before you.
 [[Channel the power of the divine and cast Hammer of God-&gt;Defeat Golem]]
 ]
 
-(if: (history:)contains&quot;a stick&quot;)
+(if: (history:)contains&quot;A stick&quot;)
 [
 [[You got a stick...Whack-&gt;Defeat Golem]]
 [[Welp, guess you can throw the Stick at the golem-&gt;Defeat Golem]]
@@ -177,7 +179,7 @@ You move past the square is left behind and find yourself at a fork, what path d
 [[Go to the left -&gt;Labyrinth Left Path]] 
 ]
 
-(if: (history:)contains&quot;a stick&quot;)
+(if: (history:)contains&quot;A stick&quot;)
 [
 Your stick connects resoundingly onto the golem&#39;s head and for some unknown reason it appears that the off switch was located there. The golem immediately powers down
 You move past the still golem and find yourself at a fork, what path do you choose,
@@ -206,7 +208,7 @@ You close your eyes expecting death but instead you open your eyes and find your
 [(reload:)
 (goto-url:&quot;..../dungeonComplete?experience=500&amp;gold=0&quot;)]
 
-(if: (history:)contains&quot;TrollCave Right Path&quot;)
+(if: (history:)contains&quot; TrollCave Right Path&quot;)
 [(reload:)
 (goto-url:&quot;..../dungeonComplete?experience=200&amp;gold=1000&quot;)]
 
@@ -218,7 +220,7 @@ You close your eyes expecting death but instead you open your eyes and find your
 [(reload:)
 (goto-url:&quot;..../dungeonComplete?experience=500&amp;gold=0&quot;)]
 
-(if: (history:)contains&quot;GoblinCanve Right Path&quot;)
+(if: (history:)contains&quot; GoblinCanve Right Path&quot;)
 [(reload:)
 (goto-url: &quot;..../dungeonComplete?experience=250&amp;gold=1000&quot;)]
 
@@ -269,7 +271,7 @@ You summon the holy might of your protector and sunder the troll with a holy app
 [[Keep your distance and cast another Smite-&gt;Keep DistanceSmite]]
 [[Enmbue yourself with Divine Protection and get in close-&gt;CloseQuatersDivine]]
 ]
-(if: (history:)contains&quot;a stick&quot;)
+(if: (history:)contains&quot;A stick&quot;)
 [
 You brandish your stick in front of you and thank god you do as a large troll lumbers into view.
 You can,
@@ -288,11 +290,11 @@ You can,
 [
 [[Cast Holy Prison on the ground -&gt;Trap]]
 ]
-(if: (history:)contains&quot;a stick&quot;)
+(if: (history:)contains&quot;A stick&quot;)
 [
 [[Quickly dig a trap. You only have a stick-&gt;Trap]]
 ]
-</tw-passagedata><tw-passagedata pid="25" name="Prepare SpellGoblin" tags="" position="1159,867" size="100,100">(if: (history:)contains&quot;Staff Route&quot;)
+</tw-passagedata><tw-passagedata pid="25" name="Prepare SpellGoblin" tags="" position="1189,889" size="100,100">(if: (history:)contains&quot;Staff Route&quot;)
 [
 Your staff crackles with lightning as you prepare lightning daggers and good thing you did because not a moment too soon a group of goblins scamper into view
 You quickly cast your lightning daggers into the group of goblins, felling four of them before they could even react, but goblins are opportunistic beings and seeing you alone charge forward in a swarm.
@@ -313,7 +315,7 @@ You summon the holy might of your protector and sunder three of the goblins befo
 [[Keep your distance and cast another Smite-&gt;Keep DistanceSmiteGoblin]]
 [[Enmbue yourself with Divine Protection and get in close-&gt;CloseQuatersDivineGoblin]]
 ]
-(if: (history:)contains&quot;a stick&quot;)
+(if: (history:)contains&quot;A stick&quot;)
 [
 You brandish your stick in front of you and thank god you do as a group of goblins scamper lumbers into view.
 You can,
@@ -353,7 +355,7 @@ Fire erupts around the troll and it is trapped in a roaring inferno, hotter than
 Beams of light emerge from the ground and ceiling and traps the troll in a blinding box of light. It begins to shrink more and more before it ends in a small box that can nestle in one&#39;s palm. The box dissapaites and you see the troll&#39;s remains, slowly unfold itself into a small pile.
 [[Proceed forward-&gt;AfterTrollWin]]
 ]
-(if: (history:)contains&quot;a stick&quot;)
+(if: (history:)contains&quot;A stick&quot;)
 [
 The troll falls into your hole, but trolls are massive. It simply picked itself up and began sweeping the room with its piggish eyes, looking for the culprit.
 It gave a long sniff and began to lumber towards your hiding spot.
@@ -375,7 +377,7 @@ Beams of light emerge from the ground and ceiling and traps the group of goblins
 [[Proceed forward-&gt;AfterGoblinWin]]
 ]
 
-(if: (history:)contains&quot;a stick&quot;)
+(if: (history:)contains&quot;A stick&quot;)
 [
 The goblins falls into your hole, killing many in the fall but there were so many and a few stopped as the initial group fell. It simply picked itself up and began sweeping  its piggish eyes, looking for the culprit.
 It gave a long sniff and began to lumber towards your hiding spot.
@@ -448,7 +450,7 @@ You stand alone in a burning cave filled with the charred bodies of goblins
 [[Proceed forward-&gt;AfterGoblinWin]] </tw-passagedata><tw-passagedata pid="45" name="Keep DistanceSmiteGoblin" tags="" position="1028,986" size="100,100">You summon massive holy apparations of hammers, swords, and axes to smite the group of goblins, as you nimbly dodge the goblin&#39;s wild swings, but you are running low on mana and the goblins keeps coming. Just when you think that maybe retreating would be a better option, you dig deep and pray to your god once more, summoning the Holy Lance of Judgement.
 With an almighty yell you cast the lance and see the lance pierce through all the goblins remaining, blowing them apart in a green mist.
 You stand huffing and puffing.Alone. You defeated all the goblins
-[[Proceed Forward -&gt;AfterGoblinWin]] </tw-passagedata><tw-passagedata pid="46" name="CloseQuatersDivineGoblin" tags="" position="1318,1003" size="100,100">You feel your god&#39;s prescence flow through you as you are embued with its power, runes are etched onto your body as you become an avatar of your god.
+[[Proceed Forward -&gt;AfterGoblinWin]] </tw-passagedata><tw-passagedata pid="46" name="CloseQuatersDivineGoblin" tags="" position="1318,1004" size="100,100">You feel your god&#39;s prescence flow through you as you are embued with its power, runes are etched onto your body as you become an avatar of your god.
 Power flows through you and you watch, smiling as the first goblin&#39;s rusty blade shatters harmlessly as it makes contact with you.
 The goblins confident in their numbers charge forth, attempting to bite, stab, swing, and dog pile you. You laugh, swelling with power, you grab one by the leg and begin to use its body as a weapon.
 Unfortunately, your strength is too much and you shatter your new weapon after it makes contact with several goblins. No matter there are plenty remaining to be your weapon.
@@ -479,7 +481,7 @@ Finding more and more evidence of the deadly saber tiger, you stop at a gigantic
 Judging from the length and width of the claw marks you know that this is a large saber tiger even for its species. You know you are now very, very close to the den of the tiger.
 
 [[Proceed forward and take the fight to it? -&gt;Go to Den of Tiger]]
-[[Stop the chase and lay traps around the vicinity-&gt;TrapTiger]] </tw-passagedata><tw-passagedata pid="54" name="TrapTiger" tags="" position="1858,879" size="100,100">Figuring that fighting the tiger could very easily lead to your death.(if: (history:)contains&quot;a stick&quot;)[You decide to create numerous basic hunting traps.You leave for the night, best to not make camp in the Forest of Beasts] (if: (history:)contains&quot;Staff Route&quot;)[You decide to lay numerous magical holding traps around the area.You leave for the night, best to not make camp in the Forest of Beasts ]
+[[Stop the chase and lay traps around the vicinity-&gt;TrapTiger]] </tw-passagedata><tw-passagedata pid="54" name="TrapTiger" tags="" position="1858,879" size="100,100">Figuring that fighting the tiger could very easily lead to your death.(if: (history:)contains&quot;A stick&quot;)[You decide to create numerous basic hunting traps.You leave for the night, best to not make camp in the Forest of Beasts] (if: (history:)contains&quot;Staff Route&quot;)[You decide to lay numerous magical holding traps around the area.You leave for the night, best to not make camp in the Forest of Beasts ]
 (if: (history:)contains&quot;Wand Route&quot;)[You decide to lay numerous magical holding traps around the area.You leave for the night, best to not make camp in the Forest of Beasts]
 (if: (history:)contains&quot;Orb Route&quot;)[You decide to lay numerous magical holding traps around the area. You leave for the night, best to not make camp in the Forest of Beasts]
 You return the next day and find a massive Saber Tiger, far larger than any you have ever seen, caught in one of your traps. You also notice three tiger cubs guarding their mother, despite their small size. You can&#39;t believe your luck, the cubs would fetch a far better price if you sell them on the market, and you could still kill the mother and get a hefty price from the pelt. But are you willing to kill such a beautiful creature and condemn such cute cubs to slavery?
@@ -500,7 +502,7 @@ You instantly recognizeher as a druid.
 You go deeper into the den your (if: (history:)contains&quot;Staff Route&quot;)  [staff held before you, lightning crackling. You hear a low growl that chills you to your core and before you can cast chain lightning, three cute little tiger cubs jump out.]
 (if: (history:)contains&quot;Orb Route&quot;)[ orb gripped tightly, fire nestled in your pam. You hear a low growl that chills you to your core and before you can cast chain lightning, three cute little tiger cubs jump out.]
 (if: (history:)contains&quot;Wand Route&quot;) [wand gripped tightly, light radiating from its tip. You hear a low growl that chills you to your core and before you can cast chain lightning, three cute little tiger cubs jump out.]
-(if: (history:)contains&quot;a stick&quot;) [stick brandished menacingly. You hear a low growl that chills you to your core and before you can cast chain lightning, three cute little tiger cubs jump out.]
+(if: (history:)contains&quot;A stick&quot;) [stick brandished menacingly. You hear a low growl that chills you to your core and before you can cast chain lightning, three cute little tiger cubs jump out.]
 [[You can kidnap these cubs before the mother comes, they would fetch a lot of money in the black market-&gt;Take Cubs]]
 [[Leave, you can&#39;t harm such cute creatures-&gt;Leave]]</tw-passagedata><tw-passagedata pid="58" name="Take Cubs" tags="" position="1780,1028" size="100,100">As the heartless monster you are, you decide to just take the cubs. Your soul be damned, its all about the coin for you.
 You snatch the cubs, their soft and silky fur confirming how much money you will be able to make off them. 
@@ -519,9 +521,9 @@ It turns and leaves with the family of cubs.
 You go deeper into the den your (if: (history:)contains&quot;Staff Route&quot;)  [staff held before you, lightning crackling. You hear a low growl that chills you to your core and before you can cast chain lightning, three cute little tiger cubs jump out.]
 (if: (history:)contains&quot;Orb Route&quot;)[ orb gripped tightly, fire nestled in your palm. You hear a low growl that chills you to your core and before you can cast chain lightning, three cute little bear cubs jump out.]
 (if: (history:)contains&quot;Wand Route&quot;) [wand gripped tightly, light radiating from the tip. You hear a low growl that chills you to your core and before you can cast chain lightning, three cute little bear cubs jump out.]
-(if: (history:)contains&quot;a stick&quot;) [stick brandished menacingly. You hear a low growl that chills you to your core and before you can cast chain lightning, three cute little bear cubs jump out.]
+(if: (history:)contains&quot;A stick&quot;) [stick brandished menacingly. You hear a low growl that chills you to your core and before you can cast chain lightning, three cute little bear cubs jump out.]
 [[You can kidnap these cubs before the mother comes, they would fetch a lot of money in the black market-&gt;Take Cubs]]
-[[Leave, you can&#39;t harm such cute creatures-&gt;Leave]]</tw-passagedata><tw-passagedata pid="61" name="TrapBear" tags="" position="1978,842" size="100,100">Figuring that fighting the bear could very easily lead to your death.(if: (history:)contains&quot;a stick&quot;)[You decide to create numerous basic hunting traps.You leave for the night, best to not make camp in the Forest of Beasts] (if: (history:)contains&quot;Staff Route&quot;)[You decide to lay numerous magical holding traps around the area.You leave for the night, best to not make camp in the Forest of Beasts ]
+[[Leave, you can&#39;t harm such cute creatures-&gt;Leave]]</tw-passagedata><tw-passagedata pid="61" name="TrapBear" tags="" position="1978,842" size="100,100">Figuring that fighting the bear could very easily lead to your death.(if: (history:)contains&quot;A stick&quot;)[You decide to create numerous basic hunting traps.You leave for the night, best to not make camp in the Forest of Beasts] (if: (history:)contains&quot;Staff Route&quot;)[You decide to lay numerous magical holding traps around the area.You leave for the night, best to not make camp in the Forest of Beasts ]
 (if: (history:)contains&quot;Wand Route&quot;)[You decide to lay numerous magical holding traps around the area.You leave for the night, best to not make camp in the Forest of Beasts]
 (if: (history:)contains&quot;Orb Route&quot;)[You decide to lay numerous magical holding traps around the area. You leave for the night, best to not make camp in the Forest of Beasts]
 You return the next day and find a massive Half Moon Bear, far larger than any you have ever seen, caught in one of your traps. You also notice three little bear cubs guarding their mother, despite their small size. You can&#39;t believe your luck, the cubs would fetch a far better price if you sell them on the market, and you could still kill the mother and get a hefty price from the pelt. But are you willing to kill such a beautiful creature and condemn such cute cubs to slavery?

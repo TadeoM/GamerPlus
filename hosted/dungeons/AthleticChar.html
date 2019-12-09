@@ -16,7 +16,9 @@
 
 
 
+
 </style><script role="script" id="twine-user-script" type="text/twine-javascript">
+
 
 
 
@@ -89,7 +91,7 @@ An arcane golem crackling with eldritch energy appears before you.
 [[Channel the power of the divine and cast Hammer of God-&gt;Defeat Golem]]
 ]
 
-(if: (history:)contains&quot;a stick&quot;)
+(if: (history:)contains&quot;A stick&quot;)
 [
 [[You got a stick...Whack-&gt;Defeat Golem]]
 [[Welp, guess you can throw the Stick at the golem-&gt;Defeat Golem]]
@@ -122,7 +124,7 @@ You and your hammer burn with holy light and the golem falters in its charge, yo
 [[Go to the left -&gt;Labyrinth Left Path]] 
 ]
 
-(if: (history:)contains&quot;a stick&quot;)
+(if: (history:)contains&quot;A stick&quot;)
 [
 Your stick connects resoundingly onto the golem&#39;s head and for some unknown reason it appears that the off switch was located there. The golem immediately powers down
 You move past the still golem and find yourself at a fork, what path do you choose,
@@ -151,7 +153,7 @@ You close your eyes expecting death but instead you open your eyes and find your
 [(reload:)
 (goto-url:&quot;..../dungeonComplete?experience=500&amp;gold=0&quot;)]
 
-(if: (history:)contains&quot;TrollCave Right Path&quot;)
+(if: (history:)contains&quot; TrollCave Right Path&quot;)
 [(reload:)
 (goto-url:&quot;..../dungeonComplete?experience=200&amp;gold=1000&quot;)]
 
@@ -163,7 +165,7 @@ You close your eyes expecting death but instead you open your eyes and find your
 [(reload:)
 (goto-url:&quot;..../dungeonComplete?experience=500&amp;gold=0&quot;)]
 
-(if: (history:)contains&quot;GoblinCanve Right Path&quot;)
+(if: (history:)contains&quot; GoblinCanve Right Path&quot;)
 [(reload:)
 (goto-url: &quot;..../dungeonComplete?experience=250&amp;gold=1000&quot;)]
 
@@ -214,7 +216,7 @@ You summon the holy might of your protector and smash the troll&#39;s foot. Howl
 [[Keep your distance and wait for an opportunity-&gt;Keep DistanceSmite]]
 [[Enmbue yourself with Divine Protection and get in close-&gt;CloseQuatersDivine]]
 ]
-(if: (history:)contains&quot;a stick&quot;)
+(if: (history:)contains&quot;A stick&quot;)
 [
 You brandish your stick in front of you and thank god you do as a large troll lumbers into view.
 You can,
@@ -233,7 +235,7 @@ You can,
 [
 [[Cast Holy Prison on the ground -&gt;Trap]]
 ]
-(if: (history:)contains&quot;a stick&quot;)
+(if: (history:)contains&quot;A stick&quot;)
 [
 [[Quickly dig a trap. You only have a stick-&gt;Trap]]
 ]
@@ -258,7 +260,7 @@ You summon the holy might of your protector and sunder three of the goblins befo
 [[Keep your distance and fight them in a chokepoint-&gt;Keep DistanceSmiteGoblin]]
 [[Enmbue yourself with Divine Protection and get in close-&gt;CloseQuatersDivineGoblin]]
 ]
-(if: (history:)contains&quot;a stick&quot;)
+(if: (history:)contains&quot;A stick&quot;)
 [
 You brandish your stick in front of you and thank god you do as a group of goblins scamper lumbers into view.
 You can,
@@ -277,7 +279,7 @@ You can,
 [
 [[Cast Holy Prison on the ground -&gt;GoblinTrap]]
 ]
-(if: (history:)contains&quot;a stick&quot;)
+(if: (history:)contains&quot;A stick&quot;)
 [
 [[Quickly dig a trap. You only have a stick-&gt;GoblinTrap]]
 ]
@@ -297,7 +299,7 @@ Fire erupts around the troll and it is trapped in a roaring inferno, hotter than
 Beams of light emerge from the ground and ceiling and traps the troll in a blinding box of light. It begins to shrink more and more before it ends in a small box that can nestle in one&#39;s palm. The box dissapaites and you see the troll&#39;s remains, slowly unfold itself into a small pile.
 [[Proceed forward-&gt;AfterTrollWin]]
 ]
-(if: (history:)contains&quot;a stick&quot;)
+(if: (history:)contains&quot;A stick&quot;)
 [
 The troll falls into your hole, but trolls are massive. It simply picked itself up and began sweeping the room with its piggish eyes, looking for the culprit.
 It gave a long sniff and began to lumber towards your hiding spot.
@@ -319,7 +321,7 @@ Fire erupts around the group of goblins and it is trapped in a roaring inferno, 
 Beams of light emerge from the ground and ceiling and traps the group of goblins in a blinding box of light. It begins to shrink more and more before it ends in a small box that can nestle in one&#39;s palm. The box dissapaites and you see the goblins&#39;s remains, squished together into a paste.
 [[Proceed forward-&gt;AfterGoblinWin]]
 ]
-(if: (history:)contains&quot;a stick&quot;)
+(if: (history:)contains&quot;A stick&quot;)
 [
 The goblins falls into your hole, killing many in the fall but there were so many and a few stopped as the initial group fell. It simply picked itself up and began sweeping  its piggish eyes, looking for the culprit.
 It gave a long sniff and began to lumber towards your hiding spot.
@@ -373,7 +375,7 @@ The right has the stench of trolls coming more prominently while the left barely
 [[Go back home-&gt;Leave]]</tw-passagedata><tw-passagedata pid="36" name=" TrollCave Right Path" tags="" position="501,1539" size="100,100">Going down the right passage you feel as if you made the right choice and after walking down the path for several minutes, you find yourself in a large cave filled with treasures from adventurers in the past.
 You stuff your knapsack full of coins and gems, stuffing it so much until you can hardly stand upright without feeling the strain on your knees
 A successful haul.
-[[Head Back -&gt;Leave]]</tw-passagedata><tw-passagedata pid="37" name="TrollCave Left Path" tags="" position="702,1526" size="100,100">Going down the left path you begin to feel unease just from the silence, not even water was dripping from the stalactites.
+[[Head Back -&gt;Leave]]</tw-passagedata><tw-passagedata pid="37" name="TrollCave Left Path" tags="" position="733,1514" size="100,100">Going down the left path you begin to feel unease just from the silence, not even water was dripping from the stalactites.
 You soon learn why when you enter a cave where rows of gigantic skeletons lay.
 You entered a troll graveyard. A pity. It may not be much treasure but at the very least you can sell a pretty penny off on an auction with one of these skulls.
 Grumbling you go to the largest skeleton and take the prized skull.
@@ -406,12 +408,12 @@ Well so much for that plan.
 [[Time to run -&gt;AfterGoblinDefeat]]</tw-passagedata><tw-passagedata pid="46" name="AfterGoblinWin" tags="" position="1145,1473" size="100,100">As you walk further into the den you happen upon another fork.
 The right has the stench of goblins coming more prominently while the left barely smells of anything and you think that you even hear muffled cries of humans?
 [[Right Path-&gt; GoblinCanve Right Path]]
-[[Left Path-&gt;GoblinCanve Left Path]]</tw-passagedata><tw-passagedata pid="47" name="AfterGoblinDefeat" tags="" position="1348,1447" size="100,100">You barely manage to outrun the goblins. In their mad dash to get you, they began to trample over each other and started to fight amongst themselves
+[[Left Path-&gt;GoblinCanve Left Path]]</tw-passagedata><tw-passagedata pid="47" name="AfterGoblinDefeat" tags="" position="1364,1486" size="100,100">You barely manage to outrun the goblins. In their mad dash to get you, they began to trample over each other and started to fight amongst themselves
 You decide that your brush of death was enough for one day&#39;s adventure and decide to head back.
 [[Go back home-&gt;Leave]]</tw-passagedata><tw-passagedata pid="48" name=" GoblinCanve Right Path" tags="" position="1010,1610" size="100,100">Going down the right passage you feel as if you made the right choice and after walking down the path for several minutes, you find yourself in a large cave filled with treasures from adventurers in the past.
 You stuff your knapsack full of coins and gems, stuffing it so much until you can hardly stand upright without feeling the strain on your knees
 A successful haul.
-[[Head Back -&gt;Leave]]</tw-passagedata><tw-passagedata pid="49" name="GoblinCanve Left Path" tags="" position="1201,1620" size="100,100">Going down the left path you confirm your suspicions that you indeed did hear humans.
+[[Head Back -&gt;Leave]]</tw-passagedata><tw-passagedata pid="49" name="GoblinCanve Left Path" tags="" position="1178,1594" size="100,100">Going down the left path you confirm your suspicions that you indeed did hear humans.
 You soon learn why when you enter a cave where merchants, and townspeople were held in cages.
 You entered the goblin prison. You begin to quickly release them, each one crying and kissing your hands as they thank you.
 It may not be treasure but you saved alot of lives. 
@@ -441,7 +443,7 @@ You instantly recognizeher as a druid.
 You go deeper into the den your (if: (history:)contains&quot;Sword Route&quot;)  [sword held before you, lightning crackling. You hear a low growl that chills you to your core and before you can cast chain lightning, three cute little tiger cubs jump out.]
 (if: (history:)contains&quot;Axe Route&quot;)[ axe gripped tightly, fire bursting from the edges. You hear a low growl that chills you to your core and before you can cast chain lightning, three cute little tiger cubs jump out.]
 (if: (history:)contains&quot;Hammer Route&quot;) [hammer gripped tightly, light radiating from its head. You hear a low growl that chills you to your core and before you can cast chain lightning, three cute little tiger cubs jump out.]
-(if: (history:)contains&quot;a stick&quot;) [stick brandished menacingly. You hear a low growl that chills you to your core and before you can cast chain lightning, three cute little tiger cubs jump out.]
+(if: (history:)contains&quot;A stick&quot;) [stick brandished menacingly. You hear a low growl that chills you to your core and before you can cast chain lightning, three cute little tiger cubs jump out.]
 [[You can kidnap these cubs before the mother comes, they would fetch a lot of money in the black market-&gt;Take Cubs]]
 [[Leave, you can&#39;t harm such cute creatures-&gt;Leave]]</tw-passagedata><tw-passagedata pid="55" name="Take Cubs" tags="" position="1813,1044" size="100,100">As the heartless monster you are, you decide to just take the cubs. Your soul be damned, its all about the coin for you.
 You snatch the cubs, their soft and silky fur confirming how much money you will be able to make off them. 
@@ -460,7 +462,7 @@ It turns and leaves with the family of cubs.
 You go deeper into the den your (if: (history:)contains&quot;Sword Route&quot;)  [sword held before you, lightning crackling. You hear a low growl that chills you to your core and before you can cast chain lightning, three cute little tiger cubs jump out.]
 (if: (history:)contains&quot;Axe Route&quot;)[ axe gripped tightly, fire bursting from the edges. You hear a low growl that chills you to your core and before you can cast chain lightning, three cute little bear cubs jump out.]
 (if: (history:)contains&quot;Hammer Route&quot;) [hammer gripped tightly, light radiating from its head. You hear a low growl that chills you to your core and before you can cast chain lightning, three cute little bear cubs jump out.]
-(if: (history:)contains&quot;a stick&quot;) [stick brandished menacingly. You hear a low growl that chills you to your core and before you can cast chain lightning, three cute little bear cubs jump out.]
+(if: (history:)contains&quot;A stick&quot;)[stick brandished menacingly. You hear a low growl that chills you to your core and before you can cast chain lightning, three cute little bear cubs jump out.]
 [[You can kidnap these cubs before the mother comes, they would fetch a lot of money in the black market-&gt;Take Cubs]]
 [[Leave, you can&#39;t harm such cute creatures-&gt;Leave]]</tw-passagedata><tw-passagedata pid="58" name="TrapBear" tags="" position="1978,842" size="100,100">Figuring that fighting the bear could very easily lead to your death.You decide to create numerous basic hunting traps.You leave for the night, best to not make camp in the Forest of Beasts.
 You return the next day and find a massive Half Moon Bear, far larger than any you have ever seen, caught in one of your traps. You also notice three little bear cubs guarding their mother, despite their small size. You can&#39;t believe your luck, the cubs would fetch a far better price if you sell them on the market, and you could still kill the mother and get a hefty price from the pelt. But are you willing to kill such a beautiful creature and condemn such cute cubs to slavery?

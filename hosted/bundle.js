@@ -9,7 +9,6 @@ var accountWisdom = 0;
 var accountExperience = 0;
 var experienceNeeded = 1000;
 
-var levelUpJSON = {};
 var handleQuest = function handleQuest(e) {
     e.preventDefault();
 
@@ -584,9 +583,9 @@ var setup = function setup(csrf) {
     });
     ReactDOM.render(React.createElement(QuestForm, { csrf: csrf }), document.querySelector("#makeQuest"));
     loadQuestsFromServer();
-    var signupButton = document.querySelector("#profileButton");
+    var profileButton = document.querySelector("#profileButton");
 
-    signupButton.addEventListener("click", function (e) {
+    profileButton.addEventListener("click", function (e) {
         e.preventDefault();
         showProfile();
         return false;

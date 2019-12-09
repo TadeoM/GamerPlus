@@ -7,9 +7,7 @@ let accountWisdom = 0;
 let accountExperience = 0;
 let experienceNeeded=1000;
 
-let levelUpJSON = {
 
-}
 const handleQuest = (e) =>{
     e.preventDefault();
 
@@ -420,9 +418,9 @@ const setup = function(csrf) {
         <QuestForm csrf ={csrf}/>, document.querySelector("#makeQuest")
     );
     loadQuestsFromServer();
-    const signupButton = document.querySelector("#profileButton");
+    const profileButton = document.querySelector("#profileButton");
 
-    signupButton.addEventListener("click", (e) => {
+    profileButton.addEventListener("click", (e) => {
         e.preventDefault();
         showProfile();
         return false;
