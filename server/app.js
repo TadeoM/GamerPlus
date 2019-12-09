@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const expressHandlebars = require('express-handlebars');
 const session = require('express-session');
+const fileUpload = require('express-fileupload');
 const RedisStore = require('connect-redis')(session);
 const url = require('url');
 const csrf = require('csurf');
@@ -42,6 +43,7 @@ app.use('/assets', express.static(path.resolve(`${__dirname}/../hosted/`)));
 app.use(favicon(`${__dirname}/../hosted/img/favicon.png`));
 
 app.use(compression());
+app.use(fileUpload());
 app.use(bodyParser.urlencoded({
   extended: true,
 }));
@@ -52,7 +54,7 @@ app.use(session({
     port: redisURL.port,
     pass: redisPASS,
   }),
-  secret: 'Domo Arigato',
+  secret: 'Gamer Plus',
   resave: true,
   saveUninitialized: true,
   cookie: {

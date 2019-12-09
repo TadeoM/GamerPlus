@@ -4,7 +4,6 @@ const _ = require('underscore');
 
 let FriendModel = {};
 
-const convertId = mongoose.Types.ObjectId;
 const setName = (name) => _.escape(name).trim();
 
 const FriendSchema = new mongoose.Schema({
@@ -18,7 +17,6 @@ const FriendSchema = new mongoose.Schema({
     friend: {
         type: String,
         require: true,
-
     }
 });
 

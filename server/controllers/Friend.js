@@ -19,7 +19,7 @@ const addFriend = (request,response) => {
     const res = response;
 
     console.log(req.body);
-    return Account.AccountModel.findByUsername(req.body.name, (err, docs) => {
+    return Account.AccountModel.findByUsername(req.body.name, (error, docs) => {
         if(docs) {
             const friendData = {
                 user: req.session.account.username,
@@ -43,6 +43,7 @@ const addFriend = (request,response) => {
             
             return friendPromise;
         }
+        return res.status(400).json({ error: 'No Docs' });
     });
 };
 

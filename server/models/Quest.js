@@ -26,6 +26,9 @@ const QuestSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  groupQuest: {
+    type: String,
+  },
   questType: {
     type: String,
     required: true,
@@ -39,6 +42,10 @@ const QuestSchema = new mongoose.Schema({
     type:String,
     required: true,
   },
+  imageName: {
+    type: String,
+    required: true,
+  }
   /*
   questReciever:{
     type:mongoose.Schema.ObjectId,
@@ -54,16 +61,30 @@ QuestSchema.statics.toAPI = (doc) => ({
   questType: doc.questType,
   questExperience: doc.questExperience,
   questContent: doc.questContent,
+  imageName: doc.imageName,
+  groupQuest: doc.groupQuest,
   _id: doc._id,
 });
 
 // Find its owner
-QuestSchema.statics.findbyOwner = (ownerId, callback) => {
+QuestSchema.statics.findByOwner = (ownerId, callback) => {
   const search = {
     owner: convertID(ownerId),
   };
-  return QuestModel.find(search).select('name questType questExperience questContent').exec(callback);
+  return QuestModel.find(search)
+  .select('name questType questExperience questContent imageName')
+  .exec(callback);
 };
+
+QuestSchema.statics.findByGroup = (groupName, callback) => {
+  const search = {
+    groupQuest: groupName,
+  };
+  return QuestModel.find(search)
+  .select('name questType questExperience questContent imageName')
+  .exec(callback);
+};
+
 // Find by username and then edit.
 // Find Quest By ID and delete
 QuestSchema.statics.deleteQuest = (id, callback) => {

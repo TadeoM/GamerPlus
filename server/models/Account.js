@@ -44,6 +44,9 @@ const AccountSchema = new mongoose.Schema({
     type: Array,
     default: [],
   },
+  profilePic: {
+    type: String,
+  }
 });
 
 AccountSchema.statics.toAPI = doc => ({
@@ -53,6 +56,7 @@ AccountSchema.statics.toAPI = doc => ({
   wisdom: doc.wisdom,
   charisma: doc.charisma,
   friendList: doc.friendList,
+  profilePic: doc.profilePic,
   _id: doc._id,
 });
 

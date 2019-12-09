@@ -1,4 +1,4 @@
-const models = require('../models');
+ const models = require('../models');
 
 const Account = models.Account;
 
@@ -40,7 +40,7 @@ const login = (request, response) => {
     }
 
     req.session.account = Account.AccountModel.toAPI(account);
-
+  
     return res.json({ redirect: '/maker' });
   });
 };
@@ -111,18 +111,22 @@ const changePassword = (request, response) =>{
     return res.status(400).json({ error: 'Passwords do not match' });
   }
 
-  return Account.AccountModel.authenticate(req.body.username,  req.body.currPass, (err, account) => {
+  return Account.AccountModel.authenticate(req.body.username, 
+    req.body.currPass, (err, account) => {
     if (err || !account) {
       return res.status(401).json({ error: 'Wrong username or password' });
     }
     
-    return Account.AccountModel.generateHash(req.body.pass, (salt, hash) => {
-      return Account.AccountModel.updateOne({ username: req.session.account.username },{ salt, password: hash }, (err) => {           
-        if(err) {             
-            return res.status(400).json({err});           
+    return Account.AccountModel
+    .generateHash
+    (req.body.pass, (salt, hash) => {
+      return Account.AccountModel.updateOne({ username: req.session.account.username },
+        { salt, password: hash }, (error) => {           
+        if(error) {             
+            return res.status(400).json({error});           
         }
         return res.json({message: "password successfully changed"});         
-    });
+      });
     });
   });
 }
@@ -130,7 +134,14 @@ const getAccount = (request, response) => {
   const req = request;
   const res = response;
 
-  return Account.AccountModel.findByUsername(req.session.account.username, (err, docs) => {
+  let username = "";
+  if(req.query.user){
+    username = req.query.user;
+  }
+  else {
+    username = req.session.account.username;
+  }
+  return Account.AccountModel.findByUsername(username, (err, docs) => {
     if (err) {
       console.log(err);
       return res.status(400).json({ error: 'An error occurred' });
@@ -149,7 +160,41 @@ const createStats = (request, response) => {
     updateAccount.athletics = req.body.athletics;
     updateAccount.wisdom = req.body.wisdom;
     updateAccount.charisma = req.body.charisma;
+    
 
+    switch(req.body.profilePic) {
+      case "slide1":
+        updateAccount.profilePic = "BarbarianChar.png"
+        break;
+      case "slide2":
+        updateAccount.profilePic = "BardChar.png"
+        break;
+      case "slide3":
+        updateAccount.profilePic = "BeastMasterChar.png"
+        break;
+      case "slide4":
+        updateAccount.profilePic = "DruidChar.png"
+        break;
+      case "slide5":
+        updateAccount.profilePic = "FighterChar.png"
+        break;
+      case "slide6":
+        updateAccount.profilePic = "PirateChar.png"
+        break;
+      case "slide7":
+        updateAccount.profilePic = "PaladinChar.png"
+        break;
+      case "slide8":
+        updateAccount.profilePic = "RogueChar.png"
+        break;
+      case "slide9":
+        updateAccount.profilePic = "ShamanChar.png"
+        break;
+      default:
+        break;
+     }
+
+    console.log(updateAccount.profilePic);
     const savePromise = updateAccount.save();
 
     savePromise.then(() => {
@@ -174,6 +219,8 @@ const getToken = (request, response) => {
   const req = request;
   const res = response;
 
+  console.log("See it's empty")
+  console.log(req.groups);
   const csrfJSON = {
     csrfToken: req.csrfToken(),
   };

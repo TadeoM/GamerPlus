@@ -1,5 +1,6 @@
 let csrfToken = null;
 let groupsListed = []
+let groupPage = "";
 let quests = [];
 
 const handleQuest = (e) =>{
@@ -28,14 +29,13 @@ const handleQuest = (e) =>{
     let a = document.querySelector('#questType');
     let questType = a.options[a.selectedIndex].text;
     let questContent = document.querySelector('.questContent').value;
-
-
+    console.log(groupPage)
     
     formData.append('questName', questName);
     formData.append('questExp', questExp);
     formData.append('questType', questType);
     formData.append('questContent', questContent);
-    
+    formData.append('groupName', groupPage);
     formData.append('_csrf', csrfToken);
 
     fetch(`/upload?_csrf=${csrfToken}`,
@@ -60,7 +60,7 @@ const handleQuest = (e) =>{
         function(response){
             if(response.status === 200){
                 console.log("Quest made");
-                loadQuestsFromServer();
+                loadGroupQuestsFromServer();
             }
         }
     );
@@ -68,26 +68,61 @@ const handleQuest = (e) =>{
     return false;
 };
 
-const completeQuest = (e) =>{
-    e.preventDefault();
-}
-
-const deleteQuest = (e) =>{
+const handleGroup = (e) =>{
     e.preventDefault();
 
+    $("#groupMessage").animate({width:'hide'},350);
+
+    if($("#groupName").val()==''|| $("#groupOwner").val()=='')
+    {
+        handleError("Gamer! All fields are required");
+        return false;
+    }
+
+    let formData = new FormData();
+    let groupName = document.querySelector('#groupName').value;
+    let groupOwner = document.querySelector('#groupOwner').checked;
+    let groupMember = document.querySelector('#groupMember').value;
+
+    formData.append('groupName', groupName);
+    formData.append('groupOwner', groupOwner);
+    formData.append('groupMember', groupMember);
+    formData.append('_csrf', csrfToken);
+
+    fetch(`/addMember?_csrf=${csrfToken}`,
+    {
+        method: "POST",
+        body: formData,
+    })
+    .then(
+        function(response){
+            loadGroupsFromServer();
+        }
+    );
     
-    //data.quests = $("#questList").props;
-    console.log( $("#curQuestForm").serialize());
+    return false;
+};
 
-    //Delete in our database and reload quests. 
-    sendAjax('POST',$("#curQuestForm").attr("action"), $("#curQuestForm").serialize(), function(){
-        loadQuestsFromServer();
-        
-    });
-    
-}
-
-
+const GroupForm = (props) =>{
+    return(
+        <form id="groupForm" name="groupForm"
+            onSubmit ={handleGroup}
+            action ="/addMember"
+            encType="multipart/form-data"
+            className ="mainForm"
+        >
+            <label>Group Creation</label>
+            <label htmlFor ="name">Name: </label>
+            <input id="groupName" type="text" name="name" placeholder ="Group Name"/>
+            <input id="groupOwner" type="checkbox" name="owner" value="owner" /> Owner<br></br>
+            <label htmlFor ="newMember">New Member: </label>
+            <input id="groupMember" type="text" name="newMember" placeholder ="New Member"/>
+            <input type="hidden" name="_csrf" value={csrfToken}/>
+            <input className ="makeGroupSubmit" type="submit" value ="Make Group"/>
+            <a href="/groupPage" className="navButton" id="groupButton">All Groups</a>
+        </form>
+    );
+};
 
 const QuestForm = (props) =>{
     return(
@@ -123,7 +158,7 @@ const QuestForm = (props) =>{
             
             <textarea id="questContent" className="questContent" name="questContent" placeholder ="Details of the Quest"></textarea>
             <input type="hidden" name="_csrf" value={csrfToken}/>
-            
+            <input id="groupName" type="hidden" name="groupName" value={groupName} />
             <input type="hidden" name="_csrf" value={csrfToken}/>
             <input className ="makeQuestSubmit" type="submit" value ="Make Quest"/>
         </form>
@@ -170,75 +205,26 @@ const QuestList = function(props)
         </div>
     );
 };
-const PendingQuestList = function(props)
-{
-    if(props.quests.length === 0)
-    {
-        return(
-            <div className="pendingQuestList">
-                <h3 className="emptyQuest">No Quests Yet</h3>
-            </div>
+
+const loadGroupQuestsFromServer = () =>{
+    console.log("Trying to Load Quests")
+    sendAjax('GET', `/getGroupQuests?groupName=${groupPage}`, null, (data) =>{
+        ReactDOM.render(
+            <QuestList quests ={quests} csrf = {csrfToken} />, document.querySelector("#quests")
         );
-    }
-const pendingQuestNodes = props.quests.map(function(quest)
-{
-    return(
-        <form id="pendingQuestForm" name ="pendingQuestForm"
-            onSubmit ={completeQuest}
-            action ="/completeQuest"
-            method="POST"
-            className="curQuestForm"
-        >
-        <div key={quest._id} className="quest">
-            <img src="/assets/img/scrollQuest.png" alt="domo face" className="scrollQuest"/>
-            <h3 className="questName">Name: {quest.name}</h3>
-            <h3 className="questType">Quest Type: {quest.questType}</h3>
-            <h3 className="questExperience">EXP: {quest.questExperience}</h3>
-            <h4 className="questContent">Quest Content: {quest.questContent}</h4>
-            <input type="submit" name="deleteQuest" value="Delete Quest" />
-            <input type ="hidden" name ="_id" value ={quest._id}/>
-            <input type="hidden" name="_csrf" value={props.csrf}/>
-        </div>
-         </form>
-    );
-});
-return (
-    <div className="pendingQuestList">
-        {pendingQuestNodes}
-    </div>
-);
+    });
 };
 
-const ProfileBar = function(props) {
-    return (
-        <div className="profileBox">
-            <div> 
-                <img id="char" src={`/assets/img/${props.account.profilePic}`} alt="character"/>
-                <div className="button" id="profileBar">
-                    <div className="btn btn-one">
-                        <a href="/profile">To Profile</a>
-                    </div>
-                </div>
-            </div>
-            <h3>
-                <span id="profileStats">
-                    <h3 className="accountName"><b>User:</b> {props.account.username} </h3>
-                    <h3 className="accountAthletics"><b>Athletics:</b> {props.account.athletics}</h3>
-                    <h3 className="accountWisdom"><b>Wisdom:</b> {props.account.wisdom}</h3>
-                    <h3 className="accountCharisma"><b>Charisma:</b> {props.account.charisma}</h3>
-                </span>
-            </h3>
-        </div>
-    );
-};
-
-const AccountData = function(props) {
-    return (
-        <div>
-            <img id="char" src={`/assets/img/${props.account.profilePic}`} alt="character"/>
-            <h3 className="accountName"><b>User:</b> {props.account.username} </h3>
-        </div>
-    );
+const showGroup = (groupName) => {
+    groupPage = groupName;
+    sendAjax('GET', `/getGroup?groupName=${groupName}`, null, (data) =>{
+        ReactDOM.render(
+            <QuestForm groupName={groupPage} csrf ={csrfToken}/>, document.querySelector("#groups")
+        );
+        sendAjax('GET', `/getGroupQuests?groupName=${groupPage}`, null, (questData) =>{
+            console.log(questData);
+        });
+    });
 };
 
 const GroupList = function(props)
@@ -248,16 +234,10 @@ const GroupList = function(props)
         return(
             <div className="groupList">
                 <h3 className="emptyGroup">No Groups Yet</h3>
-                {/* <a href="/groupPage" className="navButton" id="groupButton">Join More Groups</a> */}
-                <div className="button groupButtons">
-                    <div className="btn btn-one">
-                        <a href="/groupPage" className="navButton" id="groupButton">Join More Groups</a>
-                    </div>
-                </div>
             </div>
         );
     }
-    groupsListed = []
+    groupsListed = [];
     
     const groupNodes = props.groups.map(function(group)
     {
@@ -268,28 +248,23 @@ const GroupList = function(props)
                     <h3 className="groupName">Name: {group.groupName}</h3>
                     <div className="button groupButtons">
                         <div className="btn btn-one">
-                        <a href={`/groupPage?group=${group.groupName}`} name={`${group.groupName}`}>Group Page Link</a>
+                            <a name={`${group.groupName}`} onClick={() => showGroup(group.groupName)}>Group Page Link</a>
                         </div>
                     </div>
+                    
                     <input type="hidden" name="_csrf" value={props.csrf}/>
                 </div>
             );
         }
+        
     });
     return (
         <div className="groupList">
+            <a></a>
             {groupNodes}
-            <div className="button groupButtons">
-                <div className="btn btn-one">
-                    <a href="/groupPage" className="navButton" id="groupButton">Join More Groups</a>
-                </div>
-            </div>
-            {/* <a href="/groupPage" className="navButton" id="groupButton">Join More Groups</a> */}
         </div>
     );
 }
-
-
 
 const loadGroupsFromServer = () =>{
     sendAjax('GET', '/getGroups', null, (data) =>{
@@ -299,67 +274,21 @@ const loadGroupsFromServer = () =>{
     });
 };
 
-const loadQuestsFromServer = () =>{
-    sendAjax('GET', '/getQuests', null, (data) =>{
-        for(let j = 0; j < data.quests.length; j++){
-            quests.push(data.quests[j]);
-        }
-        sendAjax('GET', '/getFriends', null, (friendData) => {
-            for(let i = 0; i < friendData.friends.length; i++){
-                sendAjax('GET', `/getAccount?user=${friendData.friends[i].friend}`, null, (friendAccount) => {
-                    sendAjax('GET', `/getQuests?user=${friendAccount.account._id}`, null, (friendQuestData) => {
-                        for(let j = 0; j < friendQuestData.quests.length; j++){
-                            quests.push(friendQuestData.quests[j]);
-                        }
-                        if (i === friendData.friends.length -1 ){
-                            ReactDOM.render(
-                                <QuestList quests ={quests} csrf = {csrfToken} />, document.querySelector("#quests")
-                            );
-                        }
-                    });
-                });
-            }
-        });
-    });
-    console.log(quests)
-    console.log(quests.length)
-    
-};
-const loadPendingQuestsFromServer = () =>{
-    sendAjax('GET', '/getPendingQuests', null, (data) =>{
-        ReactDOM.render(
-            <QuestList quests ={data.quests} csrf = {csrfToken} />, document.querySelector("#quests")
-        );
-    });
-};
-const loadAccountFromServer = () => {
-    sendAjax('GET', '/getAccount', null, (data) =>{
-        ReactDOM.render(
-            <AccountData account={data.account} />, document.querySelector("#accountData")
-        );
-        ReactDOM.render(
-            <ProfileBar account={data.account} />, document.querySelector("#profileContent")
-        );
-    });
-};
-
 const setup = function(csrf) {
-    
-    loadGroupsFromServer();
+    var urlParams = new URLSearchParams(window.location.search);
+    const hasGroup = urlParams.has('group'); 
+    const groupToShow = urlParams.get('group'); // "edit"
     ReactDOM.render(
-        <QuestForm csrf ={csrf}/>, document.querySelector("#makeQuest")
+        <GroupForm csrf ={csrf}/>, document.querySelector("#groupCreation")
     );
-    loadQuestsFromServer();
-    const signupButton = document.querySelector("#profileButton");
+    if(hasGroup) {
+        showGroup(groupToShow);
+    }
+    else {    
+        loadGroupsFromServer();
+    }
 
-    signupButton.addEventListener("click", (e) => {
-        e.preventDefault();
-        showProfile();
-        return false;
-    });
-    loadAccountFromServer();
     
-    $("#profileContent").animate({ width:'hide'}, 0);
 };
 
 const getToken = () => {
@@ -372,4 +301,3 @@ const getToken = () => {
 $(document).ready(function() {
     getToken();
 });
-
