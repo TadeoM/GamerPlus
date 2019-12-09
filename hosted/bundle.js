@@ -482,6 +482,11 @@ var GroupList = function GroupList(props) {
             { className: "groupList" },
             React.createElement(
                 "h3",
+                { className: "title" },
+                "Groups"
+            ),
+            React.createElement(
+                "h4",
                 { className: "emptyGroup" },
                 "No Groups Yet"
             ),
@@ -534,6 +539,11 @@ var GroupList = function GroupList(props) {
     return React.createElement(
         "div",
         { className: "groupList" },
+        React.createElement(
+            "h3",
+            { className: "title" },
+            "Group"
+        ),
         groupNodes,
         React.createElement(
             "div",

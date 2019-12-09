@@ -307,7 +307,8 @@ const GroupList = function(props)
     {
         return(
             <div className="groupList">
-                <h3 className="emptyGroup">No Groups Yet</h3>
+                <h3 className="title">Groups</h3>
+                <h4 className="emptyGroup">No Groups Yet</h4>
                 <div className="button groupButtons">
                     <div className="btn btn-one">
                         <a href="/groupPage" className="navButton" id="groupButton">Join More Groups</a>
@@ -337,6 +338,7 @@ const GroupList = function(props)
     });
     return (
         <div className="groupList">
+            <h3 className="title">Group</h3>
             {groupNodes}
             <div className="button groupButtons">
                 <div className="btn btn-one">

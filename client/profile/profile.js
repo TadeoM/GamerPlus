@@ -97,7 +97,8 @@ const changePassword = (e) =>{
     e.preventDefault();
 
     console.log($("#curQuestForm").serialize());
-    sendAjax('POST',$("#changePswdForm").attr("action"), $("#changePswdForm").serialize());}
+    sendAjax('POST',$("#changePswdForm").attr("action"), $("#changePswdForm").serialize());
+}
 
 const showProfile = (e) => {
     showProfile("PROFILE");
