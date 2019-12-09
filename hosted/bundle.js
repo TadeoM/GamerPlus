@@ -7,7 +7,9 @@ var accountCharisma = 0;
 var accountWisdom = 0;
 
 var accountExperience = 0;
-var experienceToLevelup = 1000;
+var experienceNeeded = 1000;
+
+var levelUpJSON = {};
 var handleQuest = function handleQuest(e) {
     e.preventDefault();
 
@@ -61,7 +63,13 @@ var handleQuest = function handleQuest(e) {
 
     return false;
 };
+var levelUp = function levelUp(e) {
+    e.preventDefault();
 
+    sendAjax('POST', $("#levelUpForm").attr("action"), $("#levelUpForm").serialize(), function () {
+        experienceNeeded = experienceNeeded * 3;
+    });
+};
 var completeQuest = function completeQuest(e) {
     e.preventDefault();
 };
@@ -334,6 +342,7 @@ var ProfileBar = function ProfileBar(props) {
     accountAthletics = props.account.athletics;
     accountWisdom = props.account.wisdom;
     accountCharisma = props.account.charisma;
+    accountExperience = props.account.experience;
     return React.createElement(
         "div",
         { className: "profileBox" },
@@ -471,6 +480,29 @@ var AccountData = function AccountData(props) {
             " ",
             props.account.username,
             " "
+        ),
+        React.createElement(
+            "form",
+            { id: "levelUpForm", name: "levelUpForm",
+                onSubmit: "levelUp",
+                action: "/levelUp",
+                method: "POST",
+                className: "levelUpForm"
+            },
+            React.createElement(
+                "h3",
+                { className: "accountExperience", name: "experience" },
+                "Experience: ",
+                props.account.experience
+            ),
+            React.createElement(
+                "h3",
+                { className: "accountExperienceNeeded", name: "experienceNeeded" },
+                "Experience Needed To Level Up: ",
+                experienceNeeded
+            ),
+            React.createElement("input", { type: "submit", name: "levelUp", value: "Level Up" }),
+            React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf })
         )
     );
 };
@@ -507,7 +539,7 @@ var loadPendingQuestsFromServer = function loadPendingQuestsFromServer() {
 };
 var loadAccountFromServer = function loadAccountFromServer() {
     sendAjax('GET', '/getAccount', null, function (data) {
-        ReactDOM.render(React.createElement(AccountData, { account: data.account }), document.querySelector("#accountData"));
+        ReactDOM.render(React.createElement(AccountData, { account: data.account, csrf: csrfToken }), document.querySelector("#accountData"));
         ReactDOM.render(React.createElement(ProfileBar, { account: data.account }), document.querySelector("#profileContent"));
     });
 };

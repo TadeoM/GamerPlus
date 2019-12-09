@@ -4,7 +4,7 @@ let experienceValue = 0;
 let url = null;
 const handleGetReward = (e) =>{
 e.preventDefault();
-sendAjax('POST', $("#dungeonForm").attr("action"), $("#dungeonForm").serialize(), redirect);
+sendAjax('POST', $("#dungeonForm").attr("action"), $("#dungeonForm").serialize());
 
 }
 const DungeonData = function(props) {
@@ -18,8 +18,8 @@ const DungeonData = function(props) {
         >
         <div>
             <img src="/assets/img/treasurechest.jpg" alt="Treasure" className="treasurechest"/>
-            <h3 className="dungeonGold">Gold Earned: {goldValue}</h3>
-            <h4 className="dungeonExperience">Experience Earned: {experienceValue}</h4>
+            <h3 className="dungeonGold" name="gold">Gold Earned: {goldValue}</h3>
+            <h4 className="dungeonExperience" name="experience">Experience Earned: {experienceValue}</h4>
             <input type="submit" name="getReward" value="Get Reward" />
             <input type="hidden" name="_csrf" value={props.csrf}/>
         </div>

@@ -161,6 +161,10 @@ const createStats = (request, response) => {
     updateAccount.wisdom = req.body.wisdom;
     updateAccount.charisma = req.body.charisma;
     
+    if (err) {
+      console.log(err);
+      return res.status(400).json({ error: 'An error occurred' });
+    }
 
     switch(req.body.profilePic) {
       case "slide1":
@@ -220,24 +224,62 @@ const getReward = (req, res) => {
       dungeonGold: req.body.gold,
     };
     console.log(req.session.account);
-    //req.session.account = Account.AccountModel.toAPI(updateAccount);
-    return Account.AccountModel.updateOne({ username: req.session.account.username },
-      { experience:dungeonData.dungeonExperience, gold:dungeonData.dungeonGold }, (error) => {           
-      if(error) {             
-          return res.status(400).json({error});           
+    parseInt(dungeonData.dungeonExperience);
+    parseInt(dungeonData.dungeonGold);
+    return Account.AccountModel.findByUsername(req.session.account.username, (err, doc) => {
+      const updateAccount = doc;
+
+      updateAccount.gold +=dungeonData.dungeonGold;
+      updateAccount.experience += dungeonData.dungeonExperience;
+      if (err) {
+        console.log(err);
+        return res.status(400).json({ error: 'An error occurred' });
       }
-      return res.json({message: "Successfully obtained reward"});         
+  
+      const savePromise = updateAccount.save();
+  
+      savePromise.then(() => {
+        req.session.account = Account.AccountModel.toAPI(updateAccount);
+  
+        return res.json({ redirect: '/maker' });
+      });
+  
+      savePromise.catch((error) => {
+        console.log(error);
+  
+        return res.status(400).json({ error: 'An error occured in getting the reward' });
+      });
     });
+ 
 };
 const LevelUp = (req,res)=>{
+  
   let newLevel = req.session.account.level;
-  newLevel+=1;
-  return Account.AccountModel.updateOne({ username: req.session.account.username },
-    { level:newLevel }, (error) => {           
-    if(error) {             
-        return res.status(400).json({error});           
+  if(req.body.experience>=req.body.experienceNeeded)
+  {
+    newLevel+=1;
+  }
+  return Account.AccountModel.findByUsername(req.session.account.username, (err, doc) => {
+    const updateAccount = doc;
+
+    updateAccount.level = newLevel;
+    if (err) {
+      console.log(err);
+      return res.status(400).json({ error: 'An error occurred' });
     }
-    return res.json({message: "Successfully Leveled Up"});         
+    const savePromise = updateAccount.save();
+  
+      savePromise.then(() => {
+        req.session.account = Account.AccountModel.toAPI(updateAccount);
+  
+        return res.json({ redirect: '/maker' });
+      });
+  
+      savePromise.catch((error) => {
+        console.log(error);
+  
+        return res.status(400).json({ error: 'An error occured in leveling up' });
+      });  
   });
 
 }

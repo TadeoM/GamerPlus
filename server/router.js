@@ -20,7 +20,7 @@ const router = (app) => {
     app.get('/getFriends', mid.requiresLogin, controllers.Friend.getFriends);
     app.post('/addFriend', mid.requiresLogin, controllers.Friend.addFriend);
 
-    app.get('/levelUp', mid.requiresLogin, controllers.Account.LevelUp);
+    app.post('/levelUp', mid.requiresLogin, controllers.Account.LevelUp);
     
     app.get('/getQuests', mid.requiresLogin, controllers.Quest.getQuests);
     app.get('/getGroupQuests', mid.requiresLogin, controllers.Quest.getGroupQuests)

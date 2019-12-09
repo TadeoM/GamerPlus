@@ -22,7 +22,7 @@
     "watchUploadBundle": "babel --watch ./client/fileUpload ./client/helper --presets react --out-file ./hosted/uploadBundle.js",
     "watchAppBundle": "babel --watch ./client/app ./client/helper --presets react --out-file ./hosted/bundle.js",
     "watchCreatorBundle": "babel --watch ./client/creation ./client/helper --presets react --out-file ./hosted/creationBundle.js",
-    "watchDungeonBundle":"babel --watch ./client/dungeon ./client/helper --presets react --out-file ./hosted/dungeonBundle.js",
+    "watchDungeonBundle": "babel --watch ./client/dungeon ./client/helper --presets react --out-file ./hosted/dungeonBundle.js",
     "nodemon": "nodemon --watch ./server ./server/app.js",
     "start": "node ./server/app.js",
     "pretest": "eslint ./server --fix",

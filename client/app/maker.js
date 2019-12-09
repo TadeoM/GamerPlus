@@ -5,7 +5,11 @@ let accountCharisma = 0;
 let accountWisdom = 0;
 
 let accountExperience = 0;
-let experienceToLevelup=1000;
+let experienceNeeded=1000;
+
+let levelUpJSON = {
+
+}
 const handleQuest = (e) =>{
     e.preventDefault();
 
@@ -71,7 +75,15 @@ const handleQuest = (e) =>{
     
     return false;
 };
+const levelUp = (e) =>{
+    e.preventDefault();
 
+    sendAjax('POST',$("#levelUpForm").attr("action"), $("#levelUpForm").serialize(), function(){
+        experienceNeeded = experienceNeeded*3;
+        
+    });
+
+}
 const completeQuest = (e) =>{
     e.preventDefault();
 }
@@ -256,6 +268,7 @@ const ProfileBar = function(props) {
     accountAthletics = props.account.athletics;
     accountWisdom = props.account.wisdom;
     accountCharisma = props.account.charisma;
+    accountExperience = props.account.experience;
     return (
         <div className="profileBox">
             <div> 
@@ -287,6 +300,17 @@ const AccountData = function(props) {
         <div>
             <img id="char" src={`/assets/img/${props.account.profilePic}`} alt="character"/>
             <h3 className="accountName"><b>User:</b> {props.account.username} </h3>
+            <form id="levelUpForm" name="levelUpForm"
+            onSubmit="levelUp"
+            action="/levelUp"
+            method="POST"
+            className="levelUpForm"
+            >
+            <h3 className="accountExperience" name="experience">Experience: {props.account.experience}</h3>
+            <h3 className="accountExperienceNeeded" name="experienceNeeded">Experience Needed To Level Up: {experienceNeeded}</h3>
+            <input type="submit" name="levelUp" value="Level Up" />
+            <input type="hidden" name="_csrf" value={props.csrf}/>
+            </form>
         </div>
     );
 };
@@ -325,7 +349,7 @@ const loadPendingQuestsFromServer = () =>{
 const loadAccountFromServer = () => {
     sendAjax('GET', '/getAccount', null, (data) =>{
         ReactDOM.render(
-            <AccountData account={data.account} />, document.querySelector("#accountData")
+            <AccountData account={data.account} csrf={csrfToken} />, document.querySelector("#accountData")
         );
         ReactDOM.render(
             <ProfileBar account={data.account} />, document.querySelector("#profileContent")

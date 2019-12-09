@@ -6,7 +6,7 @@ var experienceValue = 0;
 var url = null;
 var handleGetReward = function handleGetReward(e) {
     e.preventDefault();
-    sendAjax('POST', $("#dungeonForm").attr("action"), $("#dungeonForm").serialize(), redirect);
+    sendAjax('POST', $("#dungeonForm").attr("action"), $("#dungeonForm").serialize());
 };
 var DungeonData = function DungeonData(props) {
     return React.createElement(
@@ -26,13 +26,13 @@ var DungeonData = function DungeonData(props) {
                 React.createElement("img", { src: "/assets/img/treasurechest.jpg", alt: "Treasure", className: "treasurechest" }),
                 React.createElement(
                     "h3",
-                    { className: "dungeonGold" },
+                    { className: "dungeonGold", name: "gold" },
                     "Gold Earned: ",
                     goldValue
                 ),
                 React.createElement(
                     "h4",
-                    { className: "dungeonExperience" },
+                    { className: "dungeonExperience", name: "experience" },
                     "Experience Earned: ",
                     experienceValue
                 ),
