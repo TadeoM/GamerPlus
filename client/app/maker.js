@@ -28,8 +28,6 @@ const handleQuest = (e) =>{
     let a = document.querySelector('#questType');
     let questType = a.options[a.selectedIndex].text;
     let questContent = document.querySelector('.questContent').value;
-
-
     
     formData.append('questName', questName);
     formData.append('questExp', questExp);
@@ -248,7 +246,6 @@ const GroupList = function(props)
         return(
             <div className="groupList">
                 <h3 className="emptyGroup">No Groups Yet</h3>
-                {/* <a href="/groupPage" className="navButton" id="groupButton">Join More Groups</a> */}
                 <div className="button groupButtons">
                     <div className="btn btn-one">
                         <a href="/groupPage" className="navButton" id="groupButton">Join More Groups</a>
@@ -284,7 +281,6 @@ const GroupList = function(props)
                     <a href="/groupPage" className="navButton" id="groupButton">Join More Groups</a>
                 </div>
             </div>
-            {/* <a href="/groupPage" className="navButton" id="groupButton">Join More Groups</a> */}
         </div>
     );
 }
