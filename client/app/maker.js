@@ -306,8 +306,10 @@ const AccountData = function(props) {
             method="POST"
             className="levelUpForm"
             >
+            <h3 className="accountLevel" name="level">Level:{props.account.level}</h3>
             <h3 className="accountExperience" name="experience">Experience: {props.account.experience}</h3>
             <h3 className="accountExperienceNeeded" name="experienceNeeded">Experience Needed To Level Up: {experienceNeeded}</h3>
+ 
             <input type="submit" name="levelUp" value="Level Up" />
             <input type="hidden" name="_csrf" value={props.csrf}/>
             </form>

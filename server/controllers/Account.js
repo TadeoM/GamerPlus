@@ -258,7 +258,7 @@ const LevelUp = (req,res)=>{
   if(req.body.experience>=req.body.experienceNeeded)
   {
     newLevel+=1;
-  }
+  
   return Account.AccountModel.findByUsername(req.session.account.username, (err, doc) => {
     const updateAccount = doc;
 
@@ -281,7 +281,10 @@ const LevelUp = (req,res)=>{
         return res.status(400).json({ error: 'An error occured in leveling up' });
       });  
   });
-
+  }
+  else{
+    return res.status(400).json({error:"YOU DON'T HAVE ENOUGH EXP LOSER!"})
+  }
 }
 const getToken = (request, response) => {
   const req = request;

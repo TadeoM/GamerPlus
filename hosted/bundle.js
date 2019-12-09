@@ -491,6 +491,12 @@ var AccountData = function AccountData(props) {
             },
             React.createElement(
                 "h3",
+                { className: "accountLevel", name: "level" },
+                "Level:",
+                props.account.level
+            ),
+            React.createElement(
+                "h3",
                 { className: "accountExperience", name: "experience" },
                 "Experience: ",
                 props.account.experience

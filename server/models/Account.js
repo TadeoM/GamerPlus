@@ -74,6 +74,7 @@ AccountSchema.statics.toAPI = doc => ({
   experience:doc.experience,
   gold:doc.gold,
   gem:doc.gem,
+  level:doc.level,
   friendList: doc.friendList,
   profilePic: doc.profilePic,
   _id: doc._id,
