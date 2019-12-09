@@ -4,6 +4,8 @@ let accountAthletics = 0;
 let accountCharisma = 0;
 let accountWisdom = 0;
 
+let accountExperience = 0;
+let experienceToLevelup=1000;
 const handleQuest = (e) =>{
     e.preventDefault();
 
@@ -270,6 +272,10 @@ const ProfileBar = function(props) {
                     <h3 className="accountAthletics"><b>Athletics:</b> {props.account.athletics}</h3>
                     <h3 className="accountWisdom"><b>Wisdom:</b> {props.account.wisdom}</h3>
                     <h3 className="accountCharisma"><b>Charisma:</b> {props.account.charisma}</h3>
+                    <h3 className="accountGold"><b>Gold:</b> {props.account.gold}</h3>
+                    <h3 className="accountExperience"><b>Experience:</b> {props.account.experience}</h3>
+                    <h3 className="accountGem"><b>Gem:</b> {props.account.gem}</h3>
+                    <h3 className="accountLevel"><b>Level:</b> {props.account.level}</h3>
                 </span>
             </h3>
         </div>
@@ -307,8 +313,6 @@ const loadQuestsFromServer = () =>{
             }
         });
     });
-    console.log(quests)
-    console.log(quests.length)
     
 };
 const loadPendingQuestsFromServer = () =>{
@@ -328,40 +332,36 @@ const loadAccountFromServer = () => {
         );
     });
 };
-const goToDungeon = ()=>
+
+const SetUpDungeon = ()=>
 {
     const dungeonBtn = document.querySelector("#goToDungeonButton");
 
     if(accountAthletics>accountCharisma&& accountAthletics>accountWisdom)
     {
-        dungeonBtn.href = "views/dungeons/AthleticChar.html";
+        dungeonBtn.href = "assets/dungeons/AthleticChar.html";
     }
     else if(accountCharisma>accountAthletics && accountCharisma>accountWisdom)
     {
-        dungeonBtn.href = "views/dungeons/CharismaticChar.html";
+        dungeonBtn.href = "assets/dungeons/CharismaticChar.html";
     }
     else if(accountWisdom>accountAthletics && accountWisdom>accountCharisma)
     {
-        dungeonBtn.href = "views/dungeons/WisdomChar.html";
+        dungeonBtn.href = "assets/dungeons/WisdomChar.html";
     }
     else
     {
-        dungeonBtn.href = "views/dungeons/WisdomChar.html";
+        dungeonBtn.href = "assets/dungeons/WisdomChar.html";
     }
 
 
 }
+
 const setup = function(csrf) {
     const changePswdBtn = document.querySelector("#changePswdBtn");
     changePswdBtn.addEventListener("click", (e) => {
         e.preventDefault();
         createChangePasswordForm(csrf);
-        return false;
-    });
-    const dungeonBtn = document.querySelector("#goToDungeonButton");
-    dungeonBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        goToDungeon();
         return false;
     });
     ReactDOM.render(
@@ -388,5 +388,7 @@ const getToken = () => {
 
 $(document).ready(function() {
     getToken();
+    SetUpDungeon();
+    
 });
 

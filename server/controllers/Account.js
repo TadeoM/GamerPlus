@@ -214,7 +214,33 @@ const createStats = (request, response) => {
     });
   });
 };
+const getReward = (req, res) => {
+  const dungeonData = {
+      dungeonExperience: req.body.experience,
+      dungeonGold: req.body.gold,
+    };
+    console.log(req.session.account);
+    //req.session.account = Account.AccountModel.toAPI(updateAccount);
+    return Account.AccountModel.updateOne({ username: req.session.account.username },
+      { experience:dungeonData.dungeonExperience, gold:dungeonData.dungeonGold }, (error) => {           
+      if(error) {             
+          return res.status(400).json({error});           
+      }
+      return res.json({message: "Successfully obtained reward"});         
+    });
+};
+const LevelUp = (req,res)=>{
+  let newLevel = req.session.account.level;
+  newLevel+=1;
+  return Account.AccountModel.updateOne({ username: req.session.account.username },
+    { level:newLevel }, (error) => {           
+    if(error) {             
+        return res.status(400).json({error});           
+    }
+    return res.json({message: "Successfully Leveled Up"});         
+  });
 
+}
 const getToken = (request, response) => {
   const req = request;
   const res = response;
@@ -235,3 +261,5 @@ module.exports.getAccount = getAccount;
 module.exports.creatorPage = creatorPage;
 module.exports.createStats = createStats;
 module.exports.changePassword = changePassword;
+module.exports.getReward = getReward;
+module.exports.LevelUp = LevelUp;

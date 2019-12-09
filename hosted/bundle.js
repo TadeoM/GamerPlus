@@ -6,6 +6,8 @@ var accountAthletics = 0;
 var accountCharisma = 0;
 var accountWisdom = 0;
 
+var accountExperience = 0;
+var experienceToLevelup = 1000;
 var handleQuest = function handleQuest(e) {
     e.preventDefault();
 
@@ -403,6 +405,50 @@ var ProfileBar = function ProfileBar(props) {
                     ),
                     " ",
                     props.account.charisma
+                ),
+                React.createElement(
+                    "h3",
+                    { className: "accountGold" },
+                    React.createElement(
+                        "b",
+                        null,
+                        "Gold:"
+                    ),
+                    " ",
+                    props.account.gold
+                ),
+                React.createElement(
+                    "h3",
+                    { className: "accountExperience" },
+                    React.createElement(
+                        "b",
+                        null,
+                        "Experience:"
+                    ),
+                    " ",
+                    props.account.experience
+                ),
+                React.createElement(
+                    "h3",
+                    { className: "accountGem" },
+                    React.createElement(
+                        "b",
+                        null,
+                        "Gem:"
+                    ),
+                    " ",
+                    props.account.gem
+                ),
+                React.createElement(
+                    "h3",
+                    { className: "accountLevel" },
+                    React.createElement(
+                        "b",
+                        null,
+                        "Level:"
+                    ),
+                    " ",
+                    props.account.level
                 )
             )
         )
@@ -453,8 +499,6 @@ var loadQuestsFromServer = function loadQuestsFromServer() {
             }
         });
     });
-    console.log(quests);
-    console.log(quests.length);
 };
 var loadPendingQuestsFromServer = function loadPendingQuestsFromServer() {
     sendAjax('GET', '/getPendingQuests', null, function (data) {
@@ -467,30 +511,26 @@ var loadAccountFromServer = function loadAccountFromServer() {
         ReactDOM.render(React.createElement(ProfileBar, { account: data.account }), document.querySelector("#profileContent"));
     });
 };
-var goToDungeon = function goToDungeon() {
+
+var SetUpDungeon = function SetUpDungeon() {
     var dungeonBtn = document.querySelector("#goToDungeonButton");
 
     if (accountAthletics > accountCharisma && accountAthletics > accountWisdom) {
-        dungeonBtn.href = "views/dungeons/AthleticChar.html";
+        dungeonBtn.href = "assets/dungeons/AthleticChar.html";
     } else if (accountCharisma > accountAthletics && accountCharisma > accountWisdom) {
-        dungeonBtn.href = "views/dungeons/CharismaticChar.html";
+        dungeonBtn.href = "assets/dungeons/CharismaticChar.html";
     } else if (accountWisdom > accountAthletics && accountWisdom > accountCharisma) {
-        dungeonBtn.href = "views/dungeons/WisdomChar.html";
+        dungeonBtn.href = "assets/dungeons/WisdomChar.html";
     } else {
-        dungeonBtn.href = "views/dungeons/WisdomChar.html";
+        dungeonBtn.href = "assets/dungeons/WisdomChar.html";
     }
 };
+
 var setup = function setup(csrf) {
     var changePswdBtn = document.querySelector("#changePswdBtn");
     changePswdBtn.addEventListener("click", function (e) {
         e.preventDefault();
         createChangePasswordForm(csrf);
-        return false;
-    });
-    var dungeonBtn = document.querySelector("#goToDungeonButton");
-    dungeonBtn.addEventListener("click", function (e) {
-        e.preventDefault();
-        goToDungeon();
         return false;
     });
     ReactDOM.render(React.createElement(QuestForm, { csrf: csrf }), document.querySelector("#makeQuest"));
@@ -515,6 +555,7 @@ var getToken = function getToken() {
 
 $(document).ready(function () {
     getToken();
+    SetUpDungeon();
 });
 "use strict";
 

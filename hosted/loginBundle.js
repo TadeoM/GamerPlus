@@ -6,7 +6,7 @@ var handleLogin = function handleLogin(e) {
     $("#messageArea").animate({ width: 'hide' }, 0);
 
     if ($("#user").val() == '' || $("#pass").val() == '') {
-        handleError("RAWR! Username or password is empty");
+        handleError("Yo! Username or password is empty");
         return false;
     }
 
@@ -23,12 +23,12 @@ var handleSignup = function handleSignup(e) {
     $("#domoMessage").animate({ width: 'hide' }, 0);
 
     if ($("#user").val() == '' || $("#pass").val() == '' || $("#pass2").val() == '') {
-        handleError("RAWR! All fields are required");
+        handleError("Yo! All fields are required");
         return false;
     }
 
     if ($("#pass").val() !== $("#pass2").val()) {
-        handleError("RAWR! Passwords do not match");
+        handleError("Yo! Passwords do not match");
         return false;
     }
 

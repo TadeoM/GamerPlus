@@ -20,6 +20,7 @@ const router = (app) => {
     app.get('/getFriends', mid.requiresLogin, controllers.Friend.getFriends);
     app.post('/addFriend', mid.requiresLogin, controllers.Friend.addFriend);
 
+    app.get('/levelUp', mid.requiresLogin, controllers.Account.LevelUp);
     
     app.get('/getQuests', mid.requiresLogin, controllers.Quest.getQuests);
     app.get('/getGroupQuests', mid.requiresLogin, controllers.Quest.getGroupQuests)
@@ -39,7 +40,7 @@ const router = (app) => {
 
     //Dungeons
     app.get('/dungeonComplete', mid.requiresLogin, controllers.Dungeon.dungeonComplete);
-    app.post('/getReward', mid.requiresLogin, controllers.Dungeon.getReward);
+    app.post('/getReward', mid.requiresLogin, controllers.Account.getReward);
 
     app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
 };

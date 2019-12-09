@@ -1,43 +1,110 @@
 "use strict";
 
 var csrfToken = null;
+var goldValue = 0;
+var experienceValue = 0;
+var url = null;
 var handleGetReward = function handleGetReward(e) {
     e.preventDefault();
-    sendAjax('POST', $("#loginForm").attr("action"), $("#loginForm").serialize(), redirect);
+    sendAjax('POST', $("#dungeonForm").attr("action"), $("#dungeonForm").serialize(), redirect);
 };
-var getReward = function getReward() {};
-var loadInfoFromDungeon = function loadInfoFromDungeon(e) {};
 var DungeonData = function DungeonData(props) {
     return React.createElement(
         "div",
         null,
-        React.createElement("img", { id: "char", src: "/assets/img/" + props.account.profilePic, alt: "character" }),
         React.createElement(
-            "h3",
-            { className: "accountName" },
+            "form",
+            { id: "dungeonForm", name: "dungeonForm",
+                onSubmit: handleGetReward,
+                action: "/getReward",
+                method: "POST",
+                className: "dungeonForm"
+            },
             React.createElement(
-                "b",
+                "div",
                 null,
-                "User:"
-            ),
-            " ",
-            props.account.username,
-            " "
+                React.createElement("img", { src: "/assets/img/treasurechest.jpg", alt: "Treasure", className: "treasurechest" }),
+                React.createElement(
+                    "h3",
+                    { className: "dungeonGold" },
+                    "Gold Earned: ",
+                    goldValue
+                ),
+                React.createElement(
+                    "h4",
+                    { className: "dungeonExperience" },
+                    "Experience Earned: ",
+                    experienceValue
+                ),
+                React.createElement("input", { type: "submit", name: "getReward", value: "Get Reward" }),
+                React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf })
+            )
         )
     );
 };
+/*
+const ProfileBar = function(props) {
 
+    accountAthletics = props.account.athletics;
+    accountWisdom = props.account.wisdom;
+    accountCharisma = props.account.charisma;
+    return (
+        <div className="profileBox">
+            <div> 
+                <img id="char" src={`/assets/img/${props.account.profilePic}`} alt="character"/>
+                <div className="button" id="profileBar">
+                    <div className="btn btn-one">
+                        <a href="/profile">To Profile</a>
+                    </div>
+                </div>
+            </div>
+            <h3>
+                <span id="profileStats">
+                    <h3 className="accountName"><b>User:</b> {props.account.username} </h3>
+                    <h3 className="accountAthletics"><b>Athletics:</b> {props.account.athletics}</h3>
+                    <h3 className="accountWisdom"><b>Wisdom:</b> {props.account.wisdom}</h3>
+                    <h3 className="accountCharisma"><b>Charisma:</b> {props.account.charisma}</h3>
+                    <h3 className="accountGold"><b>Gold:</b> {props.account.gold}</h3>
+                    <h3 className="accountExperience"><b>Experience:</b> {props.account.experience}</h3>
+                    <h3 className="accountGem"><b>Gem:</b> {props.account.gem}</h3>
+                    <h3 className="accountLevel"><b>Level:</b> {props.account.level}</h3>
+                </span>
+            </h3>
+        </div>
+    );
+};
+const AccountData = function(props) {
+    return (
+        <div>
+            <img id="char" src={`/assets/img/${props.account.profilePic}`} alt="character"/>
+            <h3 className="accountName"><b>User:</b> {props.account.username} </h3>
+        </div>
+    );
+};
+*/
+var getUrlInfo = function getUrlInfo() {
+    url = new URL(window.location.href);
+    goldValue = url.searchParams.get("gold");
+    experienceValue = url.searchParams.get("experience");
+    console.log(url);
+};
+/*
+const loadAccountFromServer = () => {
+    sendAjax('GET', '/getAccount', null, (data) =>{
+        ReactDOM.render(
+            <AccountData account={data.account} />, document.querySelector("#accountData")
+        );
+        ReactDOM.render(
+            <ProfileBar account={data.account} />, document.querySelector("#profileContent")
+        );
+    });
+};
+*/
 var setup = function setup(csrf) {
     var changePswdBtn = document.querySelector("#changePswdBtn");
     changePswdBtn.addEventListener("click", function (e) {
         e.preventDefault();
         createChangePasswordForm(csrf);
-        return false;
-    });
-    var getRewardButton = document.querySelector("#getReward");
-    getRewardButton.addEventListener("click", function (e) {
-        e.preventDefault();
-        getReward();
         return false;
     });
     ReactDOM.render(React.createElement(DungeonData, { csrf: csrf }), document.querySelector("#dungeonInfo"));
@@ -48,8 +115,8 @@ var setup = function setup(csrf) {
         showProfile();
         return false;
     });
-    loadAccountFromServer();
-    $("#profileContent").animate({ width: 'hide' }, 0);
+    //loadAccountFromServer();
+    //$("#profileContent").animate({ width:'hide'}, 0);
 };
 var getToken = function getToken() {
     sendAjax('GET', '/getToken', null, function (result) {
@@ -59,6 +126,8 @@ var getToken = function getToken() {
 };
 $(document).ready(function () {
     getToken();
+    getUrlInfo();
+    setup();
 });
 "use strict";
 

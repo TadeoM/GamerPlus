@@ -5,7 +5,7 @@ var handleFriend = function handleFriend(e) {
 
     $("#domoMessage").animate({ width: 'hide' }, 350);
 
-    if ($("#domoName").val() == '' || $("#domoAge").val() == '') {
+    if ($("#friendName").val() == '') {
         handleError("RAWR! All fields are required");
         return false;
     }
@@ -30,10 +30,10 @@ var FriendForm = function FriendForm(props) {
         },
         React.createElement(
             "label",
-            { htmlFor: "name" },
-            "Name: "
+            { htmlFor: "friendName" },
+            "Friend Name: "
         ),
-        React.createElement("input", { id: "friendName", type: "text", name: "name", placeholder: "Friend Name" }),
+        React.createElement("input", { id: "friendName", type: "text", name: "friendName", placeholder: "Friend Name" }),
         React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
         React.createElement("input", { className: "makeFriendSubmit", type: "submit", value: "Add Friend" })
     );
@@ -63,7 +63,7 @@ var FriendList = function FriendList(props) {
         return React.createElement(
             "div",
             { key: friend.user, className: "friend" },
-            React.createElement("img", { src: "/assets/img/domoface.jpeg", alt: "friend face", className: "friendFace" }),
+            React.createElement("img", { src: "/assets/img/gamifyLife.png", alt: "friend face", className: "friendFace" }),
             React.createElement(
                 "h3",
                 { className: "friendName" },
@@ -86,7 +86,7 @@ var AccountData = function AccountData(props) {
     return React.createElement(
         "div",
         null,
-        React.createElement("img", { id: "char", src: "/assets/img/" + props.account.profilePic, alt: "character" }),
+        React.createElement("img", { id: "char", src: "/retrieve?name=" + props.account.profilePic, alt: "character" }),
         React.createElement(
             "h3",
             { className: "accountName" },
@@ -131,6 +131,39 @@ var AccountData = function AccountData(props) {
             ),
             " ",
             props.account.charisma
+        ),
+        React.createElement(
+            "h3",
+            { className: "accountExperience" },
+            React.createElement(
+                "b",
+                null,
+                "Experience:"
+            ),
+            " ",
+            props.account.experience
+        ),
+        React.createElement(
+            "h3",
+            { className: "accountGold" },
+            React.createElement(
+                "b",
+                null,
+                "Gold:"
+            ),
+            " ",
+            props.account.gold
+        ),
+        React.createElement(
+            "h3",
+            { className: "accountGem" },
+            React.createElement(
+                "b",
+                null,
+                "Gems:"
+            ),
+            " ",
+            props.account.gem
         )
     );
 };
