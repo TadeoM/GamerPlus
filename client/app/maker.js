@@ -87,46 +87,7 @@ const deleteQuest = (e) =>{
     
 }
 
-const changePassword = (e) =>{
-    e.preventDefault();
 
-    console.log($("#curQuestForm").serialize());
-    sendAjax('POST',$("#changePswdForm").attr("action"), $("#changePswdForm").serialize());
-}
-
-const showProfile = (e) => {
-    showProfile("PROFILE");
-}
-
-const ChangePasswordForm = (props)=>{
-    return (
-        <form id="changePswdForm" 
-            name="changePswdForm"
-            onSubmit={changePassword}
-            action="/changePswd"
-            method="POST"
-            className="mainForm"
-        >
-             <label htmlFor="username">Username: </label>
-            <input id="user" type="text" name="username" placeholder="username"/>
-            <label htmlFor="currPass">Current Password: </label>
-            <input id="currPass" type="password" name="currPass" placeholder="password"/>
-            <label htmlFor="pass">New Password: </label>
-            <input id="pass" type="password" name="pass" placeholder="password"/>
-            <input id="pass2" type="password" name="pass2" placeholder="password"/>
-            <input type="hidden" name="_csrf" value={props.csrf}/>
-            <input className="formSubmit" type="submit" value="Confirm Password Change"/>
-
-        </form>
-    ); 
-};
-
-const createChangePasswordForm =(csrf) => {
-    ReactDOM.render(
-        <ChangePasswordForm csrf={csrf} />,
-        document.querySelector("#pswdChange")
-    );
-};
 
 const QuestForm = (props) =>{
     return(
@@ -287,6 +248,7 @@ const GroupList = function(props)
         return(
             <div className="groupList">
                 <h3 className="emptyGroup">No Groups Yet</h3>
+                {/* <a href="/groupPage" className="navButton" id="groupButton">Join More Groups</a> */}
                 <div className="button groupButtons">
                     <div className="btn btn-one">
                         <a href="/groupPage" className="navButton" id="groupButton">Join More Groups</a>
@@ -306,7 +268,7 @@ const GroupList = function(props)
                     <h3 className="groupName">Name: {group.groupName}</h3>
                     <div className="button groupButtons">
                         <div className="btn btn-one">
-                            <a name={`${group.groupName}`} onClick={() => gotToGroup(group.groupName)}>Group Page Link</a>
+                        <a href={`/groupPage?group=${group.groupName}`} name={`${group.groupName}`}>Group Page Link</a>
                         </div>
                     </div>
                     <input type="hidden" name="_csrf" value={props.csrf}/>
@@ -322,17 +284,12 @@ const GroupList = function(props)
                     <a href="/groupPage" className="navButton" id="groupButton">Join More Groups</a>
                 </div>
             </div>
+            {/* <a href="/groupPage" className="navButton" id="groupButton">Join More Groups</a> */}
         </div>
     );
 }
 
-const gotToGroup = (props) =>{
-    sendAjax('GET', '/groupPage', null, (data) =>{
-        ReactDOM.render(
-            <GroupList groups ={data.groups} csrf = {csrfToken} />, document.querySelector("#groups")
-        );
-    });
-};
+
 
 const loadGroupsFromServer = () =>{
     sendAjax('GET', '/getGroups', null, (data) =>{
@@ -387,12 +344,7 @@ const loadAccountFromServer = () => {
 };
 
 const setup = function(csrf) {
-    const changePswdBtn = document.querySelector("#changePswdBtn");
-    changePswdBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        createChangePasswordForm(csrf);
-        return false;
-    });
+    
     loadGroupsFromServer();
     ReactDOM.render(
         <QuestForm csrf ={csrf}/>, document.querySelector("#makeQuest")

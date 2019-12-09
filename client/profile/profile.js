@@ -73,7 +73,7 @@ const AccountData = function(props) {
     return (
         
         <div>
-            <img id="char" src={`/retrieve?name=${props.account.profilePic}`} alt="character"/>
+            <img id="char" src={`/assets/img/${props.account.profilePic}`} alt="character"/>
             <h3 className="accountName"><b>User:</b> {props.account.username} </h3>
             <h3 className="accountAthletics"><b>Athletics:</b> {props.account.athletics}</h3>
             <h3 className="accountWisdom"><b>Wisdom:</b> {props.account.wisdom}</h3>
@@ -90,8 +90,54 @@ const loadAccountFromServer = () => {
     });
 };
 
-const setup = function(csrf) {
+const changePassword = (e) =>{
+    e.preventDefault();
 
+    console.log($("#curQuestForm").serialize());
+    sendAjax('POST',$("#changePswdForm").attr("action"), $("#changePswdForm").serialize());}
+
+const showProfile = (e) => {
+    showProfile("PROFILE");
+}
+
+const ChangePasswordForm = (props)=>{
+    return (
+        <form id="changePswdForm" 
+            name="changePswdForm"
+            onSubmit={changePassword}
+            action="/changePswd"
+            method="POST"
+            className="mainForm"
+        >
+             <label htmlFor="username">Username: </label>
+            <input id="user" type="text" name="username" placeholder="username"/>
+            <label htmlFor="currPass">Current Password: </label>
+            <input id="currPass" type="password" name="currPass" placeholder="password"/>
+            <label htmlFor="pass">New Password: </label>
+            <input id="pass" type="password" name="pass" placeholder="password"/>
+            <input id="pass2" type="password" name="pass2" placeholder="password"/>
+            <input type="hidden" name="_csrf" value={props.csrf}/>
+            <input className="formSubmit" type="submit" value="Confirm Password Change"/>
+
+        </form>
+    ); 
+};
+
+const createChangePasswordForm =(csrf) => {
+    ReactDOM.render(
+        <ChangePasswordForm csrf={csrf} />,
+        document.querySelector("#pswdChange")
+    );
+};
+
+const setup = function(csrf) {
+    const changePswdBtn = document.querySelector("#changePswdBtn");
+    createChangePasswordForm(csrf);
+    changePswdBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        
+        return false;
+    });
     ReactDOM.render(
         <FriendForm csrf={csrf} />, document.querySelector("#addFriend")
     );

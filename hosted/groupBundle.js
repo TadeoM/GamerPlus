@@ -120,7 +120,12 @@ var GroupForm = function GroupForm(props) {
         ),
         React.createElement("input", { id: "groupMember", type: "text", name: "newMember", placeholder: "New Member" }),
         React.createElement("input", { type: "hidden", name: "_csrf", value: csrfToken }),
-        React.createElement("input", { className: "makeGroupSubmit", type: "submit", value: "Make Group" })
+        React.createElement("input", { className: "makeGroupSubmit", type: "submit", value: "Make Group" }),
+        React.createElement(
+            "a",
+            { href: "/groupPage", className: "navButton", id: "groupButton" },
+            "Join More Groups"
+        )
     );
 };
 
@@ -344,16 +349,21 @@ var loadGroupsFromServer = function loadGroupsFromServer() {
 };
 
 var setup = function setup(csrf) {
+    var urlParams = new URLSearchParams(window.location.search);
+    var hasGroup = urlParams.has('group');
+    var groupToShow = urlParams.get('group'); // "edit"
     ReactDOM.render(React.createElement(GroupForm, { csrf: csrf }), document.querySelector("#groupCreation"));
-
-    loadGroupsFromServer();
+    if (hasGroup) {
+        showGroup(groupToShow);
+    } else {
+        loadGroupsFromServer();
+    }
 };
 
 var getToken = function getToken() {
     sendAjax('GET', '/getToken', null, function (result) {
         setup(result.csrfToken);
         csrfToken = result.csrfToken;
-        console.log(result.groups);
     });
 };
 

@@ -74,55 +74,6 @@ var deleteQuest = function deleteQuest(e) {
     });
 };
 
-var changePassword = function changePassword(e) {
-    e.preventDefault();
-
-    console.log($("#curQuestForm").serialize());
-    sendAjax('POST', $("#changePswdForm").attr("action"), $("#changePswdForm").serialize());
-};
-
-var showProfile = function showProfile(e) {
-    showProfile("PROFILE");
-};
-
-var ChangePasswordForm = function ChangePasswordForm(props) {
-    return React.createElement(
-        "form",
-        { id: "changePswdForm",
-            name: "changePswdForm",
-            onSubmit: changePassword,
-            action: "/changePswd",
-            method: "POST",
-            className: "mainForm"
-        },
-        React.createElement(
-            "label",
-            { htmlFor: "username" },
-            "Username: "
-        ),
-        React.createElement("input", { id: "user", type: "text", name: "username", placeholder: "username" }),
-        React.createElement(
-            "label",
-            { htmlFor: "currPass" },
-            "Current Password: "
-        ),
-        React.createElement("input", { id: "currPass", type: "password", name: "currPass", placeholder: "password" }),
-        React.createElement(
-            "label",
-            { htmlFor: "pass" },
-            "New Password: "
-        ),
-        React.createElement("input", { id: "pass", type: "password", name: "pass", placeholder: "password" }),
-        React.createElement("input", { id: "pass2", type: "password", name: "pass2", placeholder: "password" }),
-        React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
-        React.createElement("input", { className: "formSubmit", type: "submit", value: "Confirm Password Change" })
-    );
-};
-
-var createChangePasswordForm = function createChangePasswordForm(csrf) {
-    ReactDOM.render(React.createElement(ChangePasswordForm, { csrf: csrf }), document.querySelector("#pswdChange"));
-};
-
 var QuestForm = function QuestForm(props) {
     return React.createElement(
         "form",
@@ -471,9 +422,7 @@ var GroupList = function GroupList(props) {
                         { className: "btn btn-one" },
                         React.createElement(
                             "a",
-                            { name: "" + group.groupName, onClick: function onClick() {
-                                    return gotToGroup(group.groupName);
-                                } },
+                            { href: "/groupPage?group=" + group.groupName, name: "" + group.groupName },
                             "Group Page Link"
                         )
                     )
@@ -500,12 +449,6 @@ var GroupList = function GroupList(props) {
             )
         )
     );
-};
-
-var gotToGroup = function gotToGroup(props) {
-    sendAjax('GET', '/groupPage', null, function (data) {
-        ReactDOM.render(React.createElement(GroupList, { groups: data.groups, csrf: csrfToken }), document.querySelector("#groups"));
-    });
 };
 
 var loadGroupsFromServer = function loadGroupsFromServer() {
@@ -554,12 +497,7 @@ var loadAccountFromServer = function loadAccountFromServer() {
 };
 
 var setup = function setup(csrf) {
-    var changePswdBtn = document.querySelector("#changePswdBtn");
-    changePswdBtn.addEventListener("click", function (e) {
-        e.preventDefault();
-        createChangePasswordForm(csrf);
-        return false;
-    });
+
     loadGroupsFromServer();
     ReactDOM.render(React.createElement(QuestForm, { csrf: csrf }), document.querySelector("#makeQuest"));
     loadQuestsFromServer();

@@ -119,6 +119,7 @@ const GroupForm = (props) =>{
             <input id="groupMember" type="text" name="newMember" placeholder ="New Member"/>
             <input type="hidden" name="_csrf" value={csrfToken}/>
             <input className ="makeGroupSubmit" type="submit" value ="Make Group"/>
+            <a href="/groupPage" className="navButton" id="groupButton">All Groups</a>
         </form>
     );
 };
@@ -274,18 +275,26 @@ const loadGroupsFromServer = () =>{
 };
 
 const setup = function(csrf) {
+    var urlParams = new URLSearchParams(window.location.search);
+    const hasGroup = urlParams.has('group'); 
+    const groupToShow = urlParams.get('group'); // "edit"
     ReactDOM.render(
         <GroupForm csrf ={csrf}/>, document.querySelector("#groupCreation")
     );
+    if(hasGroup) {
+        showGroup(groupToShow);
+    }
+    else {    
+        loadGroupsFromServer();
+    }
 
-    loadGroupsFromServer();
+    
 };
 
 const getToken = () => {
     sendAjax('GET', '/getToken', null, (result) => {
         setup(result.csrfToken);
         csrfToken = result.csrfToken;
-        console.log(result.groups)
     });
 };
 

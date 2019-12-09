@@ -219,7 +219,8 @@ const getToken = (request, response) => {
   const req = request;
   const res = response;
 
-  console.log(req);
+  console.log("See it's empty")
+  console.log(req.groups);
   const csrfJSON = {
     csrfToken: req.csrfToken(),
   };

@@ -11,9 +11,7 @@ const groupPage = (req, res) => {
             return res.status(400).json({ error: 'An error occurred' });
         }
         
-        res.render('group', { csrfToken: req.csrfToken(), groups: docs });
-        getOneGroup(req,res);
-        return;
+        return res.render('group', { csrfToken: req.csrfToken(), groups: docs });
     });
 };
 

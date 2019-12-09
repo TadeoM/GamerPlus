@@ -51,6 +51,7 @@ nav{
     display: grid;
     grid-template-columns: 1fr 2fr;
 }
+
 .box{
     margin-top: 5%;
     width: 100%;
@@ -81,15 +82,14 @@ section {
     grid-column-start: 2;
     margin: 10px;
 }
+.col-3 {
+    grid-column-start: 3;
+    margin-left: 10px;
+}
 
 .border {
     border-right: 1px solid lightgray; 
     border-left: 1px solid lightgray; 
-}
-
-.col-3 {
-    grid-column-start: 3;
-    margin-left: 10px;
 }
 
 .quest {
@@ -98,7 +98,6 @@ section {
 
 #accountData {
     margin-right: 10px;
-    
 }
 #accountData img {
     background-color: #ECF6FE;
@@ -108,7 +107,6 @@ section {
 }
 
 .profileBox {
-    
     margin-top: 5%;
     width: 100%;
     display: grid;
@@ -304,7 +302,7 @@ section {
 }
 
 div[class*=button] {
-    height: 33.33%;
+    height: 50px;
     width: 10%; 
     display: flex;
     justify-content: center;
@@ -412,62 +410,60 @@ div[class*=button] {
 .stats ul{
     list-style-type:none;
 }
+h1 {
+  margin: 0 0 0.25em;
+}
+/* Reset Select */
+select {
+  appearance: none;
+  outline: 0;
+  box-shadow: none;
+  border: 0 !important;
+  background: #A8273A;
+  background-image: none;
+}
+/* Remove IE arrow */
+select::-ms-expand {
+  display: none;
+}
+/* Custom Select */
+.select {
+  position: relative;
+  display: flex;
+  width: 20em;
+  height: 3em;
+  line-height: 3;
+  background: #A8273A;
+  overflow: hidden;
+  border-radius: .25em;
+}
+select {
+  flex: 1;
+  padding: 0 .5em;
+  color: #fff;
+  cursor: pointer;
+}
+/* Arrow */
+.select::after {
+  content: '\25BC';
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0 1em;
+  background: #CF3047;
+  cursor: pointer;
+  pointer-events: none;
+  -webkit-transition: .25s all ease;
+  -o-transition: .25s all ease;
+  transition: .25s all ease;
+}
+/* Transition */
+.select:hover::after {
+  color: #691824;
+}
 
-
-  h1 {
-    margin: 0 0 0.25em;
-  }
-  /* Reset Select */
-  select {
-    appearance: none;
-    outline: 0;
-    box-shadow: none;
-    border: 0 !important;
-    background: #A8273A;
-    background-image: none;
-  }
-  /* Remove IE arrow */
-  select::-ms-expand {
-    display: none;
-  }
-  /* Custom Select */
-  .select {
-    position: relative;
-    display: flex;
-    width: 20em;
-    height: 3em;
-    line-height: 3;
-    background: #A8273A;
-    overflow: hidden;
-    border-radius: .25em;
-  }
-  select {
-    flex: 1;
-    padding: 0 .5em;
-    color: #fff;
-    cursor: pointer;
-  }
-  /* Arrow */
-  .select::after {
-    content: '\25BC';
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding: 0 1em;
-    background: #CF3047;
-    cursor: pointer;
-    pointer-events: none;
-    -webkit-transition: .25s all ease;
-    -o-transition: .25s all ease;
-    transition: .25s all ease;
-  }
-  /* Transition */
-  .select:hover::after {
-    color: #691824;
-  }
-  
-  .slider__contents img {
-    width: 300px;
+.slider__contents img {
+  width: 300px;
 }
 
 .slider {

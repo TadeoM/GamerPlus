@@ -30,10 +30,10 @@ var FriendForm = function FriendForm(props) {
         },
         React.createElement(
             "label",
-            { htmlFor: "name" },
-            "Name: "
+            { htmlFor: "friendName" },
+            "Friend Name: "
         ),
-        React.createElement("input", { id: "friendName", type: "text", name: "name", placeholder: "Friend Name" }),
+        React.createElement("input", { id: "friendName", type: "text", name: "friendName", placeholder: "Friend Name" }),
         React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
         React.createElement("input", { className: "makeFriendSubmit", type: "submit", value: "Add Friend" })
     );
@@ -141,8 +141,62 @@ var loadAccountFromServer = function loadAccountFromServer() {
     });
 };
 
-var setup = function setup(csrf) {
+var changePassword = function changePassword(e) {
+    e.preventDefault();
 
+    console.log($("#curQuestForm").serialize());
+    sendAjax('POST', $("#changePswdForm").attr("action"), $("#changePswdForm").serialize());
+};
+
+var showProfile = function showProfile(e) {
+    showProfile("PROFILE");
+};
+
+var ChangePasswordForm = function ChangePasswordForm(props) {
+    return React.createElement(
+        "form",
+        { id: "changePswdForm",
+            name: "changePswdForm",
+            onSubmit: changePassword,
+            action: "/changePswd",
+            method: "POST",
+            className: "mainForm"
+        },
+        React.createElement(
+            "label",
+            { htmlFor: "username" },
+            "Username: "
+        ),
+        React.createElement("input", { id: "user", type: "text", name: "username", placeholder: "username" }),
+        React.createElement(
+            "label",
+            { htmlFor: "currPass" },
+            "Current Password: "
+        ),
+        React.createElement("input", { id: "currPass", type: "password", name: "currPass", placeholder: "password" }),
+        React.createElement(
+            "label",
+            { htmlFor: "pass" },
+            "New Password: "
+        ),
+        React.createElement("input", { id: "pass", type: "password", name: "pass", placeholder: "password" }),
+        React.createElement("input", { id: "pass2", type: "password", name: "pass2", placeholder: "password" }),
+        React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
+        React.createElement("input", { className: "formSubmit", type: "submit", value: "Confirm Password Change" })
+    );
+};
+
+var createChangePasswordForm = function createChangePasswordForm(csrf) {
+    ReactDOM.render(React.createElement(ChangePasswordForm, { csrf: csrf }), document.querySelector("#pswdChange"));
+};
+
+var setup = function setup(csrf) {
+    var changePswdBtn = document.querySelector("#changePswdBtn");
+    changePswdBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        //createChangePasswordForm(csrf);
+        return false;
+    });
     ReactDOM.render(React.createElement(FriendForm, { csrf: csrf }), document.querySelector("#addFriend"));
 
     showFriends();
