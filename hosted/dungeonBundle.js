@@ -60,7 +60,7 @@ var DungeonData = function DungeonData(props) {
             React.createElement(
                 "div",
                 null,
-                React.createElement("img", { src: "/assets/img/treasurechest.jpg", alt: "Treasure", className: "treasurechest" }),
+                React.createElement("img", { src: "/assets/img/treasurechest.png", alt: "Treasure", className: "treasurechest" }),
                 React.createElement(
                     "h3",
                     { className: "dungeonGold", name: "gold", id: "gold" },
