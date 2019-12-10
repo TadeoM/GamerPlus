@@ -38,14 +38,14 @@ const QuestSchema = new mongoose.Schema({
     required: true,
     min: 0,
   },
-  questContent:{
-    type:String,
+  questContent: {
+    type: String,
     required: true,
   },
   imageName: {
     type: String,
     required: true,
-  }
+  },
   /*
   questReciever:{
     type:mongoose.Schema.ObjectId,
@@ -88,11 +88,10 @@ QuestSchema.statics.findByGroup = (groupName, callback) => {
 // Find by username and then edit.
 // Find Quest By ID and delete
 QuestSchema.statics.deleteQuest = (id, callback) => {
-  
   const search = {
     _id: id,
   };
-  //console.log(_id);
+  // console.log(_id);
   return QuestModel.deleteOne(search, callback);
 };
 QuestModel = mongoose.model('Quest', QuestSchema);

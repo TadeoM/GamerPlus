@@ -14,8 +14,8 @@ const makerPage = (req, res) => {
   });
 };
 const makeQuest = (req, res) => {
-  if (!req.body.questName || !req.body.questExp 
-    || !req.body.questType||!req.body.questContent) {
+  if (!req.body.questName || !req.body.questExp
+    || !req.body.questType || !req.body.questContent) {
     return res.status(400).json({ error: 'All Parameters Are Required For Quest Submission' });
   }
   const questData = {
@@ -27,10 +27,10 @@ const makeQuest = (req, res) => {
     owner: req.session.account._id,
   };
   console.log(req.body.groupName);
-  if(req.body.groupName) {
+  if (req.body.groupName) {
     questData.groupQuest = req.body.groupName;
   }
-  
+
   const newQuest = new Quest.QuestModel(questData);
 
   const questPromise = newQuest.save();
@@ -52,14 +52,13 @@ const getQuests = (request, response) => {
   const req = request;
   const res = response;
 
-  let userToFind = "";
-  if(req.query.user){
+  let userToFind = '';
+  if (req.query.user) {
     userToFind = req.query.user;
-  }
-  else {
+  } else {
     userToFind = req.session.account._id;
   }
-  
+
   return Quest.QuestModel.findByOwner(userToFind, (err, docs) => {
     if (err) {
       console.log(err);
@@ -78,12 +77,12 @@ const getGroupQuests = (request, response) => {
       console.log(err);
       return res.status(400).json({ error: 'An error occured in Getting' });
     }
-    
-    console.log("In the getGroupQuests");
+
+    console.log('In the getGroupQuests');
     console.log(docs);
     return res.json({ quests: docs });
   });
-}
+};
 
 const deleteQuest = (request, response) => {
   const req = request;

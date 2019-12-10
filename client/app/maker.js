@@ -5,7 +5,7 @@ let accountCharisma = 0;
 let accountWisdom = 0;
 
 let accountExperience = 0;
-let experienceNeeded=1000;
+let experienceNeeded=0;
 
 
 const handleQuest = (e) =>{
@@ -87,7 +87,7 @@ const levelUp = (e) =>{
     formData.append('experienceNeeded', expNeeded);
     
     formData.append('_csrf', csrfToken);
-    console.log(formData);
+
     fetch(`/levelUp?_csrf=${csrfToken}`,
     {
         method: "POST",
@@ -95,9 +95,11 @@ const levelUp = (e) =>{
     })
     .then(
         function(response){
+            console.log(response);
             if(response.status === 200){
                 console.log("Leveled Up");
-                window.onload=response.redirect;
+                location.reload();
+                
             }
             else if(response.status===400)
             {
@@ -105,6 +107,8 @@ const levelUp = (e) =>{
             }
         }
     );
+    
+    location.reload();
     return false;
 
 }
@@ -289,9 +293,7 @@ return (
 };
 
 const ProfileBar = function(props) {
-    accountAthletics = props.account.athletics;
-    accountWisdom = props.account.wisdom;
-    accountCharisma = props.account.charisma;
+
 
     return (
         <div className="profileBox">
@@ -319,7 +321,11 @@ const ProfileBar = function(props) {
 };
 
 const AccountData = function(props) {
+    accountAthletics = props.account.athletics;
+    accountWisdom = props.account.wisdom;
+    accountCharisma = props.account.charisma;
     accountExperience = props.account.experience;
+    experienceNeeded = props.account.experienceNeeded;
     return (
         <div>
             <img id="char" src={`/assets/img/${props.account.profilePic}`} alt="character"/>
@@ -332,7 +338,7 @@ const AccountData = function(props) {
             >
             <h3 className="accountLevel" name="level">Level:{props.account.level}</h3>
             <h3 className="accountExperience" name="experience">Experience: {props.account.experience}</h3>
-            <h3 className="accountExperienceNeeded" name="experienceNeeded">Experience Needed To Level Up: {experienceNeeded}</h3>
+            <h3 className="accountExperienceNeeded" name="experienceNeeded">Experience Needed To Level Up: {props.account.experienceNeeded}</h3>
  
             <input type="submit" name="levelUp" value="Level Up" />
             <input type="hidden" name="_csrf" value={props.csrf}/>
@@ -380,6 +386,7 @@ const loadAccountFromServer = () => {
         ReactDOM.render(
             <ProfileBar account={data.account} />, document.querySelector("#profileContent")
         );
+        SetUpDungeon();
     });
 };
 
@@ -438,7 +445,7 @@ const getToken = () => {
 
 $(document).ready(function() {
     getToken();
-    SetUpDungeon();
+    
     
 });
 

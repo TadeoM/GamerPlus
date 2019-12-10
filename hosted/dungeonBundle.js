@@ -6,12 +6,11 @@ var experienceValue = "0";
 var url = null;
 var parsedGold = 0;
 var parsedExperience = 0;
-var accountAthletics = 0;
-var accountCharisma = 0;
-var accountWisdom = 0;
 
 var accountExperience = 0;
 var experienceNeeded = 1000;
+
+var gotReward = false;
 
 var handleGetReward = function handleGetReward(e) {
     e.preventDefault();
@@ -31,8 +30,12 @@ var handleGetReward = function handleGetReward(e) {
     }).then(function (response) {
         if (response.status === 200) {
             console.log("Got Reward");
-            var divForm = document.querySelector("#dungeonForm");
-            divForm.remove();
+            gotReward = true;
+            if (gotReward) {
+                var divForm = document.querySelector("#dungeonForm");
+                divForm.remove();
+            }
+            loadAccountFromServer();
             ReactDOM.render(React.createElement(DungeonSuccess, null), document.querySelector("#dungeonInfo"));
         }
     });
@@ -41,34 +44,7 @@ var handleGetReward = function handleGetReward(e) {
 var showProfile = function showProfile(e) {
     showProfile("PROFILE");
 };
-var levelUp = function levelUp(e) {
-    e.preventDefault();
 
-    var formData = new FormData();
-
-    var currExp = accountExperience;
-    var expNeeded = experienceNeeded;
-    console.log(currExp);
-    console.log(expNeeded);
-
-    formData.append('experience', currExp);
-    formData.append('experienceNeeded', expNeeded);
-
-    formData.append('_csrf', csrfToken);
-    console.log(formData);
-    fetch("/levelUp?_csrf=" + csrfToken, {
-        method: "POST",
-        body: formData
-    }).then(function (response) {
-        if (response.status === 200) {
-            console.log("Leveled Up");
-            window.onload = response.redirect;
-        } else if (response.status === 400) {
-            console.log("Not enough Experience Man");
-        }
-    });
-    return false;
-};
 var DungeonData = function DungeonData(props) {
     return React.createElement(
         "div",
@@ -113,9 +89,6 @@ var DungeonSuccess = function DungeonSuccess() {
 
 var ProfileBar = function ProfileBar(props) {
 
-    accountAthletics = props.account.athletics;
-    accountWisdom = props.account.wisdom;
-    accountCharisma = props.account.charisma;
     return React.createElement(
         "div",
         { className: "profileBox" },
@@ -238,6 +211,7 @@ var ProfileBar = function ProfileBar(props) {
 };
 var AccountData = function AccountData(props) {
     accountExperience = props.account.experience;
+    experienceNeeded = props.account.experienceNeeded;
     return React.createElement(
         "div",
         null,
@@ -255,33 +229,22 @@ var AccountData = function AccountData(props) {
             " "
         ),
         React.createElement(
-            "form",
-            { id: "levelUpForm", name: "levelUpForm",
-                onSubmit: levelUp,
-                action: "/levelUp",
-                method: "POST",
-                className: "levelUpForm"
-            },
-            React.createElement(
-                "h3",
-                { className: "accountLevel", name: "level" },
-                "Level:",
-                props.account.level
-            ),
-            React.createElement(
-                "h3",
-                { className: "accountExperience", name: "experience" },
-                "Experience: ",
-                props.account.experience
-            ),
-            React.createElement(
-                "h3",
-                { className: "accountExperienceNeeded", name: "experienceNeeded" },
-                "Experience Needed To Level Up: ",
-                experienceNeeded
-            ),
-            React.createElement("input", { type: "submit", name: "levelUp", value: "Level Up" }),
-            React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf })
+            "h3",
+            { className: "accountLevel", name: "level" },
+            "Level:",
+            props.account.level
+        ),
+        React.createElement(
+            "h3",
+            { className: "accountExperience", name: "experience" },
+            "Experience: ",
+            props.account.experience
+        ),
+        React.createElement(
+            "h3",
+            { className: "accountExperienceNeeded", name: "experienceNeeded" },
+            "Experience Needed To Level Up: ",
+            props.account.experienceNeeded
         )
     );
 };
@@ -309,7 +272,10 @@ var setup = function setup(csrf) {
         createChangePasswordForm(csrf);
         return false;
     });
-    ReactDOM.render(React.createElement(DungeonData, { csrf: csrf }), document.querySelector("#dungeonInfo"));
+    if (!gotReward) {
+        ReactDOM.render(React.createElement(DungeonData, { csrf: csrf }), document.querySelector("#dungeonInfo"));
+    }
+
     var profileButton = document.querySelector("#profileButton");
 
     profileButton.addEventListener("click", function (e) {
