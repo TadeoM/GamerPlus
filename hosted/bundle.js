@@ -251,67 +251,6 @@ var QuestList = function QuestList(props) {
         questNodes
     );
 };
-var PendingQuestList = function PendingQuestList(props) {
-    if (props.quests.length === 0) {
-        return React.createElement(
-            "div",
-            { className: "pendingQuestList" },
-            React.createElement(
-                "h3",
-                { className: "emptyQuest" },
-                "No Quests Yet"
-            )
-        );
-    }
-    var pendingQuestNodes = props.quests.map(function (quest) {
-        return React.createElement(
-            "form",
-            { id: "pendingQuestForm", name: "pendingQuestForm",
-                onSubmit: completeQuest,
-                action: "/completeQuest",
-                method: "POST",
-                className: "curQuestForm"
-            },
-            React.createElement(
-                "div",
-                { key: quest._id, className: "quest" },
-                React.createElement("img", { src: "/assets/img/scrollQuest.png", alt: "domo face", className: "scrollQuest" }),
-                React.createElement(
-                    "h3",
-                    { className: "questName" },
-                    "Name: ",
-                    quest.name
-                ),
-                React.createElement(
-                    "h3",
-                    { className: "questType" },
-                    "Quest Type: ",
-                    quest.questType
-                ),
-                React.createElement(
-                    "h3",
-                    { className: "questExperience" },
-                    "EXP: ",
-                    quest.questExperience
-                ),
-                React.createElement(
-                    "h4",
-                    { className: "questContent" },
-                    "Quest Content: ",
-                    quest.questContent
-                ),
-                React.createElement("input", { type: "submit", name: "deleteQuest", value: "Delete Quest" }),
-                React.createElement("input", { type: "hidden", name: "_id", value: quest._id }),
-                React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf })
-            )
-        );
-    });
-    return React.createElement(
-        "div",
-        { className: "pendingQuestList" },
-        pendingQuestNodes
-    );
-};
 
 var ProfileBar = function ProfileBar(props) {
 
@@ -575,8 +514,13 @@ var loadQuestsFromServer = function loadQuestsFromServer() {
     sendAjax('GET', '/getQuests', null, function (data) {
         for (var j = 0; j < data.quests.length; j++) {
             quests.push(data.quests[j]);
+            console.log(quests);
         }
         sendAjax('GET', '/getFriends', null, function (friendData) {
+            if (friendData.friends.length === 0) {
+                ReactDOM.render(React.createElement(QuestList, { quests: quests, csrf: csrfToken }), document.querySelector("#quests"));
+            }
+
             var _loop = function _loop(i) {
                 sendAjax('GET', "/getAccount?user=" + friendData.friends[i].friend, null, function (friendAccount) {
                     sendAjax('GET', "/getQuests?user=" + friendAccount.account._id, null, function (friendQuestData) {
@@ -596,11 +540,7 @@ var loadQuestsFromServer = function loadQuestsFromServer() {
         });
     });
 };
-var loadPendingQuestsFromServer = function loadPendingQuestsFromServer() {
-    sendAjax('GET', '/getPendingQuests', null, function (data) {
-        ReactDOM.render(React.createElement(QuestList, { quests: data.quests, csrf: csrfToken }), document.querySelector("#quests"));
-    });
-};
+
 var loadAccountFromServer = function loadAccountFromServer() {
     sendAjax('GET', '/getAccount', null, function (data) {
         ReactDOM.render(React.createElement(AccountData, { account: data.account, csrf: csrfToken }), document.querySelector("#accountData"));

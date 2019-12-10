@@ -124,7 +124,7 @@ var GroupForm = function GroupForm(props) {
         React.createElement(
             "a",
             { href: "/groupPage", className: "navButton", id: "groupButton" },
-            "Join More Groups"
+            "All Groups"
         )
     );
 };

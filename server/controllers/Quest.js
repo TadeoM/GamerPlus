@@ -26,7 +26,7 @@ const makeQuest = (req, res) => {
     imageName: req.body.imageName,
     owner: req.session.account._id,
   };
-  console.log(req.body.groupName);
+
   if (req.body.groupName) {
     questData.groupQuest = req.body.groupName;
   }
@@ -64,6 +64,7 @@ const getQuests = (request, response) => {
       console.log(err);
       return res.status(400).json({ error: 'An error occured in Getting' });
     }
+    console.log(docs);
     return res.json({ quests: docs });
   });
 };

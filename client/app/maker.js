@@ -213,44 +213,6 @@ const QuestList = function(props)
         </div>
     );
 };
-const PendingQuestList = function(props)
-{
-    if(props.quests.length === 0)
-    {
-        return(
-            <div className="pendingQuestList">
-                <h3 className="emptyQuest">No Quests Yet</h3>
-            </div>
-        );
-    }
-const pendingQuestNodes = props.quests.map(function(quest)
-{
-    return(
-        <form id="pendingQuestForm" name ="pendingQuestForm"
-            onSubmit ={completeQuest}
-            action ="/completeQuest"
-            method="POST"
-            className="curQuestForm"
-        >
-        <div key={quest._id} className="quest">
-            <img src="/assets/img/scrollQuest.png" alt="domo face" className="scrollQuest"/>
-            <h3 className="questName">Name: {quest.name}</h3>
-            <h3 className="questType">Quest Type: {quest.questType}</h3>
-            <h3 className="questExperience">EXP: {quest.questExperience}</h3>
-            <h4 className="questContent">Quest Content: {quest.questContent}</h4>
-            <input type="submit" name="deleteQuest" value="Delete Quest" />
-            <input type ="hidden" name ="_id" value ={quest._id}/>
-            <input type="hidden" name="_csrf" value={props.csrf}/>
-        </div>
-         </form>
-    );
-});
-return (
-    <div className="pendingQuestList">
-        {pendingQuestNodes}
-    </div>
-);
-};
 
 const ProfileBar = function(props) {
 
@@ -369,8 +331,14 @@ const loadQuestsFromServer = () =>{
     sendAjax('GET', '/getQuests', null, (data) =>{
         for(let j = 0; j < data.quests.length; j++){
             quests.push(data.quests[j]);
+            console.log(quests)
         }
         sendAjax('GET', '/getFriends', null, (friendData) => {
+            if(friendData.friends.length === 0){
+                ReactDOM.render(
+                    <QuestList quests ={quests} csrf = {csrfToken} />, document.querySelector("#quests")
+                );
+            }
             for(let i = 0; i < friendData.friends.length; i++){
                 sendAjax('GET', `/getAccount?user=${friendData.friends[i].friend}`, null, (friendAccount) => {
                     sendAjax('GET', `/getQuests?user=${friendAccount.account._id}`, null, (friendQuestData) => {
@@ -389,13 +357,7 @@ const loadQuestsFromServer = () =>{
     });
     
 };
-const loadPendingQuestsFromServer = () =>{
-    sendAjax('GET', '/getPendingQuests', null, (data) =>{
-        ReactDOM.render(
-            <QuestList quests ={data.quests} csrf = {csrfToken} />, document.querySelector("#quests")
-        );
-    });
-};
+
 const loadAccountFromServer = () => {
     sendAjax('GET', '/getAccount', null, (data) =>{
         ReactDOM.render(
