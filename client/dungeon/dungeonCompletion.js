@@ -61,7 +61,7 @@ const DungeonData = function(props) {
             className="dungeonForm"
         >
         <div>
-            <img src="/assets/img/treasurechest.jpg" alt="Treasure" className="treasurechest"/>
+            <img src="/assets/img/treasurechest.png" alt="Treasure" className="treasurechest"/>
             <h3 className="dungeonGold" name="gold" id="gold">Gold Earned: {parsedGold}</h3>
             <h3 className="dungeonExperience" name="experience" id="experience">Experience Earned: {parsedExperience}</h3>
             <input type="submit" name="getReward" value="Get Reward" />
