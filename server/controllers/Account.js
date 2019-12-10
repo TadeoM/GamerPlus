@@ -249,16 +249,20 @@
      return res.status(200).json({ message: 'How did you get here' });
    });
  };
+
  const LevelUp = (request, response) => {
    const req = request;
    const res = response;
    let newExperience = req.session.account.experience;
    let newExperienceRequired = req.session.account.experienceNeeded;
+
+   console.log("New Experience: " + newExperience);
+   console.log("Experience Needed: " + newExperienceRequired)
   
    if (parseInt(req.body.experience,10) >= parseInt(newExperienceRequired,10)) {
      newExperience = parseInt(req.body.experience,10) - parseInt(newExperienceRequired,10);
      newExperienceRequired = parseInt(req.session.account.level) * 1000;
-     console.log(req.session.account.level);
+     console.log("New Experience Needed: " + newExperienceRequired);
    
      return Account.AccountModel.findByUsername(req.session.account.username, (err, doc) => {
        const updateAccount = doc;
@@ -266,6 +270,8 @@
        updateAccount.level += 1;
        updateAccount.experience = newExperience;
        updateAccount.experienceNeeded = newExperienceRequired;
+       console.log("Updated Account Thing: " + updateAccount.experienceNeeded);
+
        if (err) {
          console.log(err);
          return res.status(400).json({ error: 'An error occurred' });
