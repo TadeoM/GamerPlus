@@ -1,9 +1,10 @@
 "use strict";
 
+var csrfToken = null;
 var handleCreation = function handleCreation(e) {
     e.preventDefault();
 
-    $("#domoMessage").animate({ width: 'hide' }, 350);
+    $("#errorMessage").animate({ width: 'hide' }, 350);
 
     var maxTotal = 10;
 
@@ -24,6 +25,13 @@ var handleCreation = function handleCreation(e) {
     }
 
     console.log($("input[name=_csrf]").val());
+
+    var selections = document.querySelector(".slider").children;
+    for (var i = 0; i < selections.length; i++) {
+        if (selections[i].checked) {
+            $("#profilePic")[0].value = selections[i].title;
+        }
+    }
 
     sendAjax('POST', $("#accountForm").attr("action"), $("#accountForm").serialize(), redirect);
 
@@ -72,11 +80,10 @@ var AccountForm = function AccountForm(props) {
         ),
         React.createElement("input", { id: "accountCharisma", onChange: checkValues, type: "number", name: "charisma", placeholder: "1", min: "1" }),
         React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
+        React.createElement("input", { type: "hidden", id: "profilePic", name: "profilePic", value: "" }),
         React.createElement("input", { className: "makeAccountSubmit", type: "submit", value: "Make Account" })
     );
 };
-
-var CharacterSelector = function CharacterSelector(props) {};
 
 var createAcountWindow = function createAcountWindow(csrf) {
     ReactDOM.render(React.createElement(AccountForm, { csrf: csrf }), document.querySelector("#content"));
@@ -104,12 +111,12 @@ var checkValues = function checkValues(e) {
 
 var setup = function setup(csrf) {
     createAcountWindow(csrf); // default view
-    //createCarousel(csrf);
 };
 
 var getToken = function getToken() {
     sendAjax('GET', '/getToken', null, function (result) {
         setup(result.csrfToken);
+        csrfToken = result.csrfToken;
     });
 };
 
@@ -154,6 +161,10 @@ var handleError = function handleError(message) {
 
 var showProfile = function showProfile(message) {
     $("#profileContent").animate({ width: 'toggle' }, 350);
+};
+
+var showAd = function showAd() {
+    $("#ad").animate({ width: 'toggle' }, 350);
 };
 
 var redirect = function redirect(response) {

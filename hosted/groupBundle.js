@@ -2,13 +2,8 @@
 
 var csrfToken = null;
 var groupsListed = [];
+var groupPage = "";
 var quests = [];
-var accountAthletics = 0;
-var accountCharisma = 0;
-var accountWisdom = 0;
-
-var accountExperience = 0;
-var experienceNeeded = 0;
 
 var handleQuest = function handleQuest(e) {
     e.preventDefault();
@@ -34,12 +29,13 @@ var handleQuest = function handleQuest(e) {
     var a = document.querySelector('#questType');
     var questType = a.options[a.selectedIndex].text;
     var questContent = document.querySelector('.questContent').value;
+    console.log(groupPage);
 
     formData.append('questName', questName);
     formData.append('questExp', questExp);
     formData.append('questType', questType);
     formData.append('questContent', questContent);
-
+    formData.append('groupName', groupPage);
     formData.append('_csrf', csrfToken);
 
     fetch("/upload?_csrf=" + csrfToken, {
@@ -57,57 +53,80 @@ var handleQuest = function handleQuest(e) {
     }).then(function (response) {
         if (response.status === 200) {
             console.log("Quest made");
-            loadQuestsFromServer();
+            loadGroupQuestsFromServer();
         }
     });
 
     return false;
 };
-var levelUp = function levelUp(e) {
+
+var handleGroup = function handleGroup(e) {
     e.preventDefault();
 
+    $("#groupMessage").animate({ width: 'hide' }, 350);
+
+    if ($("#groupName").val() == '' || $("#groupOwner").val() == '') {
+        handleError("Gamer! All fields are required");
+        return false;
+    }
+
     var formData = new FormData();
+    var groupName = document.querySelector('#groupName').value;
+    var groupOwner = document.querySelector('#groupOwner').checked;
+    var groupMember = document.querySelector('#groupMember').value;
 
-    var currExp = accountExperience;
-    var expNeeded = experienceNeeded;
-    console.log(currExp);
-    console.log(expNeeded);
-
-    formData.append('experience', currExp);
-    formData.append('experienceNeeded', expNeeded);
-
+    formData.append('groupName', groupName);
+    formData.append('groupOwner', groupOwner);
+    formData.append('groupMember', groupMember);
     formData.append('_csrf', csrfToken);
 
-    fetch("/levelUp?_csrf=" + csrfToken, {
+    fetch("/addMember?_csrf=" + csrfToken, {
         method: "POST",
         body: formData
     }).then(function (response) {
-        console.log(response);
-        if (response.status === 200) {
-            console.log("Leveled Up");
-            location.reload();
-        } else if (response.status === 400) {
-            console.log("Not enough Experience Man");
-        }
+        loadGroupsFromServer();
     });
 
-    location.reload();
     return false;
 };
-var completeQuest = function completeQuest(e) {
-    e.preventDefault();
-};
 
-var deleteQuest = function deleteQuest(e) {
-    e.preventDefault();
-
-    //data.quests = $("#questList").props;
-    console.log($("#curQuestForm").serialize());
-
-    //Delete in our database and reload quests. 
-    sendAjax('POST', $("#curQuestForm").attr("action"), $("#curQuestForm").serialize(), function () {
-        loadQuestsFromServer();
-    });
+var GroupForm = function GroupForm(props) {
+    return React.createElement(
+        "form",
+        { id: "groupForm", name: "groupForm",
+            onSubmit: handleGroup,
+            action: "/addMember",
+            encType: "multipart/form-data",
+            className: "mainForm"
+        },
+        React.createElement(
+            "label",
+            null,
+            "Group Creation"
+        ),
+        React.createElement(
+            "label",
+            { htmlFor: "name" },
+            "Name: "
+        ),
+        React.createElement("input", { id: "groupName", type: "text", name: "name", placeholder: "Group Name" }),
+        React.createElement("input", { id: "groupOwner", type: "checkbox", name: "owner", value: "owner" }),
+        " Owner",
+        React.createElement("br", null),
+        React.createElement(
+            "label",
+            { htmlFor: "newMember" },
+            "New Member: "
+        ),
+        React.createElement("input", { id: "groupMember", type: "text", name: "newMember", placeholder: "New Member" }),
+        React.createElement("input", { type: "hidden", name: "_csrf", value: csrfToken }),
+        React.createElement("input", { className: "makeGroupSubmit", type: "submit", value: "Make Group" }),
+        React.createElement(
+            "a",
+            { href: "/groupPage", className: "navButton", id: "groupButton" },
+            "All Groups"
+        )
+    );
 };
 
 var QuestForm = function QuestForm(props) {
@@ -183,6 +202,7 @@ var QuestForm = function QuestForm(props) {
         ),
         React.createElement("textarea", { id: "questContent", className: "questContent", name: "questContent", placeholder: "Details of the Quest" }),
         React.createElement("input", { type: "hidden", name: "_csrf", value: csrfToken }),
+        React.createElement("input", { id: "groupName", type: "hidden", name: "groupName", value: groupName }),
         React.createElement("input", { type: "hidden", name: "_csrf", value: csrfToken }),
         React.createElement("input", { className: "makeQuestSubmit", type: "submit", value: "Make Quest" })
     );
@@ -252,170 +272,21 @@ var QuestList = function QuestList(props) {
     );
 };
 
-var ProfileBar = function ProfileBar(props) {
-
-    return React.createElement(
-        "div",
-        { className: "profileBox" },
-        React.createElement(
-            "div",
-            null,
-            React.createElement("img", { id: "char", src: "/assets/img/" + props.account.profilePic, alt: "character" }),
-            React.createElement(
-                "div",
-                { className: "button", id: "profileBar" },
-                React.createElement(
-                    "div",
-                    { className: "btn btn-one" },
-                    React.createElement(
-                        "a",
-                        { href: "/profile" },
-                        "To Profile"
-                    )
-                )
-            )
-        ),
-        React.createElement(
-            "h3",
-            null,
-            React.createElement(
-                "span",
-                { id: "profileStats" },
-                React.createElement(
-                    "h3",
-                    { className: "accountName" },
-                    React.createElement(
-                        "b",
-                        null,
-                        "User:"
-                    ),
-                    " ",
-                    props.account.username,
-                    " "
-                ),
-                React.createElement(
-                    "h3",
-                    { className: "accountAthletics" },
-                    React.createElement(
-                        "b",
-                        null,
-                        "Athletics:"
-                    ),
-                    " ",
-                    props.account.athletics
-                ),
-                React.createElement(
-                    "h3",
-                    { className: "accountWisdom" },
-                    React.createElement(
-                        "b",
-                        null,
-                        "Wisdom:"
-                    ),
-                    " ",
-                    props.account.wisdom
-                ),
-                React.createElement(
-                    "h3",
-                    { className: "accountCharisma" },
-                    React.createElement(
-                        "b",
-                        null,
-                        "Charisma:"
-                    ),
-                    " ",
-                    props.account.charisma
-                ),
-                React.createElement(
-                    "h3",
-                    { className: "accountGold" },
-                    React.createElement(
-                        "b",
-                        null,
-                        "Gold:"
-                    ),
-                    " ",
-                    props.account.gold
-                ),
-                React.createElement(
-                    "h3",
-                    { className: "accountExperience" },
-                    React.createElement(
-                        "b",
-                        null,
-                        "Experience:"
-                    ),
-                    " ",
-                    props.account.experience
-                ),
-                React.createElement(
-                    "h3",
-                    { className: "accountLevel" },
-                    React.createElement(
-                        "b",
-                        null,
-                        "Level:"
-                    ),
-                    " ",
-                    props.account.level
-                )
-            )
-        )
-    );
+var loadGroupQuestsFromServer = function loadGroupQuestsFromServer() {
+    console.log("Trying to Load Quests");
+    sendAjax('GET', "/getGroupQuests?groupName=" + groupPage, null, function (data) {
+        ReactDOM.render(React.createElement(QuestList, { quests: quests, csrf: csrfToken }), document.querySelector("#quests"));
+    });
 };
 
-var AccountData = function AccountData(props) {
-    accountAthletics = props.account.athletics;
-    accountWisdom = props.account.wisdom;
-    accountCharisma = props.account.charisma;
-    accountExperience = props.account.experience;
-    experienceNeeded = props.account.experienceNeeded;
-    return React.createElement(
-        "div",
-        null,
-        React.createElement("img", { id: "char", src: "/assets/img/" + props.account.profilePic, alt: "character" }),
-        React.createElement(
-            "h3",
-            { className: "accountName" },
-            React.createElement(
-                "b",
-                null,
-                "User:"
-            ),
-            " ",
-            props.account.username,
-            " "
-        ),
-        React.createElement(
-            "form",
-            { id: "levelUpForm", name: "levelUpForm",
-                onSubmit: levelUp,
-                action: "/levelUp",
-                method: "POST",
-                className: "levelUpForm"
-            },
-            React.createElement(
-                "h3",
-                { className: "accountLevel", name: "level" },
-                "Level:",
-                props.account.level
-            ),
-            React.createElement(
-                "h3",
-                { className: "accountExperience", name: "experience" },
-                "Experience: ",
-                props.account.experience
-            ),
-            React.createElement(
-                "h3",
-                { className: "accountExperienceNeeded", name: "experienceNeeded" },
-                "Experience Needed To Level Up: ",
-                props.account.experienceNeeded
-            ),
-            React.createElement("input", { type: "submit", name: "levelUp", value: "Level Up" }),
-            React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf })
-        )
-    );
+var showGroup = function showGroup(groupName) {
+    groupPage = groupName;
+    sendAjax('GET', "/getGroup?groupName=" + groupName, null, function (data) {
+        ReactDOM.render(React.createElement(QuestForm, { groupName: groupPage, csrf: csrfToken }), document.querySelector("#groups"));
+        sendAjax('GET', "/getGroupQuests?groupName=" + groupPage, null, function (questData) {
+            console.log(questData);
+        });
+    });
 };
 
 var GroupList = function GroupList(props) {
@@ -425,26 +296,8 @@ var GroupList = function GroupList(props) {
             { className: "groupList" },
             React.createElement(
                 "h3",
-                { className: "title" },
-                "Groups"
-            ),
-            React.createElement(
-                "h4",
                 { className: "emptyGroup" },
                 "No Groups Yet"
-            ),
-            React.createElement(
-                "div",
-                { className: "button groupButtons" },
-                React.createElement(
-                    "div",
-                    { className: "btn btn-one" },
-                    React.createElement(
-                        "a",
-                        { href: "/groupPage", className: "navButton", id: "groupButton" },
-                        "Join More Groups"
-                    )
-                )
             )
         );
     }
@@ -470,7 +323,9 @@ var GroupList = function GroupList(props) {
                         { className: "btn btn-one" },
                         React.createElement(
                             "a",
-                            { href: "/groupPage?group=" + group.groupName, name: "" + group.groupName },
+                            { name: "" + group.groupName, onClick: function onClick() {
+                                    return showGroup(group.groupName);
+                                } },
                             "Group Page Link"
                         )
                     )
@@ -482,25 +337,8 @@ var GroupList = function GroupList(props) {
     return React.createElement(
         "div",
         { className: "groupList" },
-        React.createElement(
-            "h3",
-            { className: "title" },
-            "Group"
-        ),
-        groupNodes,
-        React.createElement(
-            "div",
-            { className: "button groupButtons" },
-            React.createElement(
-                "div",
-                { className: "btn btn-one" },
-                React.createElement(
-                    "a",
-                    { href: "/groupPage", className: "navButton", id: "groupButton" },
-                    "Join More Groups"
-                )
-            )
-        )
+        React.createElement("a", null),
+        groupNodes
     );
 };
 
@@ -510,74 +348,16 @@ var loadGroupsFromServer = function loadGroupsFromServer() {
     });
 };
 
-var loadQuestsFromServer = function loadQuestsFromServer() {
-    sendAjax('GET', '/getQuests', null, function (data) {
-        for (var j = 0; j < data.quests.length; j++) {
-            quests.push(data.quests[j]);
-            console.log(quests);
-        }
-        sendAjax('GET', '/getFriends', null, function (friendData) {
-            if (friendData.friends.length === 0) {
-                ReactDOM.render(React.createElement(QuestList, { quests: quests, csrf: csrfToken }), document.querySelector("#quests"));
-            }
-
-            var _loop = function _loop(i) {
-                sendAjax('GET', "/getAccount?user=" + friendData.friends[i].friend, null, function (friendAccount) {
-                    sendAjax('GET', "/getQuests?user=" + friendAccount.account._id, null, function (friendQuestData) {
-                        for (var _j = 0; _j < friendQuestData.quests.length; _j++) {
-                            quests.push(friendQuestData.quests[_j]);
-                        }
-                        if (i === friendData.friends.length - 1) {
-                            ReactDOM.render(React.createElement(QuestList, { quests: quests, csrf: csrfToken }), document.querySelector("#quests"));
-                        }
-                    });
-                });
-            };
-
-            for (var i = 0; i < friendData.friends.length; i++) {
-                _loop(i);
-            }
-        });
-    });
-};
-
-var loadAccountFromServer = function loadAccountFromServer() {
-    sendAjax('GET', '/getAccount', null, function (data) {
-        ReactDOM.render(React.createElement(AccountData, { account: data.account, csrf: csrfToken }), document.querySelector("#accountData"));
-        ReactDOM.render(React.createElement(ProfileBar, { account: data.account }), document.querySelector("#profileContent"));
-        SetUpDungeon();
-    });
-};
-
-var SetUpDungeon = function SetUpDungeon() {
-    var dungeonBtn = document.querySelector("#goToDungeonButton");
-
-    if (accountAthletics > accountCharisma && accountAthletics > accountWisdom) {
-        dungeonBtn.href = "assets/dungeons/AthleticChar.html";
-    } else if (accountCharisma > accountAthletics && accountCharisma > accountWisdom) {
-        dungeonBtn.href = "assets/dungeons/CharismaticChar.html";
-    } else if (accountWisdom > accountAthletics && accountWisdom > accountCharisma) {
-        dungeonBtn.href = "assets/dungeons/WisdomChar.html";
-    } else {
-        dungeonBtn.href = "assets/dungeons/WisdomChar.html";
-    }
-};
-
 var setup = function setup(csrf) {
-
-    loadGroupsFromServer();
-    ReactDOM.render(React.createElement(QuestForm, { csrf: csrf }), document.querySelector("#makeQuest"));
-    loadQuestsFromServer();
-    var profileButton = document.querySelector("#profileButton");
-
-    profileButton.addEventListener("click", function (e) {
-        e.preventDefault();
-        showProfile();
-        return false;
-    });
-    loadAccountFromServer();
-
-    $("#profileContent").animate({ width: 'hide' }, 0);
+    var urlParams = new URLSearchParams(window.location.search);
+    var hasGroup = urlParams.has('group');
+    var groupToShow = urlParams.get('group'); // "edit"
+    ReactDOM.render(React.createElement(GroupForm, { csrf: csrf }), document.querySelector("#groupCreation"));
+    if (hasGroup) {
+        showGroup(groupToShow);
+    } else {
+        loadGroupsFromServer();
+    }
 };
 
 var getToken = function getToken() {

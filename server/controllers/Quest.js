@@ -3,7 +3,7 @@ const models = require('../models');
 const Quest = models.Quest;
 
 const makerPage = (req, res) => {
-  Quest.QuestModel.findbyOwner(req.session.account._id, (err, docs) => {
+  Quest.QuestModel.findByOwner(req.session.account._id, (err, docs) => {
     if (err) {
       console.log(err);
       return res.status(400).json({
@@ -14,16 +14,22 @@ const makerPage = (req, res) => {
   });
 };
 const makeQuest = (req, res) => {
-  if (!req.body.name || !req.body.questExperience || !req.body.questType||!req.body.questContent) {
+  if (!req.body.questName || !req.body.questExp
+    || !req.body.questType || !req.body.questContent) {
     return res.status(400).json({ error: 'All Parameters Are Required For Quest Submission' });
   }
   const questData = {
-    name: req.body.name,
+    name: req.body.questName,
     questType: req.body.questType,
-    questExperience: req.body.questExperience,
+    questExperience: req.body.questExp,
     questContent: req.body.questContent,
+    imageName: req.body.imageName,
     owner: req.session.account._id,
   };
+
+  if (req.body.groupName) {
+    questData.groupQuest = req.body.groupName;
+  }
 
   const newQuest = new Quest.QuestModel(questData);
 
@@ -45,12 +51,36 @@ const makeQuest = (req, res) => {
 const getQuests = (request, response) => {
   const req = request;
   const res = response;
-  
-  return Quest.QuestModel.findbyOwner(req.session.account._id, (err, docs) => {
+
+  let userToFind = '';
+  if (req.query.user) {
+    userToFind = req.query.user;
+  } else {
+    userToFind = req.session.account._id;
+  }
+
+  return Quest.QuestModel.findByOwner(userToFind, (err, docs) => {
     if (err) {
       console.log(err);
       return res.status(400).json({ error: 'An error occured in Getting' });
     }
+    console.log(docs);
+    return res.json({ quests: docs });
+  });
+};
+
+const getGroupQuests = (request, response) => {
+  const req = request;
+  const res = response;
+
+  return Quest.QuestModel.findByGroup(req.query.groupName, (err, docs) => {
+    if (err) {
+      console.log(err);
+      return res.status(400).json({ error: 'An error occured in Getting' });
+    }
+
+    console.log('In the getGroupQuests');
+    console.log(docs);
     return res.json({ quests: docs });
   });
 };
@@ -68,16 +98,10 @@ const deleteQuest = (request, response) => {
     return res.json({ quests: docs });
   });
 };
-/*
-const getPendingQuests = (request, response)=>{
-  const req = request;
-  const res = response;
 
-}
-*/
 module.exports.makerPage = makerPage;
 module.exports.make = makeQuest;
 module.exports.getQuests = getQuests;
 module.exports.deleteQuest = deleteQuest;
-//module.exports.getPendingQuests = getPendingQuests;
+module.exports.getGroupQuests = getGroupQuests;
 

@@ -1,192 +1,323 @@
-const models = require('../models');
+ const models = require('../models');
 
-const Account = models.Account;
+ const Account = models.Account;
 
-const loginPage = (req, res) => {
-  res.render('login', { csrfToken: req.csrfToken() });
-};
+ const loginPage = (req, res) => {
+   res.render('login', { csrfToken: req.csrfToken() });
+ };
 
-const creatorPage = (req, res) => {
-    Account.AccountModel.findByUsername(req.session.account.username, (err, docs) => {
-        if(err) {
-            console.log(err);
-            return res.status(400).json({ error: 'An error occurred' });
-        }
-        
-        return res.render('creation', { csrfToken: req.csrfToken(), account: docs });
-    });
-};
+ const creatorPage = (req, res) => {
+   Account.AccountModel.findByUsername(req.session.account.username, (err, docs) => {
+     if (err) {
+       console.log(err);
+       return res.status(400).json({ error: 'An error occurred' });
+     }
 
-const logout = (req, res) => {
-  req.session.destroy();
-  res.redirect('/');
-};
+     return res.render('creation', { csrfToken: req.csrfToken(), account: docs });
+   });
+ };
 
-const login = (request, response) => {
-  const req = request;
-  const res = response;
+ const logout = (req, res) => {
+   req.session.destroy();
+   res.redirect('/');
+ };
+
+ const login = (request, response) => {
+   const req = request;
+   const res = response;
 
     // force cast top strings to cover some security flaws
-  const username = `${req.body.username}`;
-  const password = `${req.body.pass}`;
+   const username = `${req.body.username}`;
+   const password = `${req.body.pass}`;
 
-  if (!username || !password) {
-    return res.status(400).json({ error: 'Gamer! All fields are required' });
-  }
+   if (!username || !password) {
+     return res.status(400).json({ error: 'Gamer! All fields are required' });
+   }
 
-  return Account.AccountModel.authenticate(username, password, (err, account) => {
-    if (err || !account) {
-      return res.status(401).json({ error: 'Wrong username or password' });
-    }
+   return Account.AccountModel.authenticate(username, password, (err, account) => {
+     if (err || !account) {
+       return res.status(401).json({ error: 'Wrong username or password' });
+     }
 
-    req.session.account = Account.AccountModel.toAPI(account);
+     req.session.account = Account.AccountModel.toAPI(account);
 
-    return res.json({ redirect: '/maker' });
-  });
-};
+     return res.json({ redirect: '/maker' });
+   });
+ };
 
-const signup = (request, response) => {
-  const req = request;
-  const res = response;
+ const signup = (request, response) => {
+   const req = request;
+   const res = response;
 
     // cast to string to cover up some security flaws
-  req.body.username = `${req.body.username}`;
-  req.body.pass = `${req.body.pass}`;
-  req.body.pass2 = `${req.body.pass2}`;
+   req.body.username = `${req.body.username}`;
+   req.body.pass = `${req.body.pass}`;
+   req.body.pass2 = `${req.body.pass2}`;
 
-  if (!req.body.username || !req.body.pass || !req.body.pass2) {
-    return res.status(400).json({ error: 'Gamer! All fields are requires' });
-  }
+   if (!req.body.username || !req.body.pass || !req.body.pass2) {
+     return res.status(400).json({ error: 'Gamer! All fields are requires' });
+   }
 
-  if (req.body.pass !== req.body.pass2) {
-    return res.status(400).json({ error: 'Gamer! Passwords do not match' });
-  }
+   if (req.body.pass !== req.body.pass2) {
+     return res.status(400).json({ error: 'Gamer! Passwords do not match' });
+   }
 
-  return Account.AccountModel.generateHash(req.body.pass, (salt, hash) => {
-    const accountData = {
-      username: req.body.username,
-      salt,
-      password: hash,
-    };
+   return Account.AccountModel.generateHash(req.body.pass, (salt, hash) => {
+     const accountData = {
+       username: req.body.username,
+       salt,
+       password: hash,
+     };
 
-    const newAccount = new Account.AccountModel(accountData);
+     const newAccount = new Account.AccountModel(accountData);
 
-    const savePromise = newAccount.save();
+     const savePromise = newAccount.save();
 
-    savePromise.then(() => {
-      req.session.account = Account.AccountModel.toAPI(newAccount);
+     savePromise.then(() => {
+       req.session.account = Account.AccountModel.toAPI(newAccount);
 
-      return res.json({ redirect: '/creator' });
-    });
+       return res.json({ redirect: '/creator' });
+     });
 
-    savePromise.catch((err) => {
-      console.log(err);
+     savePromise.catch((err) => {
+       console.log(err);
 
-      if (err.code === 11000) {
-        return res.status(400).json({ error: 'Username already in use.' });
+       if (err.code === 11000) {
+         return res.status(400).json({ error: 'Username already in use.' });
+       }
+
+       return res.status(400).json({ error: 'An error occured' });
+     });
+   });
+ };
+
+ const changePassword = (request, response) => {
+   const req = request;
+   const res = response;
+
+   req.body.username = `${req.body.username}`;
+   req.body.currPass = `${req.body.currPass}`;
+   req.body.pass = `${req.body.pass}`;
+   req.body.pass2 = `${req.body.pass2}`;
+   if (!req.body.username || !req.body.currPass || !req.body.pass || !req.body.pass2) {
+     return res.status(400).json({ error: 'Gamer! All fields are requires' });
+   }
+
+   if (req.body.currPass === req.body.pass) {
+     return res.status(400).json({ error: 'Cannot use the same password gamer' });
+   }
+   if (req.body.pass !== req.body.pass2) {
+     return res.status(400).json({ error: 'Passwords do not match' });
+   }
+
+   return Account.AccountModel.authenticate(req.body.username,
+    req.body.currPass, (err, account) => {
+      if (err || !account) {
+        return res.status(401).json({ error: 'Wrong username or password' });
       }
 
-      return res.status(400).json({ error: 'An error occured' });
+      return Account.AccountModel
+    .generateHash(req.body.pass, (salt, hash) =>
+    Account.AccountModel.updateOne({ username: req.session.account.username },
+        { salt, password: hash }, (error) => {
+          if (error) {
+            return res.status(400).json({ error });
+          }
+          return res.json({ message: 'password successfully changed' });
+        }));
     });
-  });
-};
+ };
+ const getAccount = (request, response) => {
+   const req = request;
+   const res = response;
 
-const changePassword = (request, response) =>{
-  const req = request;
-  const res = response;
+   let username = '';
+   if (req.query.user) {
+     username = req.query.user;
+   } else {
+     username = req.session.account.username;
+   }
+   return Account.AccountModel.findByUsername(username, (err, docs) => {
+     if (err) {
+       console.log(err);
+       return res.status(400).json({ error: 'An error occurred' });
+     }
 
-  req.body.username = `${req.body.username}`;
-  req.body.currPass = `${req.body.currPass}`;
-  req.body.pass = `${req.body.pass}`;
-  req.body.pass2 = `${req.body.pass2}`;
-  if (!req.body.username || !req.body.currPass || !req.body.pass || !req.body.pass2) {
-    return res.status(400).json({ error: 'Gamer! All fields are requires' });
-  }
+     return res.json({ account: docs });
+   });
+ };
 
-  if(req.body.currPass === req.body.pass)
-  {
-    return res.status(400).json({ error: 'Cannot use the same password gamer' });
-  }
-  if (req.body.pass !== req.body.pass2) {
-    return res.status(400).json({ error: 'Passwords do not match' });
-  }
+ const createStats = (request, response) => {
+   const req = request;
+   const res = response;
 
-  return Account.AccountModel.authenticate(req.body.username,  req.body.currPass, (err, account) => {
-    if (err || !account) {
-      return res.status(401).json({ error: 'Wrong username or password' });
+   return Account.AccountModel.findByUsername(req.session.account.username, (err, doc) => {
+     const updateAccount = doc;
+     updateAccount.athletics = req.body.athletics;
+     updateAccount.wisdom = req.body.wisdom;
+     updateAccount.charisma = req.body.charisma;
+
+     if (err) {
+       console.log(err);
+       return res.status(400).json({ error: 'An error occurred' });
+     }
+
+     switch (req.body.profilePic) {
+       case 'slide1':
+         updateAccount.profilePic = 'BarbarianChar.png';
+         break;
+       case 'slide2':
+         updateAccount.profilePic = 'BardChar.png';
+         break;
+       case 'slide3':
+         updateAccount.profilePic = 'BeastMasterChar.png';
+         break;
+       case 'slide4':
+         updateAccount.profilePic = 'DruidChar.png';
+         break;
+       case 'slide5':
+         updateAccount.profilePic = 'FighterChar.png';
+         break;
+       case 'slide6':
+         updateAccount.profilePic = 'PirateChar.png';
+         break;
+       case 'slide7':
+         updateAccount.profilePic = 'PaladinChar.png';
+         break;
+       case 'slide8':
+         updateAccount.profilePic = 'RogueChar.png';
+         break;
+       case 'slide9':
+         updateAccount.profilePic = 'ShamanChar.png';
+         break;
+       default:
+         break;
+     }
+
+     console.log(updateAccount.profilePic);
+     const savePromise = updateAccount.save();
+
+     savePromise.then(() => {
+       req.session.account = Account.AccountModel.toAPI(updateAccount);
+
+       return res.json({ redirect: '/maker' });
+     });
+
+     savePromise.catch((error) => {
+       console.log(error);
+
+       if (error.code === 11000) {
+         return res.status(400).json({ error: 'Username already in use.' });
+       }
+
+       return res.status(400).json({ error: 'An error occured' });
+     });
+   });
+ };
+ const getReward = (request, response) => {
+   const req = request;
+   const res = response;
+   const dungeonData = {
+     dungeonExperience: req.body.experience,
+     dungeonGold: req.body.gold,
+   };
+
+   return Account.AccountModel.findByUsername(req.session.account.username, (err, doc) => {
+     const updateAccount = doc;
+     updateAccount.gold = parseInt(updateAccount.gold, 10) + parseInt(dungeonData.dungeonGold, 10);
+     updateAccount.experience = parseInt(updateAccount.experience, 10) +
+     parseInt(dungeonData.dungeonExperience, 10);
+     if (err) {
+       console.log(err);
+       return res.status(400).json({ error: 'An error occurred' });
+     }
+
+     const savePromise = updateAccount.save();
+
+     savePromise.then(() => {
+       req.session.account = Account.AccountModel.toAPI(updateAccount);
+
+      
+       return res.status(200);
+     });
+
+     savePromise.catch((error) => {
+       console.log(error);
+
+       return res.status(400).json({ error: 'An error occured in getting the reward' });
+     });
+     return res.status(200).json({ message: 'How did you get here' });
+   });
+ };
+
+ const LevelUp = (request, response) => {
+   const req = request;
+   const res = response;
+   let newExperience = req.session.account.experience;
+   let newExperienceRequired = req.session.account.experienceNeeded;
+
+   console.log("New Experience: " + newExperience);
+   console.log("Experience Needed: " + newExperienceRequired)
+  
+   if (parseInt(req.body.experience,10) >= parseInt(newExperienceRequired,10)) {
+     newExperience = parseInt(req.body.experience,10) - parseInt(newExperienceRequired,10);
+     newExperienceRequired = parseInt(req.session.account.level) * 1000;
+     console.log("New Experience Needed: " + newExperienceRequired);
+   
+     return Account.AccountModel.findByUsername(req.session.account.username, (err, doc) => {
+       const updateAccount = doc;
+
+       updateAccount.level += 1;
+       updateAccount.experience = newExperience;
+       updateAccount.experienceNeeded = newExperienceRequired;
+       console.log("Updated Account Thing: " + updateAccount.experienceNeeded);
+
+       if (err) {
+         console.log(err);
+         return res.status(400).json({ error: 'An error occurred' });
+       }
+       const savePromise = updateAccount.save();
+
+       savePromise.then(() => {
+        req.session.account = Account.AccountModel.toAPI(updateAccount);
+ 
+        return res.json({ redirect: '/maker' });
+      });
+
+       savePromise.catch((error) => {
+         console.log(error);
+
+         return res.status(400).json({ error: 'An error occured in leveling up' });
+       });
+      
+     });
+    }
+    else
+    {
+      console.log("Error here?");
+      return res.status(400).json({ error: 'Not enough experience buddy' });
     }
     
-    return Account.AccountModel.generateHash(req.body.pass, (salt, hash) => {
-      return Account.AccountModel.updateOne({ username: req.session.account.username },{ salt, password: hash }, (err) => {           
-        if(err) {             
-            return res.status(400).json({err});           
-        }
-        return res.json({message: "password successfully changed"});         
-    });
-    });
-  });
-}
-const getAccount = (request, response) => {
-  const req = request;
-  const res = response;
+ };
+ const getToken = (request, response) => {
+   const req = request;
+   const res = response;
 
-  return Account.AccountModel.findByUsername(req.session.account.username, (err, docs) => {
-    if (err) {
-      console.log(err);
-      return res.status(400).json({ error: 'An error occurred' });
-    }
+   const csrfJSON = {
+     csrfToken: req.csrfToken(),
+   };
 
-    return res.json({ account: docs });
-  });
-};
+   res.json(csrfJSON);
+ };
 
-const createStats = (request, response) => {
-  const req = request;
-  const res = response;
-
-  return Account.AccountModel.findByUsername(req.session.account.username, (err, doc) => {
-    const updateAccount = doc;
-    updateAccount.athletics = req.body.athletics;
-    updateAccount.wisdom = req.body.wisdom;
-    updateAccount.charisma = req.body.charisma;
-
-    const savePromise = updateAccount.save();
-
-    savePromise.then(() => {
-      req.session.account = Account.AccountModel.toAPI(updateAccount);
-
-      return res.json({ redirect: '/maker' });
-    });
-
-    savePromise.catch((error) => {
-      console.log(error);
-
-      if (error.code === 11000) {
-        return res.status(400).json({ error: 'Username already in use.' });
-      }
-
-      return res.status(400).json({ error: 'An error occured' });
-    });
-  });
-};
-
-const getToken = (request, response) => {
-  const req = request;
-  const res = response;
-
-  const csrfJSON = {
-    csrfToken: req.csrfToken(),
-  };
-
-  res.json(csrfJSON);
-};
-
-module.exports.loginPage = loginPage;
-module.exports.login = login;
-module.exports.logout = logout;
-module.exports.signup = signup;
-module.exports.getToken = getToken;
-module.exports.getAccount = getAccount;
-module.exports.creatorPage = creatorPage;
-module.exports.createStats = createStats;
-module.exports.changePassword = changePassword;
+ module.exports.loginPage = loginPage;
+ module.exports.login = login;
+ module.exports.logout = logout;
+ module.exports.signup = signup;
+ module.exports.getToken = getToken;
+ module.exports.getAccount = getAccount;
+ module.exports.creatorPage = creatorPage;
+ module.exports.createStats = createStats;
+ module.exports.changePassword = changePassword;
+ module.exports.getReward = getReward;
+ module.exports.LevelUp = LevelUp;

@@ -4,35 +4,33 @@ const _ = require('underscore');
 
 let FriendModel = {};
 
-const convertId = mongoose.Types.ObjectId;
 const setName = (name) => _.escape(name).trim();
 
 const FriendSchema = new mongoose.Schema({
-    user: {
-        type: String,
-        required: true,
-        trim: true,
-        set: setName,
-    },
-    
-    friend: {
-        type: String,
-        require: true,
+  user: {
+    type: String,
+    required: true,
+    trim: true,
+    set: setName,
+  },
 
-    }
+  friend: {
+    type: String,
+    require: true,
+  },
 });
 
 FriendSchema.statics.toAPI = (doc) => ({
-    name: doc.name,
-    friend: doc.friend,
+  name: doc.name,
+  friend: doc.friend,
 });
 
 FriendSchema.statics.findByUser = (username, callback) => {
-    const search = {
-        user: username,
-    };
-    
-    return FriendModel.find(search).select('user friend').exec(callback);
+  const search = {
+    user: username,
+  };
+
+  return FriendModel.find(search).select('user friend').exec(callback);
 };
 
 FriendModel = mongoose.model('Friend', FriendSchema);
