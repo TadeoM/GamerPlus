@@ -4,13 +4,11 @@ let experienceValue = "0";
 let url = null;
 let parsedGold = 0;
 let parsedExperience = 0;
-let accountAthletics = 0;
-let accountCharisma = 0;
-let accountWisdom = 0;
 
 let accountExperience = 0;
 let experienceNeeded=1000;
 
+let gotReward = false;
 
 const handleGetReward = (e) =>{
 e.preventDefault();
@@ -33,8 +31,13 @@ let formData = new FormData();
         function(response){
             if(response.status === 200){
                 console.log("Got Reward");
-                let divForm = document.querySelector("#dungeonForm");
-                divForm.remove();
+                gotReward=true;
+                if(gotReward)
+                {
+                    let divForm = document.querySelector("#dungeonForm");
+                    divForm.remove();
+                }
+                loadAccountFromServer();
                 ReactDOM.render(
                     <DungeonSuccess/>,document.querySelector("#dungeonInfo")
                 )
@@ -47,41 +50,7 @@ let formData = new FormData();
 const showProfile = (e) => {
     showProfile("PROFILE");
 }
-const levelUp = (e) =>{
-    e.preventDefault();
 
-    let formData = new FormData();
-
-    let currExp = accountExperience;
-    let expNeeded = experienceNeeded;
-    console.log(currExp);
-    console.log(expNeeded);
-
-    formData.append('experience',currExp);
-    formData.append('experienceNeeded', expNeeded);
-    
-    formData.append('_csrf', csrfToken);
-    console.log(formData);
-    fetch(`/levelUp?_csrf=${csrfToken}`,
-    {
-        method: "POST",
-        body: formData,
-    })
-    .then(
-        function(response){
-            if(response.status === 200){
-                console.log("Leveled Up");
-                window.onload=response.redirect;
-            }
-            else if(response.status===400)
-            {
-                console.log("Not enough Experience Man");
-            }
-        }
-    );
-    return false;
-
-}
 const DungeonData = function(props) {
     return (
         <div>
@@ -111,9 +80,6 @@ const DungeonSuccess = function()
 
 const ProfileBar = function(props) {
 
-    accountAthletics = props.account.athletics;
-    accountWisdom = props.account.wisdom;
-    accountCharisma = props.account.charisma;
     return (
         <div className="profileBox">
             <div> 
@@ -141,23 +107,15 @@ const ProfileBar = function(props) {
 };
 const AccountData = function(props) {
     accountExperience = props.account.experience;
+    experienceNeeded = props.account.experienceNeeded;
     return (
         <div>
             <img id="char" src={`/assets/img/${props.account.profilePic}`} alt="character"/>
             <h3 className="accountName"><b>User:</b> {props.account.username} </h3>
-            <form id="levelUpForm" name="levelUpForm"
-            onSubmit={levelUp}
-            action="/levelUp"
-            method="POST"
-            className="levelUpForm"
-            >
+           
             <h3 className="accountLevel" name="level">Level:{props.account.level}</h3>
             <h3 className="accountExperience" name="experience">Experience: {props.account.experience}</h3>
-            <h3 className="accountExperienceNeeded" name="experienceNeeded">Experience Needed To Level Up: {experienceNeeded}</h3>
- 
-            <input type="submit" name="levelUp" value="Level Up" />
-            <input type="hidden" name="_csrf" value={props.csrf}/>
-            </form>
+            <h3 className="accountExperienceNeeded" name="experienceNeeded">Experience Needed To Level Up: {props.account.experienceNeeded}</h3>
         </div>
     );
 };
@@ -191,9 +149,13 @@ const setup = function(csrf)
         createChangePasswordForm(csrf);
         return false;
     });
-    ReactDOM.render(
-        <DungeonData csrf ={csrf}/>, document.querySelector("#dungeonInfo")
-    );
+    if(!gotReward)
+    {
+        ReactDOM.render(
+            <DungeonData csrf ={csrf}/>, document.querySelector("#dungeonInfo")
+        );
+    }
+  
     const profileButton = document.querySelector("#profileButton");
 
     profileButton.addEventListener("click", (e) => {

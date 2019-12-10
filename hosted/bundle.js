@@ -8,7 +8,7 @@ var accountCharisma = 0;
 var accountWisdom = 0;
 
 var accountExperience = 0;
-var experienceNeeded = 1000;
+var experienceNeeded = 0;
 
 var handleQuest = function handleQuest(e) {
     e.preventDefault();
@@ -77,18 +77,21 @@ var levelUp = function levelUp(e) {
     formData.append('experienceNeeded', expNeeded);
 
     formData.append('_csrf', csrfToken);
-    console.log(formData);
+
     fetch("/levelUp?_csrf=" + csrfToken, {
         method: "POST",
         body: formData
     }).then(function (response) {
+        console.log(response);
         if (response.status === 200) {
             console.log("Leveled Up");
-            window.onload = response.redirect;
+            location.reload();
         } else if (response.status === 400) {
             console.log("Not enough Experience Man");
         }
     });
+
+    location.reload();
     return false;
 };
 var completeQuest = function completeQuest(e) {
@@ -311,9 +314,6 @@ var PendingQuestList = function PendingQuestList(props) {
 };
 
 var ProfileBar = function ProfileBar(props) {
-    accountAthletics = props.account.athletics;
-    accountWisdom = props.account.wisdom;
-    accountCharisma = props.account.charisma;
 
     return React.createElement(
         "div",
@@ -426,8 +426,11 @@ var ProfileBar = function ProfileBar(props) {
 };
 
 var AccountData = function AccountData(props) {
+    accountAthletics = props.account.athletics;
+    accountWisdom = props.account.wisdom;
+    accountCharisma = props.account.charisma;
     accountExperience = props.account.experience;
-    console.log(props.account.profilePic);
+    experienceNeeded = props.account.experienceNeeded;
     return React.createElement(
         "div",
         null,
@@ -468,7 +471,7 @@ var AccountData = function AccountData(props) {
                 "h3",
                 { className: "accountExperienceNeeded", name: "experienceNeeded" },
                 "Experience Needed To Level Up: ",
-                experienceNeeded
+                props.account.experienceNeeded
             ),
             React.createElement("input", { type: "submit", name: "levelUp", value: "Level Up" }),
             React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf })
@@ -602,6 +605,7 @@ var loadAccountFromServer = function loadAccountFromServer() {
     sendAjax('GET', '/getAccount', null, function (data) {
         ReactDOM.render(React.createElement(AccountData, { account: data.account, csrf: csrfToken }), document.querySelector("#accountData"));
         ReactDOM.render(React.createElement(ProfileBar, { account: data.account }), document.querySelector("#profileContent"));
+        SetUpDungeon();
     });
 };
 
@@ -645,7 +649,6 @@ var getToken = function getToken() {
 
 $(document).ready(function () {
     getToken();
-    SetUpDungeon();
 });
 "use strict";
 
