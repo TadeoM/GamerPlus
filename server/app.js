@@ -16,7 +16,6 @@ const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
 const dbURL = process.env.MONGODB_URI || 'mongodb://localhost/GamifyPlus';
 
-console.log("FUCK");
 console.log(process.env.MONGODB_URI);
 
 mongoose.connect(dbURL, (err) => {
